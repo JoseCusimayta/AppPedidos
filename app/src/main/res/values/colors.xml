@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303f9f</color>
+    <color name="colorAccent">#2196f3</color>
+    <color name="colorButtonNormal">#2196f3</color>
+    <color name="DarkBlue">#212f3c</color>
+    <color name="DarkGrey">#e25f6164</color>
+    <color name="White">#e2ffffff</color>
+    <color name="HeaderPopUp">#e283c3e9</color>
+    <color name="BodyPopUp">#e2e98883</color>
+    <color name="viewBg">#f1f5f8</color>
+    <color name="album_title">#4c4c4c</color>
+</resources>

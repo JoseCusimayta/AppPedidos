@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/id_lyContent"
+    tools:context=".Fragment.FragDescripcion">
+
+    <TextView
+        android:id="@+id/tv_origen_popup"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="92dp"
+            android:clickable="true"
+            android:src="@drawable/info_color"
+            app:backgroundTint="@color/colorPrimaryDark" />
+
+        <TextView
+            android:id="@+id/et_nombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/DarkBlue"
+            android:padding="12dp"
+            android:text="Nombre de Familia"
+            android:textColor="#ffffff" />
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/iv_imagen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/et_nombre"
+            android:layout_above="@+id/ly_footer"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/tv_precio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/black"
+            android:text="Precio"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
+
+        <TextView
+            android:id="@+id/tv_cantidad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/ly_footer"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/black"
+            android:text="Cantidad de articulos"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse" />
+
+        <LinearLayout
+            android:id="@+id/ly_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/DarkBlue"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/ib_galeria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/DarkBlue"
+                android:padding="15dp"
+                android:src="@drawable/fotos" />
+
+            <ImageButton
+                android:id="@+id/ib_fichatecnica"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/DarkBlue"
+                android:padding="15dp"
+                android:src="@drawable/doc_color" />
+
+            <EditText
+                android:id="@+id/et_cantidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Cantidad"
+                android:inputType="numberDecimal"
+                android:padding="15dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
+
+            <ImageButton
+                android:id="@+id/ib_carritoPedidos"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@color/DarkBlue"
+                android:padding="15dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/carrito_lista" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

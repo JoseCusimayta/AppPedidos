@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.FragSplashScreen">
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageView4"
+        android:layout_centerHorizontal="true"
+        android:text="Desarrollado por:  ERP SOLUTIONS"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
+
+    <TextView
+        android:id="@+id/tv_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:autoLink="web"
+        android:text="http://erp-solutionsperu.com/"
+        android:textAppearance="@style/TextAppearance.AppCompat.Tooltip"
+        android:textColorLink="@color/White" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_above="@+id/tv_link"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logoerp" />
+
+</RelativeLayout>

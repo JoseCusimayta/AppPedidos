@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.FragMenuPrincipal">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ly_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/colorPrimary">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_articulos"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:tag="articulos" />
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/iv_articulos"
+                    android:layout_alignParentStart="true"
+                    android:background="@android:color/white"
+                    android:text="Articulos"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_familia"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:tag="familia" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/iv_familia"
+                    android:layout_alignParentStart="true"
+                    android:background="@android:color/white"
+                    android:text="Familia"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_subfamilia"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:tag="subfamilia" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/iv_subfamilia"
+                    android:layout_alignParentStart="true"
+                    android:background="@android:color/white"
+                    android:text="SubFamilia"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_concepto1"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/logo"
+                    android:tag="concepto1"/>
+
+                <TextView
+                    android:id="@+id/tv_concepto1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/iv_concepto1"
+                    android:layout_alignParentStart="true"
+                    android:background="@android:color/white"
+                    android:tag="tv_1"
+                    android:text="Concepto1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_concepto2"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:tag="concepto2"
+                    android:src="@drawable/logo"/>
+
+                <TextView
+                    android:id="@+id/tv_concepto2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/iv_concepto2"
+                    android:layout_alignParentStart="true"
+                    android:background="@android:color/white"
+                    android:tag="tv_2"
+                    android:text="Concepto2"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_concepto3"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:tag="concepto3"
+                    android:src="@drawable/logo" />
+
+                <TextView
+                    android:id="@+id/tv_concepto3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/iv_concepto3"
+                    android:layout_alignParentStart="true"
+                    android:background="@android:color/white"
+                    android:tag="tv_3"
+                    android:text="Concepto3"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_concepto4"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:tag="concepto4"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/logo" />
+
+                <TextView
+                    android:id="@+id/tv_concepto4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/iv_concepto4"
+                    android:layout_alignParentStart="true"
+                    android:background="@android:color/white"
+                    android:tag="tv_4"
+                    android:text="Concepto4"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_concepto5"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:tag="concepto5"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/logo" />
+
+                <TextView
+                    android:id="@+id/tv_concepto5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/iv_concepto5"
+                    android:layout_alignParentStart="true"
+                    android:background="@android:color/white"
+                    android:tag="tv_5"
+                    android:text="Concepto5"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_concepto6"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:tag="concepto6"
+                    android:src="@drawable/logo" />
+
+                <TextView
+                    android:id="@+id/tv_concepto6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/iv_concepto6"
+                    android:layout_alignParentStart="true"
+                    android:background="@android:color/white"
+                    android:tag="tv_6"
+                    android:text="Concepto6"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_concepto7"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:tag="concepto7"
+                    android:src="@drawable/logo" />
+
+                <TextView
+                    android:id="@+id/tv_concepto7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/iv_concepto7"
+                    android:layout_alignParentStart="true"
+                    android:background="@android:color/white"
+                    android:tag="tv_7"
+                    android:text="Concepto7"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
