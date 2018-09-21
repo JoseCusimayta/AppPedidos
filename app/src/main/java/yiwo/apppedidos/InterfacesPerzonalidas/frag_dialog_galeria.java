@@ -12,6 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
+import com.synnapps.carouselview.ImageListener;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,11 +30,13 @@ import yiwo.apppedidos.R;
  */
 public class frag_dialog_galeria {
 
-    ImageView iv_producto, iv_producto1, iv_producto2, iv_producto3, iv_producto4;
-    Bitmap bitmap, bitmap1, bitmap2, bitmap3, bitmap4;
-    Context context;
-    String TAG = "frag_dialog_galeria";
+    private Bitmap bitmap, bitmap1, bitmap2, bitmap3, bitmap4;
+    private Context context;
+    private String TAG = "frag_dialog_galeria";
 
+    private CarouselView carouselView;
+
+    private Bitmap[] sampleImages;
     public interface FinalizoCuadroDialogGaleria {
         void ResultadoCuadroDialogGaleria(Bitmap bitmap);
     }
@@ -41,91 +48,80 @@ public class frag_dialog_galeria {
         this.context = context;
         interfaz = actividad;
         final Dialog dialogo = new Dialog(context);
-        //dialogo.setCancelable(false);
+        dialogo.setCancelable(true);
         dialogo.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogo.setContentView(R.layout.frag_dialog_galeria);
         dialogo.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        iv_producto = dialogo.findViewById(R.id.iv_producto);
-        iv_producto1 = dialogo.findViewById(R.id.iv_producto1);
-        iv_producto2 = dialogo.findViewById(R.id.iv_producto2);
-        iv_producto3 = dialogo.findViewById(R.id.iv_producto3);
-        iv_producto4 = dialogo.findViewById(R.id.iv_producto4);
-
-        iv_producto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                interfaz.ResultadoCuadroDialogGaleria(bitmap);
-                dialogo.dismiss();
-            }
-        });
-        iv_producto1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bitmap = bitmap1;
-                iv_producto.setImageBitmap(bitmap);
-            }
-        });
-        iv_producto2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bitmap = bitmap2;
-                iv_producto.setImageBitmap(bitmap);
-            }
-        });
-        iv_producto3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bitmap = bitmap3;
-                iv_producto.setImageBitmap(bitmap);
-            }
-        });
-        iv_producto4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bitmap = bitmap4;
-                iv_producto.setImageBitmap(bitmap);
-            }
-        });
         try {
             File file = new File(CodigosGenerales.myDirectorio, CodigosGenerales.Codigo_Empresa + "_" + CodigosGenerales.Codigo_Articulo + "_1.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
             if (file.exists()) {
                 bitmap1 = BitmapFactory.decodeStream(new FileInputStream(file));
                 bitmap=bitmap1;
-                iv_producto.setImageBitmap(bitmap1);
-                iv_producto1.setImageBitmap(bitmap1);
             } else {
                 Log.d(TAG + "-A", "Poniendo Logo ");
-                iv_producto1.setVisibility(View.INVISIBLE);
                 dialogo.dismiss();
             }
             file = new File(CodigosGenerales.myDirectorio, CodigosGenerales.Codigo_Empresa + "_" + CodigosGenerales.Codigo_Articulo + "_2.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
             if (file.exists()) {
                 bitmap2 = BitmapFactory.decodeStream(new FileInputStream(file));
-                iv_producto2.setImageBitmap(bitmap2);
             } else {
                 Log.d(TAG + "-A", "Poniendo Logo ");
-                iv_producto2.setVisibility(View.INVISIBLE);
             }
             file = new File(CodigosGenerales.myDirectorio, CodigosGenerales.Codigo_Empresa + "_" + CodigosGenerales.Codigo_Articulo + "_3.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
             if (file.exists()) {
                 bitmap3 = BitmapFactory.decodeStream(new FileInputStream(file));
-                iv_producto3.setImageBitmap(bitmap3);
             } else {
                 Log.d(TAG + "-A", "Poniendo Logo ");
-                iv_producto3.setVisibility(View.INVISIBLE);
             }
             file = new File(CodigosGenerales.myDirectorio, CodigosGenerales.Codigo_Empresa + "_" + CodigosGenerales.Codigo_Articulo + "_4.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
             if (file.exists()) {
                 bitmap4 = BitmapFactory.decodeStream(new FileInputStream(file));
-                iv_producto4.setImageBitmap(bitmap4);
             } else {
                 Log.d(TAG + "-A", "Poniendo Logo ");
-                iv_producto4.setVisibility(View.INVISIBLE);
             }
+
+            sampleImages = new Bitmap[]{bitmap1,bitmap2,bitmap3,bitmap4};
+            carouselView = dialogo.findViewById(R.id.carouselView);
+            carouselView.setPageCount(sampleImages.length);
+
+            carouselView.setImageListener(imageListener);
+            carouselView.setImageClickListener(new ImageClickListener() {
+                @Override
+                public void onClick(int position) {
+                    switch (position){
+                        case 0:
+                            bitmap=bitmap1;
+                        case 1:
+                            bitmap=bitmap2;
+                        case 2:
+                            bitmap=bitmap3;
+                        case 3:
+                            bitmap=bitmap4;
+                    }
+                    interfaz.ResultadoCuadroDialogGaleria(bitmap);
+                    dialogo.dismiss();
+                    //Toast.makeText(this, "Clicked item: "+ position, Toast.LENGTH_SHORT).show();
+                }
+            });
+
         } catch (FileNotFoundException e) {
             Log.d(TAG, e.getMessage());
         }
+
+
+
+
+
         dialogo.show();
     }
+
+
+    ImageListener imageListener = new ImageListener() {
+        @Override
+        public void setImageForPosition(int position, ImageView imageView) {
+            imageView.setImageBitmap(sampleImages[position]);
+        }
+    };
+
 }

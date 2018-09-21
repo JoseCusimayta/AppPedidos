@@ -256,7 +256,7 @@ public class BDPedidos {
                 Connection connection = bdata.getConnection();
 
 
-                String nitem=listaDeseos.get(i).get(0);
+                String nitem=String.valueOf (i+1);
                 String ccod_articulo=listaDeseos.get(i).get(1);
                 String nom_articulo=listaDeseos.get(i).get(2);
                 String cunidad=listaDeseos.get(i).get(3);

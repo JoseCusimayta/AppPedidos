@@ -18,17 +18,12 @@
 
             <Button
                 android:id="@+id/b_actualizar"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Actualizar En Linea" />
+                android:text="Actualizar" />
 
-            <Button
-                android:id="@+id/b_actualizar_lan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Actualizar LAN" />
         </LinearLayout>
 
         <ProgressBar

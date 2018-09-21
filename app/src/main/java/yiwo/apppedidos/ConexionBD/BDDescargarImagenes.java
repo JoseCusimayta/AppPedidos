@@ -1,8 +1,5 @@
 package yiwo.apppedidos.ConexionBD;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -11,7 +8,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -19,30 +15,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.Data.BDArticulos;
 
 public class BDDescargarImagenes {
 
     private String TAG = "BDDescargarImagenes";
-    private int Puerto = 8080;
-
-    private RedDisponible redDisponible = new RedDisponible();
-
-    private String ip_lan = "192.168.1.111", ip_publica = "148.102.21.175", Carpeta = "Imagenes";
 
     public Boolean GuardarMenu() {
 
         String ip;
-        Log.d(TAG, "Conecntandose a: " + ip_lan + " - " + redDisponible.serverAvailable(CodigosGenerales.getActivity, ip_lan, Puerto));
-        Log.d(TAG, "Conecntandose a: " + ip_publica + " - " + redDisponible.serverAvailable(CodigosGenerales.getActivity, ip_publica, Puerto));
-        if (redDisponible.serverAvailable(CodigosGenerales.getActivity, ip_lan, Puerto))
-            ip = ip_lan;
-        else if (redDisponible.serverAvailable(CodigosGenerales.getActivity, ip_publica, Puerto))
-            ip = ip_publica;
-        else
-            return false;
 
-        String DOWNLOAD_URL = "http://" + ip + ":" + Puerto + "/" + ip_lan + "/" + Carpeta + "/";
+        if (ConfiguracionEmpresa.isLAN)
+            ip = ConfiguracionEmpresa.IP_LAN;
+        else
+            ip = ConfiguracionEmpresa.IP_Publica;
+
+
+        String DOWNLOAD_URL = "http://" + ip + ":" + ConfiguracionEmpresa.PuertoImagenes + "/" + ConfiguracionEmpresa.IP_LAN + "/" + ConfiguracionEmpresa.CarpetaImagenes + "/";
         Log.d(TAG, "Conectandose a :" + DOWNLOAD_URL);
 //        if (LAN)
 //            DOWNLOAD_URL = "http://192.168.1.111:8080/192.168.1.111/Imagenes/";//IP LAN ERP SOLUTIONS
@@ -54,9 +44,9 @@ public class BDDescargarImagenes {
         GuardarMenu_SubFamilia(DOWNLOAD_URL);
         GuardarMenu_Conceptos(DOWNLOAD_URL);
 
-        BDArticulos bdArticulos= new BDArticulos();
-        ArrayList<List<String>> arrayList= bdArticulos.getList("");
-        for(int i=0;i<arrayList.size();i++){
+        BDArticulos bdArticulos = new BDArticulos();
+        ArrayList<List<String>> arrayList = bdArticulos.getListFull("");
+        for (int i = 0; i < arrayList.size(); i++) {
             GuardarArticulos(DOWNLOAD_URL, arrayList.get(i).get(0));
         }
         return true;
@@ -86,7 +76,7 @@ public class BDDescargarImagenes {
             out.flush();
 
             out.close();
-            Log.d(TAG,"Descargando desde: "+url);
+            Log.d(TAG, "Descargando desde: " + url);
         } catch (Exception e) {
             Log.d(TAG, "GuardarMenu_Articulos - " + e.getMessage());
         }
@@ -116,7 +106,7 @@ public class BDDescargarImagenes {
             out.flush();
 
             out.close();
-            Log.d(TAG,"Descargando desde: "+url);
+            Log.d(TAG, "Descargando desde: " + url);
 
         } catch (Exception e) {
             Log.d(TAG, "GuardarMenu_Familia - " + e.getMessage());
@@ -148,7 +138,7 @@ public class BDDescargarImagenes {
 
             out.close();
 
-            Log.d(TAG,"Descargando desde: "+url);
+            Log.d(TAG, "Descargando desde: " + url);
         } catch (Exception e) {
             Log.d(TAG, "GuardarMenu_SubFamilia - " + e.getMessage());
         }
@@ -179,15 +169,14 @@ public class BDDescargarImagenes {
                 out.flush();
 
                 out.close();
-                Log.d(TAG,"Descargando desde: "+url);
+                Log.d(TAG, "Descargando desde: " + url);
             }
         } catch (Exception e) {
             Log.d(TAG, "GuardarMenu_Conceptos - " + e.getMessage());
         }
     }
 
-    public void GuardarArticulos(String DOWNLOAD_URL, String Codigo_Articulo) {
-
+    private void GuardarArticulos(String DOWNLOAD_URL, String Codigo_Articulo) {
         try {
             for (int i = 1; i <= 4; i++) {
                 String Nombre_Imagen = CodigosGenerales.Codigo_Empresa + "_" + Codigo_Articulo + "_" + i + ".jpg";
@@ -211,7 +200,7 @@ public class BDDescargarImagenes {
                 out.flush();
 
                 out.close();
-                Log.d(TAG,"Descargando desde: "+url);
+                Log.d(TAG, "Descargando desde: " + url);
             }
 
         } catch (Exception e) {
@@ -224,17 +213,16 @@ public class BDDescargarImagenes {
     public Boolean EsNecesarioActualizar() {
         try {
 
-            String ip;
-            Log.d(TAG, "Conecntandose a: " + ip_lan + " - " + redDisponible.serverAvailable(CodigosGenerales.getActivity, ip_lan, Puerto));
-            Log.d(TAG, "Conecntandose a: " + ip_publica + " - " + redDisponible.serverAvailable(CodigosGenerales.getActivity, ip_publica, Puerto));
-            if (redDisponible.serverAvailable(CodigosGenerales.getActivity, ip_lan, Puerto))
-                ip = ip_lan;
-            else if (redDisponible.serverAvailable(CodigosGenerales.getActivity, ip_publica, Puerto))
-                ip = ip_publica;
+            String ip="";
+
+            if (ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isLANAviable)
+                ip = ConfiguracionEmpresa.IP_LAN;
+            else if (!ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isPublicaAviable)
+                ip = ConfiguracionEmpresa.IP_Publica;
             else
                 return false;
 
-            String DOWNLOAD_URL = "https://" + ip + ":" + Puerto + "/" + ip_lan + "/" + Carpeta + "/";
+            String DOWNLOAD_URL = "http://" + ip + ":" + ConfiguracionEmpresa.PuertoImagenes + "/" + ConfiguracionEmpresa.IP_LAN + "/" + ConfiguracionEmpresa.CarpetaImagenes + "/";
             Log.d(TAG, "Conectandose a :" + DOWNLOAD_URL);
 
             URL url = new URL(DOWNLOAD_URL);
@@ -290,21 +278,25 @@ public class BDDescargarImagenes {
             return bitmap;
 
         } catch (Exception e) {
-            Log.d(TAG,"DescargarImagenEnLinea"+e.getMessage());
+            Log.d(TAG, "DescargarImagenEnLinea" + e.getMessage());
         }
         return null;
     }
 
-    public Bitmap getImageFromDirectory(String Imagen_nombre){
+    public Bitmap getImageFromDirectory(String Imagen_nombre) {
+        Log.d(TAG, "Descargando Imagen: ");
 
-        File imgFile;
-        Imagen_nombre=CodigosGenerales.Codigo_Empresa+"_"+ Imagen_nombre;
-        imgFile = new File(CodigosGenerales.myDirectorio, Imagen_nombre);
-        Log.d(TAG,"Cargando Imagen... "+Imagen_nombre);
+        Bitmap bitmap;
         try {
-            return BitmapFactory.decodeStream(new FileInputStream(imgFile));
+            Log.d(TAG, "Descargando Imagen: " + Imagen_nombre);
+            File imgFile;
+            Imagen_nombre = CodigosGenerales.Codigo_Empresa + "_" + Imagen_nombre;
+            Log.d(TAG, "Descargando Imagen: " + Imagen_nombre);
+            imgFile = new File(CodigosGenerales.myDirectorio, Imagen_nombre);
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(imgFile));
         } catch (FileNotFoundException e) {
             return null;
         }
+        return bitmap;
     }
 }

@@ -10,16 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.ConexionBD.BDConexionSQLite;
+import yiwo.apppedidos.ConexionBD.RedDisponible;
 import yiwo.apppedidos.Data.BDActivarFunciones;
 import yiwo.apppedidos.R;
-import yiwo.apppedidos.ConexionBD.BDConexionSQLite;
 
 
 public class FragSplashScreen extends Fragment {
@@ -63,8 +62,7 @@ public class FragSplashScreen extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            ComprobarConfiguraciones();
-            if (isConfigurate)
+            RedDisponible.isLAN(getActivity());
                 ComprobarLogin();
             return null;
         }

@@ -17,20 +17,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Connection;
 import java.util.List;
-import java.util.Objects;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.ConexionBD.BDConexionSQL;
+import yiwo.apppedidos.ConexionBD.BDConexionSQLite;
 import yiwo.apppedidos.Data.BDCentroCostos;
 import yiwo.apppedidos.Data.BDPuntoVenta;
 import yiwo.apppedidos.Data.BDUnidNegocios;
 import yiwo.apppedidos.Data.BDUsuario;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDialog2Datos;
 import yiwo.apppedidos.R;
-import yiwo.apppedidos.ConexionBD.BDConexionSQLite;
 
 
 public class FragLogin extends Fragment implements View.OnClickListener, CustomDialog2Datos.FinalizoCuadroDialogo2Datos {
@@ -40,14 +41,13 @@ public class FragLogin extends Fragment implements View.OnClickListener, CustomD
     EditText et_usuario, et_clave, et_rucEmp, et_punto_venta, et_centro_costo, et_unidad_negocio;
     DrawerLayout drawer;
     ProgressBar progressBar;
-    LinearLayout ly_login_datos;
     BDUsuario data = new BDUsuario();
     BDCentroCostos bdCentroCostos = new BDCentroCostos();
     BDPuntoVenta bdPuntoVenta = new BDPuntoVenta();
     BDUnidNegocios bdUnidNegocios = new BDUnidNegocios();
-
     BDConexionSQLite myDb;
-
+    LinearLayout ly_login_datos;
+    BDConexionSQL bdata= new BDConexionSQL();
     public FragLogin() {
         // Required empty public constructor
     }
@@ -66,18 +66,17 @@ public class FragLogin extends Fragment implements View.OnClickListener, CustomD
         et_usuario = view.findViewById(R.id.et_usuario);
         et_clave = view.findViewById(R.id.et_clave);
         progressBar = view.findViewById(R.id.progressBar);
-        ly_login_datos = view.findViewById(R.id.ly_login_datos);
         et_punto_venta = view.findViewById(R.id.et_punto_venta);
         et_centro_costo = view.findViewById(R.id.et_centro_costo);
         et_unidad_negocio = view.findViewById(R.id.et_unidad_negocio);
-
         drawer = getActivity().findViewById(R.id.drawer_layout);
+        ly_login_datos=view.findViewById(R.id.ly_login_datos);
 
         b_ingresar.setOnClickListener(this);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//Bloquear el menu lateral
 
-//        et_usuario.setText("Admin");
-//        et_clave.setText("12345678");
+        et_usuario.setText(ConfiguracionEmpresa.UsuarioAPP);
+        et_clave.setText(ConfiguracionEmpresa.ClaveAPP);
 
         et_rucEmp.setOnClickListener(this);
         et_punto_venta.setOnClickListener(this);
@@ -144,21 +143,22 @@ public class FragLogin extends Fragment implements View.OnClickListener, CustomD
         switch (CodigosGenerales.TipoArray) {
             case "Empresa":
                 try {
+                    Connection connection = bdata.getConnection();
                     CodigosGenerales.Codigo_Empresa = cod;
                     et_rucEmp.setText(ruc);
                     List<String> list;
 
-                    list = bdPuntoVenta.getPredeterminado(cod);
+                    list = bdPuntoVenta.getPredeterminado(connection, cod);
                     CodigosGenerales.Codigo_PuntoVenta = list.get(0);
                     CodigosGenerales.Codigo_Almacen = list.get(2);
                     CodigosGenerales.Direccion_Almacen=list.get(3);
                     et_punto_venta.setText(list.get(0) + "-" + list.get(1));
 
-                    list = bdCentroCostos.getPredeterminado(cod);
+                    list = bdCentroCostos.getPredeterminado(connection,cod);
                     CodigosGenerales.Codigo_CentroCostos = list.get(0);
                     et_centro_costo.setText(list.get(0) + "-" + list.get(1));
 
-                    list = bdUnidNegocios.getPredeterminado(cod);
+                    list = bdUnidNegocios.getPredeterminado(connection,cod);
                     CodigosGenerales.Codigo_UnidadNegocio = list.get(0);
                     et_unidad_negocio.setText(list.get(0) + "-" + list.get(1));
 

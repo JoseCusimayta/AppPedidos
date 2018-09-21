@@ -29,6 +29,8 @@ import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
 
 public class CodigosGenerales {
     public static boolean Login = false;
+    public static boolean isInicio=false;
+    public static boolean isLogin;
 
     public static Integer ID_Concepto;
     public static String Codigo_Empresa;
@@ -70,7 +72,7 @@ public class CodigosGenerales {
     private static BDClientes bdClientes = new BDClientes();
     private static BDMotivo bdMotivo = new BDMotivo();
     private static BDFormaPago bdFormaPago = new BDFormaPago();
-    private static BDFiltros bdFiltros= new BDFiltros();
+    private static BDFiltros bdFiltros = new BDFiltros();
 
     public static Boolean Filtro = false;
     public static List<String> list_familia = new ArrayList<>();
@@ -90,10 +92,10 @@ public class CodigosGenerales {
     //public static String DOWNLOAD_URL = "http://192.168.0.5:8080/192.168.0.5/Imagenes/";//IP Lan Gumisa para Pruebas
 //    public static String DOWNLOAD_URL_Lan = "http://192.168.0.5:8080/192.168.0.5/Imagenes/";//IP LAN Gumisa
 
-//    public static String DOWNLOAD_URL = "http://148.102.21.175:8080/192.168.1.111/Imagenes/";//IP Publica ERP SOLUTIONS
+    //    public static String DOWNLOAD_URL = "http://148.102.21.175:8080/192.168.1.111/Imagenes/";//IP Publica ERP SOLUTIONS
     public static String DOWNLOAD_URL_Lan = "http://192.168.1.111:8080/192.168.1.111/Imagenes/";//IP LAN ERP SOLUTIONS
-    public static boolean ImagenesMenuCargadas =false;
-//192.168.0.5\Imagenes
+    public static boolean ImagenesMenuCargadas = false;
+    //192.168.0.5\Imagenes
     static String root = Environment.getExternalStorageDirectory().toString(); //Obetner el directorio padre
     public static File myDirectorio = new File(root + "/pedidos"); // Crear una carpeta para guardar las imagenes
     //public static File myDirectorio_ERP = new File(root + "/pedidos2"); // Crear una carpeta para guardar las imagenes
@@ -112,13 +114,13 @@ public class CodigosGenerales {
     public static Bitmap ImagenGaleria4;
     public static boolean CancelarTask;
 
-    public static ArrayList<List<String>> listCliente=new ArrayList<>();
-    public static ArrayList<List<String>> listEmpresas=new ArrayList<>();
-    public static ArrayList<List<String>> listArticulos=new ArrayList<>();
+    public static ArrayList<List<String>> listCliente = new ArrayList<>();
+    public static ArrayList<List<String>> listEmpresas = new ArrayList<>();
+    public static ArrayList<List<String>> listArticulos = new ArrayList<>();
     public static String Nombre_Vendedor;
     public static String Celular_Vendedor;
     public static String email_Vendedor;
-    public static Activity getActivity;
+    public static String Lista_Precio="01";
 
     public static ArrayList<List<String>> getArrayList(String Nombre) {
         switch (TipoArray) {
@@ -133,7 +135,7 @@ public class CodigosGenerales {
             case "Articulos":
                 return bdArticulos.getList(Nombre);
             case "Familia":
-                    return bdFamilia.getList(Nombre);
+                return bdFamilia.getList(Nombre);
             case "SubFamilia":
                 return bdSubfamilia.getList(Nombre);
             case "Concepto":
@@ -186,27 +188,29 @@ public class CodigosGenerales {
         return calendar.getTime(); // Devuelve el objeto Date con los nuevos días añadidos
     }
 
-    public static Double getDescuenetoUnico(Double descuento_1, Double descuento_2, Double descuento_3, Double descuento_4){
+    public static Double getDescuenetoUnico(Double descuento_1, Double descuento_2, Double descuento_3, Double descuento_4) {
         return -((((100 - descuento_1) * (100 - descuento_2) * (100 - descuento_3) * (100 - descuento_4)) / 1000000) - 100);
     }
-    public static String RedondearDecimales(Double Monto, Integer Decimales){
-        return String.format("%."+Decimales+"f", Monto);
+
+    public static String RedondearDecimales(Double Monto, Integer Decimales) {
+        return String.format("%." + Decimales + "f", Monto);
     }
 
-    public static Double tryParseDouble(String value){
+    public static Double tryParseDouble(String value) {
         try {
             return Double.parseDouble(value);
-        } catch(NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             // Log exception.
             return 0.00;
         }
     }
 
+
     /**
      * Hides the soft keyboard
      */
     public static void hideSoftKeyboard(Activity activity) {
-        if(activity.getCurrentFocus()!=null) {
+        if (activity.getCurrentFocus() != null) {
             InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
         }

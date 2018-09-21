@@ -46,12 +46,12 @@ public class BDUnidNegocios {
         return arrayList;
     }
 
-    public List<String> getPredeterminado(String cod_emp) {
+    public List<String> getPredeterminado(Connection connection,String cod_emp) {
 
         List<String> list=new ArrayList<>();
 
         try {
-            Connection connection = bdata.getConnection();
+//            Connection connection = bdata.getConnection();
 
             String stsql = "Select TOP(1) erp_codune, erp_nomune from erp_unidad_negocio where erp_codemp = ? order by erp_codune";
 
@@ -63,7 +63,7 @@ public class BDUnidNegocios {
                 list.add(rs.getString("erp_codune"));
                 list.add(rs.getString("erp_nomune"));
             }
-            connection.close();
+//            connection.close();
 
         } catch (Exception e) {
             Log.d("BDEmpresa", "- getUnidadNegocioPredeterminado: "+e.getMessage());

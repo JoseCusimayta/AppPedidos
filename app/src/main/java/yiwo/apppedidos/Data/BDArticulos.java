@@ -15,7 +15,7 @@ import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 public class BDArticulos {
 
     BDConexionSQL bdata = new BDConexionSQL();
-
+String TAG="BDArticulos";
     public ArrayList<List<String>> getList(String Nombre) {
 
         ArrayList<List<String>> arrayList = new ArrayList<>();
@@ -26,14 +26,71 @@ public class BDArticulos {
             } else {
                 Connection connection = bdata.getConnection();
 
-                String stsql = "SELECT TOP(100) FROM dbo.udf_list_harticul (?,?,?,?) where codigo like ? or Nombre like ?  and cfamilia!='656' and cfamilia!='655' and estado='Activo' order by Nombre";
+                String stsql=
+                        "select top(100) \n" +
+                        "ccod_articulo, \n" +
+                        "cnom_articulo, \n" +
+                        "cfamilia,\n" +
+                        "ccod_subfamilia,\n" +
+                        "codmarca,\n" +
+                        "modelo,\n" +
+                        "color,\n" +
+                        "tratamiento,\n" +
+                        "fuelle,\n" +
+                        "azas,\n" +
+                        "solapa,\n" +
+                        "cmoneda_precio,\n" +
+                        "erp_monto,\n" +
+                        "cunidad,\n" +
+                        "Isnull((SUM(ERP_STOCOM) - SUM(ERP_STOART)),0) as stock,\n" +
+                        " Harticul.ccod_almacen\n" +
+                        " from Harticul \n" +
+                        " inner join Hstock\n" +
+                        " on \n" +
+                        " Harticul.ccod_articulo=HSTOCK.ERP_CODART and\n" +
+                        " Harticul.ccod_empresa=HSTOCK.ERP_CODEMP and \n" +
+                        " Harticul.ccod_almacen=HSTOCK.ERP_CODALM\n" +
+                        " inner join Erp_Lista_Precio_Cliente\n" +
+                        " on\n" +
+                        " Harticul.ccod_articulo=Erp_Lista_Precio_Cliente.ERP_CODART and\n" +
+                        " Harticul.ccod_empresa=Erp_Lista_Precio_Cliente.ERP_CODEMP and \n" +
+                        " Harticul.cunidad=Erp_Lista_Precio_Cliente.erp_unidad\n" +
+                        "where \n" +
+                        "ccod_empresa = ? \n" +
+                        "and ERP_CODPTV = ? \n" +
+                        "and ERP_CODALM = ? \n" +
+                        "and erp_tipo = '12 '\n" +
+                        "and erp_codigo_concepto = ? \n" +
+                        "and (ccod_articulo like ? or cnom_articulo like ? ) \n" +
+                        "group by \n" +
+                        "ccod_articulo, \n" +
+                        "cnom_articulo,\n" +
+                        "cfamilia,\n" +
+                        "ccod_subfamilia,\n" +
+                        "codmarca,\n" +
+                        "modelo,\n" +
+                        "color,\n" +
+                        "tratamiento,\n" +
+                        "fuelle,\n" +
+                        "azas,\n" +
+                        "solapa,\n" +
+                        "cmoneda_precio,\n" +
+                        "erp_monto,\n" +
+                        "cunidad,\n" +
+                        "ccod_almacen";
+//                String stsql = "SELECT TOP(100) * FROM dbo.udf_list_harticul (?,?,?,?) where codigo like ? or Nombre like ?  and cfamilia!='656' and cfamilia!='655' and estado='Activo' order by Nombre";
 
                 PreparedStatement query = connection.prepareStatement(stsql);
 
+                Log.d(TAG,"Codigo_Empresa: "+CodigosGenerales.Codigo_Empresa);
+                Log.d(TAG,"Codigo_PuntoVenta: "+CodigosGenerales.Codigo_PuntoVenta);
+                Log.d(TAG,"Codigo_Almacen: "+CodigosGenerales.Codigo_Almacen);
+                Log.d(TAG,"Lista_Precio: "+CodigosGenerales.Lista_Precio);
+                Log.d(TAG,"Nombre: "+Nombre);
                 query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
-                query.setString(2, "");         //Codigo del producto
-                query.setString(3, CodigosGenerales.Codigo_PuntoVenta);//Punto de Venta
-                query.setString(4, CodigosGenerales.Codigo_Almacen);//Almacen
+                query.setString(2, CodigosGenerales.Codigo_PuntoVenta);//ERP_CODPTV Punto de Venta
+                query.setString(3, CodigosGenerales.Codigo_Almacen);//ERP_CODALM Almacen
+                query.setString(4, CodigosGenerales.Lista_Precio);//erp_codigo_concepto Lista de precios del cliente
                 query.setString(5, Nombre + "%"); //Codigo del producto
                 query.setString(6, Nombre + "%"); //Nombre del producto
 
@@ -41,11 +98,22 @@ public class BDArticulos {
 
                 while (rs.next()) {
                     arrayList.add(Arrays.asList(
-                            rs.getString("codigo"),
-                            rs.getString("Nombre"),
-                            rs.getString("cunidad"),
+                           rs.getString("ccod_articulo"),
+                           rs.getString("cnom_articulo"),
+//                           rs.getString("cfamilia"),
+//                           rs.getString("ccod_subfamilia"),
+//                           rs.getString("codmarca"),
+//                           rs.getString("modelo"),
+//                           rs.getString("color"),
+//                           rs.getString("tratamiento"),
+//                           rs.getString("fuelle"),
+//                           rs.getString("azas"),
+//                           rs.getString("solapa"),
                             rs.getString("stock"),
-                            rs.getString("monto")
+                            rs.getString("cunidad"),
+                            rs.getString("erp_monto"),
+                            rs.getString("cmoneda_precio"),
+                           rs.getString("ccod_almacen")
                     ));
                 }
 
@@ -59,6 +127,37 @@ public class BDArticulos {
         }
         return arrayList;
     }
+    public ArrayList<List<String>> getListFull(String Nombre) {
+
+        ArrayList<List<String>> arrayList = new ArrayList<>();
+
+        try {
+                Connection connection = bdata.getConnection();
+
+                String stsql = "select ccod_articulo from Harticul where ccod_empresa = ? and ccod_almacen = ?";
+
+                PreparedStatement query = connection.prepareStatement(stsql);
+            Log.d(TAG,"Codigo_PuntoVenta "+CodigosGenerales.Codigo_PuntoVenta);
+            Log.d(TAG,"Codigo_Almacen "+CodigosGenerales.Codigo_Almacen);
+                query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
+                query.setString(2, CodigosGenerales.Codigo_PuntoVenta);//Punto de Venta
+//                query.setString(4, CodigosGenerales.Codigo_Almacen);//Almacen
+                ResultSet rs = query.executeQuery();
+
+                while (rs.next()) {
+                    arrayList.add(Arrays.asList(
+                            rs.getString("ccod_articulo")
+                    ));
+                }
+
+                connection.close();
+
+        } catch (Exception e) {
+            Log.d("BDArticulos", "- getList: " + e.getMessage());
+        }
+        return arrayList;
+    }
+
 
     public ArrayList<List<String>> getListLan(String Nombre) {
 
@@ -296,10 +395,10 @@ public class BDArticulos {
         return null;
     }
 
-    public Double getIGVArticulo(String Codigo_Articulo, String Tipo_Unidad){
+    public Double getIGVArticulo(Connection connection, String Codigo_Articulo, String Tipo_Unidad){
         Double IGV=0.00;
         try {
-            Connection connection = bdata.getConnection();
+//            Connection connection = bdata.getConnection();
 
             String stsql = "select nigv from Harticul where ccod_empresa=? and ccod_articulo=? and cunidad=?";
 
@@ -313,7 +412,7 @@ public class BDArticulos {
             while (rs.next()) {
                 IGV= rs.getDouble("nigv");
             }
-            connection.close();
+            //connection.close();
             return IGV;
         } catch (Exception e) {
             Log.d("BDArticulos", "- getFichaTecnica: " + e.getMessage());

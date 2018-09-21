@@ -1,8 +1,6 @@
 package yiwo.apppedidos.Fragment;
 
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
@@ -17,19 +15,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.ConexionBD.BDDescargarImagenes;
-import yiwo.apppedidos.Data.BDConceptos;
+import yiwo.apppedidos.ConexionBD.RedDisponible;
 import yiwo.apppedidos.R;
 
 /**
@@ -110,23 +101,32 @@ public class FragMenuPrincipal extends Fragment implements View.OnClickListener 
 
             TextView tv_descripcion_nav = getActivity().findViewById(R.id.tv_descripcion_nav);
             tv_descripcion_nav.setText(CodigosGenerales.Celular_Vendedor + "\n" + CodigosGenerales.email_Vendedor);
+
         }catch (Exception e){
             Log.d(TAG,"onPostExecute "+e.getMessage());
         }
 
-        DetectarVariacionPesoCarpeta();
+        if(RedDisponible.serverAvailable(getActivity(), ConfiguracionEmpresa.IP_Publica,ConfiguracionEmpresa.PuertoImagenes)) {
+            DetectarVariacionPesoCarpeta();
+        }
         CargarImagenesMenuPrincipal();
-
+        CodigosGenerales.isInicio=true;
         return view;
     }
+
+
+
+
 
     @Override
     public void onClick(View view) {
         Fragment fragment;
+        CodigosGenerales.isInicio=false;
         switch (view.getId()) {
             case (R.id.iv_articulos):
                 CodigosGenerales.TipoArray = "Articulos";
-                fragment = new FragArticulos();
+//                fragment = new FragArticulos();
+                fragment = new FragArticulosCardView();
                 CambiarFragment(fragment);
                 break;
             case (R.id.iv_familia):

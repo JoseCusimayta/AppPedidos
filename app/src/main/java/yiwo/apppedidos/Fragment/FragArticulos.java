@@ -1,9 +1,7 @@
 package yiwo.apppedidos.Fragment;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -14,20 +12,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,8 +34,8 @@ import yiwo.apppedidos.Data.BDFamilia;
 import yiwo.apppedidos.Data.BDSubfamilia;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomAdapterArticulos;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModelArticulos;
-import yiwo.apppedidos.InterfacesPerzonalidas.ExpandableListAdapter;
 import yiwo.apppedidos.InterfacesPerzonalidas.ExpListViewAdapterWithCheckbox;
+import yiwo.apppedidos.InterfacesPerzonalidas.ExpandableListAdapter;
 import yiwo.apppedidos.R;
 
 /**
@@ -96,6 +91,7 @@ public class FragArticulos extends Fragment {
         et_buscar = view.findViewById(R.id.et_buscar);
         progressBar = view.findViewById(R.id.progressBar);
         listView = view.findViewById(R.id.list);
+        et_buscar.setImeOptions(EditorInfo.IME_ACTION_DONE);
 //        recyclerView = view.findViewById(R.id.recyclerView);
 
 

@@ -17,7 +17,7 @@ public class BDPromociones {
     String TAG = "BDPedidos";
     BDConexionSQL bdata = new BDConexionSQL();
 
-    public List<String> getPromociones(String Codigo_Producto, String Cantidad) {
+    public List<String> getPromociones(Connection connection, String Codigo_Producto, String Cantidad) {
 
         List<String> arrayList = new ArrayList<>();
 
@@ -28,7 +28,7 @@ public class BDPromociones {
         arrayList.add("0");  //descuento único
         try {
 
-            Connection connection = bdata.getConnection();
+            //Connection connection = bdata.getConnection();
             String stsql = " select desc01, desc02,desc03,desc04 " +
                     " from Erp_Promociones " +
                     " where " +
@@ -75,7 +75,7 @@ public class BDPromociones {
 
             Log.d(TAG, "getPromociones- " + arrayList);
 
-            connection.close();
+            //connection.close();
 
         } catch (Exception e) {
             Log.d(TAG, "- getPromociones: " + e.getMessage());

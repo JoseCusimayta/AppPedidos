@@ -99,9 +99,9 @@ public class BDListDeseo {
             }
 
             if (list.size() > 0)
-                return UpdateArticulo(CodigoArticulo, Cantidad, Unidad);
+                return UpdateArticulo(connection,CodigoArticulo, Cantidad, Unidad);
             else
-                return InsertarNuevoArticulo(CodigoArticulo, NombreArticulo, Cantidad, Unidad, PrecioUnitario, ListaPrecios);
+                return InsertarNuevoArticulo(connection,CodigoArticulo, NombreArticulo, Cantidad, Unidad, PrecioUnitario, ListaPrecios);
 
 
 
@@ -208,11 +208,11 @@ public class BDListDeseo {
         return false;
     }
 
-    private Boolean InsertarNuevoArticulo(String CodigoArticulo, String NombreArticulo, String Cantidad, String Unidad, String PrecioUnitario, String ListaPrecios) {
+    private Boolean InsertarNuevoArticulo(Connection connection, String CodigoArticulo, String NombreArticulo, String Cantidad, String Unidad, String PrecioUnitario, String ListaPrecios) {
         try {
-            Double IGV_Articulo = bdArticulos.getIGVArticulo(CodigoArticulo, Unidad);
-            Connection connection = bdata.getConnection();
-            List<String> promociones = bdPromociones.getPromociones(CodigoArticulo, Cantidad);
+            Double IGV_Articulo = bdArticulos.getIGVArticulo(connection, CodigoArticulo, Unidad);
+            //Connection connection = bdata.getConnection();
+            List<String> promociones = bdPromociones.getPromociones(connection, CodigoArticulo, Cantidad);
             String sql = "insert into " + Tabla + " values (" +
                     "?," +      //Código de Empresa
                     "?," +      //Código de Usuario
@@ -257,11 +257,11 @@ public class BDListDeseo {
         }
     }
 
-    private Boolean UpdateArticulo(String CodigoArticulo, String Cantidad, String Unidad) {
+    private Boolean UpdateArticulo(Connection connection, String CodigoArticulo, String Cantidad, String Unidad) {
         try {
-            Connection connection = bdata.getConnection();
-            Double NuevaCantidad = getCantidad(CodigoArticulo) + Double.parseDouble(Cantidad);
-            List<String> promociones = bdPromociones.getPromociones(CodigoArticulo, NuevaCantidad.toString());
+            //Connection connection = bdata.getConnection();
+            Double NuevaCantidad = getCantidad(connection, CodigoArticulo) + Double.parseDouble(Cantidad);
+            List<String> promociones = bdPromociones.getPromociones(connection, CodigoArticulo, NuevaCantidad.toString());
             String sql =
                     "update " + Tabla + " set " +
                             " ncantidad=" + NuevaCantidad + ", " +
@@ -318,10 +318,10 @@ public class BDListDeseo {
         return NroItem.toString();
     }
 
-    public double getCantidad(String Codigo_Producto) {
+    public double getCantidad(Connection connection, String Codigo_Producto) {
         Double Cantidad = 0.00;
         try {
-            Connection connection = bdata.getConnection();
+            //Connection connection = bdata.getConnection();
             String stsql = "select ncantidad from " + Tabla + " where ccod_empresa=? and erp_coduser=? and ccod_ptovta=? and ccod_almacen=? and ccod_articulo=?";
 
             PreparedStatement query = connection.prepareStatement(stsql);
@@ -334,7 +334,7 @@ public class BDListDeseo {
             while (rs.next()) {
                 Cantidad = rs.getDouble(1);
             }
-            connection.close();
+            //connection.close();
         } catch (Exception e) {
             Log.d("BDListDeseo", "- getCantidad: " + e.getMessage());
         }

@@ -46,12 +46,12 @@ public class BDPuntoVenta {
         return arrayList;
     }
 
-    public List<String> getPredeterminado(String cod_emp) {
+    public List<String> getPredeterminado(Connection connection, String cod_emp) {
 
         List<String> list = new ArrayList<>();
 
         try {
-            Connection connection = bdata.getConnection();
+            //Connection connection = bdata.getConnection();
 
             String stsql = "Select TOP(1) ccod_almacen, cnom_almacen, erp_codalmacen_ptovta, cdireccion from Halmacen where ccod_empresa = ?  and ccod_almacen!='00' order by ccod_almacen";
 
@@ -65,7 +65,7 @@ public class BDPuntoVenta {
                 list.add(rs.getString("erp_codalmacen_ptovta"));
                 list.add(rs.getString("cdireccion"));
             }
-            connection.close();
+            //connection.close();
 
         } catch (Exception e) {
             Log.d("BDEmpresa", "- getPuntoVenta: " + e.getMessage());

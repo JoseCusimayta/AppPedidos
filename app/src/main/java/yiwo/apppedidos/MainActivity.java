@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.Fragment.FragList;
 import yiwo.apppedidos.Fragment.FragListDeseo;
 import yiwo.apppedidos.Fragment.FragLogin;
@@ -66,7 +67,6 @@ public class MainActivity extends AppCompatActivity
         tv_origenFiltro = findViewById(R.id.tv_origenFiltro);
         frameLayout = findViewById(R.id.frag_contenedor);
         navigationView = findViewById(R.id.nav_view);
-        CodigosGenerales.getActivity=this;
         //endregion
         findViewById(R.id.frag_contenedor).setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -104,64 +104,38 @@ public class MainActivity extends AppCompatActivity
 
         myDb = new BDConexionSQLite(this); //Cargar base de datos SQLite
 
-
         Fragment fragment = new FragSplashScreen();
         CambiarFragment(fragment);
     }
 
     @Override
     public void onBackPressed() {
-
-        //Variable usada para cancelar cualquier Tarea en segundo plano que se esté realizando
-        CodigosGenerales.CancelarTask=true;
-
-        //Variable para guardar en que número del fragmento nos encontramos,
-        // si estamos en el 1, quiere decir que estamos en el login,
-        // si es 2, quiere decir Menu Principal,
-        // con la cual activamos la funcion para evitar cerrar el programa y poner un aviso de Cerrar sesion
-        int count = getSupportFragmentManager().getBackStackEntryCount();
-
-
-        //Forzamos la activación del boton de carrito,
-        // si a veces se bloquea (por entrar a la lista del pedido),
-        // entonces, con esto podemos reactivarlo  forzosamente
-        if (!b_carrito.isEnabled())
-            b_carrito.setEnabled(true);
-
-        //AL presionar el botón atrás, primero se verifican 2 cosas
-        //1: que el usuario haya ingresado al sistema
-        //2: que esté en el menú principal
-        //Adicional a eso, se hace una corrección por si hay algún error inesperado
-        //En el cual se fuerza la salida del usuario que ha ingresado
-        if(CodigosGenerales.Login)
-            Log.d(TAG,"¡El usuario ha ingresado? - "+CodigosGenerales.Login);
-        else
-            Log.d(TAG,"¡El usuario no ha ingresado? - "+CodigosGenerales.Login);
-
-
-        //region Verificar si el usuario ha ingresado previamente
-        if (CodigosGenerales.Login) {
-
-            //region Configuración para cuando ya se ha iniciado sesión previamente
+        if(CodigosGenerales.isInicio){
+            new AlertDialog.Builder(this)
+                    .setTitle("Salir")
+                    .setMessage("¿Esstá seguro de salir?")
+                    .setNegativeButton(android.R.string.cancel, null) // dismisses by default
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .create()
+                    .show();
+        }else
             super.onBackPressed();
-            Log.d("MainActivity", "onBackPressed count: " + count);
-            //endregion
 
+
+/*
+         else if (count < 1) {
+            CodigosGenerales.Login = false;
+            super.onBackPressed();
+        } else if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
         } else {
-            //region Configuración para cuando no se ha iniciado sesión previamente
-            if (count == 1) {
-                CerrarSesion();
-            } else if (count < 1) {
-                CodigosGenerales.Login = false;
-                super.onBackPressed();
-            } else if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else {
-                super.onBackPressed();
-            }
-            //endregion
-        }
-        //endregion
+            super.onBackPressed();
+        }*/
     }
 
 
@@ -181,7 +155,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     CodigosGenerales.TipoArray = "Articulos";
                     fragment = new FragList();
-                    CambiarFragmentDrawer(fragment);
+                    CambiarFragment(fragment);
                 } catch (Exception e) {
                     Log.d("LateralPedidos", e.getMessage());
                 }
@@ -193,7 +167,7 @@ public class MainActivity extends AppCompatActivity
                         fm.popBackStack();
                     }
                     fragment = new LateralClientes();
-                    CambiarFragmentDrawer(fragment);
+                    CambiarFragment(fragment);
                 } catch (Exception e) {
                     Log.d("LateralPedidos", e.getMessage());
                 }
@@ -205,14 +179,14 @@ public class MainActivity extends AppCompatActivity
                         fm.popBackStack();
                     }
                     fragment = new LateralPedidos();
-                    CambiarFragmentDrawer(fragment);
+                    CambiarFragment(fragment);
                 } catch (Exception e) {
                     Log.d("LateralPedidos", e.getMessage());
                 }
                 break;
             case (R.id.nav_actualizar):
                 fragment = new LateralActualizar();
-                CambiarFragmentDrawer(fragment);
+                CambiarFragment(fragment);
                 break;
             case (R.id.nav_cerrarSesion):
                 CerrarSesion();
@@ -222,15 +196,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void CambiarFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.frag_contenedor, fragment)
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                .commit();
-    }
 
-    public void CambiarFragmentDrawer(Fragment fragment) {
+    public void CambiarFragment(Fragment fragment) {
+        CodigosGenerales.isInicio=false;
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frag_contenedor, fragment)
@@ -245,18 +214,19 @@ public class MainActivity extends AppCompatActivity
         switch (view.getId()) {
             case (R.id.b_carrito):
                 fragment = new FragListDeseo();
-                CambiarFragmentDrawer(fragment);
+                CambiarFragment(fragment);
                 break;
             case (R.id.iv_logo):
+                iv_logo.setEnabled(false);
                 if (!b_carrito.isEnabled())
                     b_carrito.setEnabled(true);
                 FragmentManager fm = getSupportFragmentManager();
                 for (int i = 1; i < fm.getBackStackEntryCount(); ++i) {
                     fm.popBackStack();
                 }
-
                 FragMenuPrincipal frag = new FragMenuPrincipal();
                 CambiarFragment(frag);
+
                 break;
         }
     }

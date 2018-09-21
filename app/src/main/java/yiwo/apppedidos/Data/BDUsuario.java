@@ -22,7 +22,7 @@ public class BDUsuario {
             if(Usuario.equals("erpsys") && Clave.equals("2012")){
                 CodigosGenerales.Moneda_Empresa = bdEmpresa.getMonedaTrabajo();
 
-                CodigosGenerales.Codigo_Empresa = "01";
+//                CodigosGenerales.Codigo_Empresa = "01";
                 CodigosGenerales.Nombre_Vendedor = "ERP Solutions Perú";
                 CodigosGenerales.Celular_Vendedor = "número_celular";
                 CodigosGenerales.email_Vendedor = "erpsys@gmail.com";
@@ -37,8 +37,28 @@ public class BDUsuario {
                 String ClaveEncriptada = getClaveEncriptada(Clave);
                 Connection connection = bdata.getConnection();
 
-                String stsql = "select * from sv_list_user_login where " +
-                        "codigo_empresa = ? and codigo_usuario = ? and clave = ? and estado = 'A'";
+                String stsql =
+                        "Select \n" +
+                                "Hempresa.ccod_empresa as codigo_empresa, \n" +
+                                "Hempresa.cnum_ruc as ruc, \n" +
+                                "Hempresa.crazonsocial as razon_social, \n" +
+                                "Hvended.cnom_vendedor as nombre_vendedor, \n" +
+                                "Hvended.celular as celular,\n" +
+                                "Hvended.email as email,   \n" +
+                                "erp_usuario.erp_coduser as codigo_usuario, \n" +
+                                "erp_usuario.erp_nomuser as nombre_usuario, \n" +
+                                "erp_usuario.erp_password as clave, \n" +
+                                "erp_usuario.erp_estado as estado    \n" +
+                                "From Hempresa    \n" +
+                                "Inner Join erp_usuario On     \n" +
+                                "Hempresa.ccod_empresa = erp_usuario.erp_codemp     \n" +
+                                "Inner Join Hvended On  \n" +
+                                "erp_usuario.erp_codemp = Hvended.ccod_empresa   \n" +
+                                "and erp_usuario.erp_coduser = Hvended.ccod_vendedor   \n" +
+                                "and Hempresa.ccod_empresa = ? " +
+                                "and erp_usuario.erp_coduser = ? " +
+                                "and erp_usuario.erp_password = ? " +
+                                "and erp_usuario.erp_estado = 'A'";
 
                 PreparedStatement query = connection.prepareStatement(stsql);
                 query.setString(1, CodigosGenerales.Codigo_Empresa);

@@ -46,12 +46,12 @@ public class BDCentroCostos {
     }
 
 
-    public List<String> getPredeterminado(String cod_emp) {
+    public List<String> getPredeterminado(Connection connection, String cod_emp) {
 
         List<String> list=new ArrayList<>();
 
         try {
-            Connection connection = bdata.getConnection();
+//            Connection connection = bdata.getConnection();
 
             String stsql = "select TOP(1) * from dbo.udf_list_hcencos(?) order by codigo";
 
@@ -62,7 +62,7 @@ public class BDCentroCostos {
                 list.add(rs.getString("codigo"));
                 list.add(rs.getString("nombre"));
             }
-            connection.close();
+//            connection.close();
 
         } catch (Exception e) {
             Log.d("BDEmpresa", "- getListaArticulos: "+e.getMessage());

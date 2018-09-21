@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -57,6 +58,8 @@ public class FragList extends Fragment {
         lv_items = view.findViewById(R.id.lv_items);
         et_bucar = view.findViewById(R.id.et_buscar);
         progressBar = view.findViewById(R.id.progressBar);
+
+        et_bucar.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         et_bucar.addTextChangedListener(new TextWatcher() {
             @Override
