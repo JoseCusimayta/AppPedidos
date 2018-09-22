@@ -1,6 +1,7 @@
 package yiwo.apppedidos.Fragment;
 
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.AsyncTask;
@@ -14,12 +15,15 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +39,13 @@ import yiwo.apppedidos.R;
 public class FragArticulosCardView extends Fragment {
 
 
-    private RecyclerView recyclerView;
     private ArticulosAdapter adapter;
     private List<Articulos> articulosList;
     EditText et_buscar;
     View view;
     String TAG = "FragArticulosCardView";
     ProgressBar progressBar;
-
+    BackGroundTask task;
     public FragArticulosCardView() {
         // Required empty public constructor
     }
@@ -57,7 +60,7 @@ public class FragArticulosCardView extends Fragment {
         et_buscar = view.findViewById(R.id.et_buscar);
 
 
-        recyclerView = view.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
 
         articulosList = new ArrayList<>();
         adapter = new ArticulosAdapter(getActivity(), articulosList, getFragmentManager(), getActivity());
@@ -69,13 +72,34 @@ public class FragArticulosCardView extends Fragment {
         recyclerView.setAdapter(adapter);
 
         try {
-            BackGroundTask task = new BackGroundTask();
+            task = new BackGroundTask();
             task.execute("");
         } catch (Exception e) {
+            task.cancel(true);
             Log.d(TAG, "onCreateView " + e.getMessage());
         }
 
         et_buscar.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        et_buscar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE) {
+                    try {
+                        task = new BackGroundTask();
+                        task.execute("");
+                    } catch (Exception e) {
+                        task.cancel(true);
+                        Log.d(TAG, "et_buscar: " + e.getMessage());
+                    }
+                    InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
+                    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
         et_buscar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -84,9 +108,10 @@ public class FragArticulosCardView extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    BackGroundTask task = new BackGroundTask();
+                    task = new BackGroundTask();
                     task.execute("");
                 } catch (Exception e) {
+                    task.cancel(true);
                     Log.d(TAG, "et_buscar: " + e.getMessage());
                 }
             }
@@ -109,6 +134,7 @@ public class FragArticulosCardView extends Fragment {
             progressBar.setVisibility(View.VISIBLE);
 //            articulosList = new ArrayList<>();
             articulosList.clear();
+            adapter.notifyDataSetChanged();
             super.onPreExecute();
         }
 
@@ -116,7 +142,10 @@ public class FragArticulosCardView extends Fragment {
         protected String doInBackground(String... strings) {
             try {
                 arrayList = CodigosGenerales.getArrayListArticulos(et_buscar.getText().toString());
+                articulosList.clear();
                 for (int i = 0; i < arrayList.size(); i = i + 2) {
+                    if(isCancelled())
+                        break;
                     Double cantidad_productos = CodigosGenerales.tryParseDouble(arrayList.get(i).get(2));
                     Double precio_productos = CodigosGenerales.tryParseDouble(arrayList.get(i).get(4));
 //                    Log.d(TAG,"Nombre:"+arrayList.get(i).get(1));

@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.ConexionBD.BDConexionSQLite;
 import yiwo.apppedidos.ConexionBD.RedDisponible;
 import yiwo.apppedidos.Data.BDActivarFunciones;
+import yiwo.apppedidos.Data.BDEmpresa;
 import yiwo.apppedidos.R;
 
 
@@ -29,6 +30,7 @@ public class FragSplashScreen extends Fragment {
     BDActivarFunciones bdActivarFunciones = new BDActivarFunciones();
     Boolean isConfigurate, isLogin;
     Fragment fragment;
+    BDEmpresa bdEmpresa= new BDEmpresa();
     public FragSplashScreen() {
         // Required empty public constructor
     }
@@ -62,8 +64,9 @@ public class FragSplashScreen extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
+
             RedDisponible.isLAN(getActivity());
-                ComprobarLogin();
+            ComprobarLogin();
             return null;
         }
 
@@ -76,34 +79,9 @@ public class FragSplashScreen extends Fragment {
 
 
     public void CambiarFragment(Fragment fragment) {
-        assert getFragmentManager() != null;
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
-        transaction.replace(R.id.frag_contenedor, fragment);
-        transaction.commit();
+        CodigosGenerales.CambiarFragment(fragment,getFragmentManager().beginTransaction());
     }
 
-
-    public void ComprobarConfiguraciones(){
-        Cursor datos_configuracion = myDb.getDataConfiguracion();
-
-        List<String> datos_empresa = new ArrayList();
-
-        while (datos_configuracion.moveToNext()) {
-            datos_empresa.add(datos_configuracion.getString(1));//Obtener el Codigo_Empresa
-            datos_empresa.add(datos_configuracion.getString(2));//Obtener el Codigo_PuntoVenta
-            datos_empresa.add(datos_configuracion.getString(3));//Obtener el Codigo_Almacen
-            datos_empresa.add(datos_configuracion.getString(4));//Obtener el Codigo_Usuario
-        }
-        if(datos_empresa.isEmpty()) {
-            isConfigurate=false;
-            fragment = new FragConfiguracion();
-            Log.d(TAG, "Vacío: " + datos_empresa);
-        }else{
-            Log.d(TAG, "Con Datos: " + datos_empresa);
-            isConfigurate=true;
-        }
-    }
 
     public void ComprobarLogin(){
 
@@ -140,6 +118,8 @@ public class FragSplashScreen extends Fragment {
             CodigosGenerales.Nombre_Vendedor = datos_usuario.get(8);   //Guardar el Nombre del Vendedor
             CodigosGenerales.Celular_Vendedor = datos_usuario.get(9);   //Guardar el Celular del Vendedor
             CodigosGenerales.email_Vendedor = datos_usuario.get(10);   //Guardar el email del Vendedor
+            ConfiguracionEmpresa.Tipo_CambioEmpresa = bdEmpresa.getTipoCambio(); //Obtener el tipo de cambio actualL
+            Log.d(TAG,"Tipo_CambioEmpresa "+ConfiguracionEmpresa.Tipo_CambioEmpresa);
 //                    CodigosGenerales.TipoArray = "Articulos";
 //                    CodigosGenerales.getArrayListArticulos("");
             //endregion

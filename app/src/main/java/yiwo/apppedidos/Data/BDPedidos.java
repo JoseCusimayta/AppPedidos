@@ -161,19 +161,21 @@ public class BDPedidos {
                                  String Erp_Subtotal, String Erp_Descuento, String Erp_IGV, String Erp_Importe,
                                  String Erp_Percepcion, String Erp_Total, String Erp_dfecha_val, String Comentario, String cTipoCambio) {
         try {
-            String CodPedido = bdMotivo.getNuevoCodigoPedido();
+
+            Connection connection = bdata.getConnection();
+            String CodPedido = bdMotivo.getNuevoCodigoPedido(connection);
             if (Cod_Cliente.isEmpty() || CodPedido.isEmpty())
                 return false;
             if (
-                    GuardarPedido(idmotivo_venta, CodPedido, Cod_Cliente, Nom_Cliente,
+                    GuardarPedido(connection,idmotivo_venta, CodPedido, Cod_Cliente, Nom_Cliente,
                             Ruc_Cliente, Cod_FormaPago, Tipo_Moneda, SI_IGV,
                             Tipo_Cambio, Importe,
                             Descuento, Lista_Precios, Centro_Costo, Unidad_Negocio,
                             Lugar_Entrega,
                             Erp_Subtotal, Erp_Descuento, Erp_IGV, Erp_Importe,
                             Erp_Percepcion, Erp_Total, Erp_dfecha_val, Comentario, cTipoCambio)
-                            && bdMotivo.ActualizarCorrelativo()
-                            && LlenarDetalle(idmotivo_venta, CodPedido)
+                            && bdMotivo.ActualizarCorrelativo(connection)
+                            && LlenarDetalle(connection,idmotivo_venta, CodPedido)
                     ) {
                 return true;
             } else {
@@ -186,7 +188,8 @@ public class BDPedidos {
     }
 
 
-    private Boolean GuardarPedido(String idmotivo_venta, String CodPedido, String Cod_Cliente, String Nom_Cliente,
+    private Boolean GuardarPedido(Connection connection ,
+                                  String idmotivo_venta, String CodPedido, String Cod_Cliente, String Nom_Cliente,
                                   String Ruc_Cliente, String Cod_FormaPago, String Tipo_Moneda, String SI_IGV,
                                   String Tipo_Cambio, String Importe,
                                   String Descuento, String Lista_Precios, String Centro_Costo, String Unidad_Negocio,
@@ -194,7 +197,6 @@ public class BDPedidos {
                                   String Erp_Subtotal, String Erp_Descuento, String Erp_IGV, String Erp_Importe,
                                   String Erp_Percepcion, String Erp_Total, String Erp_dfecha_val, String Comentario, String cTipoCambio) {
         try {
-            Connection connection = bdata.getConnection();
             Log.d("Codigo_Empresa", CodigosGenerales.Codigo_Empresa + "");
             Log.d("Unidad_Negocio", CodigosGenerales.Codigo_UnidadNegocio + "");
             String sql = "exec insertarHpedidoC "
@@ -233,12 +235,10 @@ public class BDPedidos {
             Log.d("adas","sql- "+sql);
             Statement statement = connection.createStatement();
             statement.execute(sql);
-
-            connection.close();
             return true;
         } catch (Exception e) {
             if (e.getMessage().equals("Infracción de la restricción PRIMARY KEY 'Pk_Hpedidoc'. No se puede insertar una clave duplicada en el objeto 'dbo.Hpedidoc'."))
-                bdMotivo.ActualizarCorrelativo();
+                bdMotivo.ActualizarCorrelativo(connection);
 
             Log.d("BDPedidos", "- GuardarPedido: " + e.getMessage());
         }
@@ -246,14 +246,13 @@ public class BDPedidos {
     }
 
 
-    private Boolean LlenarDetalle(String idmotivo_venta, String Codigo_Pedido) {
+    private Boolean LlenarDetalle( Connection connection, String idmotivo_venta, String Codigo_Pedido) {
         try {
 
             ArrayList<List<String>> listaDeseos = bdListDeseo.getList();
 
             for (int i = 0; i < listaDeseos.size(); i++) {
                 Log.d(TAG,"asd"+listaDeseos);
-                Connection connection = bdata.getConnection();
 
 
                 String nitem=String.valueOf (i+1);
@@ -282,7 +281,6 @@ public class BDPedidos {
                 }
                 MontoIGV=BaseCalculada*IGV_Articulo/100;
                 ImporteTotal = BaseCalculada + MontoIGV;
-
 
                 String sql = "exec insertarHpedidoD  ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
                         " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
@@ -350,7 +348,6 @@ public class BDPedidos {
                 query.setString(59, "01");//@erp_lpn
 
                 query.execute();
-                connection.close();
             }
 
             return true;

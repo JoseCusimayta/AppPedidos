@@ -1,10 +1,14 @@
 package yiwo.apppedidos.AspectosGenerales;
 
+import java.util.List;
+
 public class ConfiguracionEmpresa {
 
     public static Boolean isLAN=false;
     public static Boolean isLANAviable=false;
     public static Boolean isPublicaAviable=false;
+
+    public static List<String> Tipo_CambioEmpresa;
 
     public static int PuertoSQL=1433;
     public static int PuertoImagenes=8080;
@@ -25,7 +29,6 @@ public class ConfiguracionEmpresa {
     public static String IP_Publica="148.102.21.175";
     public static String BD_Empresa="Bd_Consultoria_2015";
     public static String ServerSQL="SQLSERVER2008R2";
-
     //Configuración Gumisa
 
     /*public static String IP_LAN="192.168.0.5";

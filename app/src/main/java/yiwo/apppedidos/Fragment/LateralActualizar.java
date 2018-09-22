@@ -41,7 +41,7 @@ public class LateralActualizar extends Fragment {
     String TAG = "LateralActualizar";
     BackGroundTask task;
     Boolean Online = true, descarga_exitosa = false;
-
+    Integer articulos_descargados=0, articulos_no_descargados=0, articulos_totales=0;
     public LateralActualizar() {
         // Required empty public constructor
     }
@@ -119,9 +119,16 @@ public class LateralActualizar extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             if (exito) {
-                Toast.makeText(getContext(), "Actualización finalizada", Toast.LENGTH_SHORT).show();
-                tv_mensaje.setText("Finzalizado.");
-                pb_loading.setProgress(100);
+                if(articulos_descargados==articulos_totales){
+
+                    Toast.makeText(getContext(), "Actualización finalizada ", Toast.LENGTH_SHORT).show();
+                    tv_mensaje.setText("La actualización se ha llevado a cabo con éxito \n Imagenes descargadas: "+articulos_descargados);
+                    pb_loading.setProgress(100);
+                }else {
+                    Toast.makeText(getContext(), "Actualización finalizada ", Toast.LENGTH_SHORT).show();
+                    tv_mensaje.setText("La actualización se ha llevado a cabo con algunos problemas....\n Se han podido descargar " + articulos_descargados + " imagenes.");
+                    pb_loading.setProgress(100);
+                }
             } else {
                 Toast.makeText(getContext(), "Actualización fallida", Toast.LENGTH_SHORT).show();
                 tv_mensaje.setText("Hubo un problema en la actualización.");
@@ -156,11 +163,14 @@ public class LateralActualizar extends Fragment {
 
         BDArticulos bdArticulos = new BDArticulos();
         ArrayList<List<String>> arrayList = bdArticulos.getListFull("");
-        Integer total= arrayList.size();
+        articulos_totales = arrayList.size();
         for (int i = 0; i < arrayList.size(); i++) {
-            GuardarArticulos(DOWNLOAD_URL, arrayList.get(i).get(0));
-            Integer Porcentaje= (100* i) /total;
-            pb_loading.setProgress(Porcentaje);
+            if (task.isCancelled())
+                break;
+            if (GuardarArticulos(DOWNLOAD_URL, arrayList.get(i).get(0))) {
+                Integer Porcentaje = (100 * i) / articulos_totales;
+                pb_loading.setProgress(Porcentaje);
+            }
 
         }
         return true;
@@ -290,7 +300,7 @@ public class LateralActualizar extends Fragment {
         }
     }
 
-    private void GuardarArticulos(String DOWNLOAD_URL, String Codigo_Articulo) {
+    private Boolean GuardarArticulos(String DOWNLOAD_URL, String Codigo_Articulo) {
         try {
             for (int i = 1; i <= 4; i++) {
                 String Nombre_Imagen = CodigosGenerales.Codigo_Empresa + "_" + Codigo_Articulo + "_" + i + ".jpg";
@@ -314,12 +324,15 @@ public class LateralActualizar extends Fragment {
                 out.flush();
 
                 out.close();
+                articulos_descargados++;
                 Log.d(TAG, "Descargando desde: " + url);
             }
+            return true;
 
         } catch (Exception e) {
+            articulos_no_descargados++;
             Log.d(TAG, "GuardarArticulos -" + e.getMessage());
         }
-
+return false;
     }
 }

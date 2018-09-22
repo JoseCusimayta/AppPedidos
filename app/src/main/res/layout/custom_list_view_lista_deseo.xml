@@ -102,6 +102,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="right"
                         android:orientation="horizontal">
 
                         <TextView
@@ -112,12 +113,12 @@
                             android:text="S/." />
 
                         <TextView
-                            android:id="@+id/tv_precio_producto"
+                            android:id="@+id/tv_base_calculada"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
-                            android:text="999999.99" />
+                            android:text="9999.99" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -180,7 +181,7 @@
                 android:text="base imponible" />
 
             <TextView
-                android:id="@+id/tv_base_calculada"
+                android:id="@+id/tv_importe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -198,7 +199,7 @@
                 android:text="igv" />
 
             <TextView
-                android:id="@+id/tv_importe"
+                android:id="@+id/tv_precio_producto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"

@@ -25,7 +25,7 @@ public class BDClientes {
             }else {
                 Connection connection = bdata.getConnection();
 
-                String stsql = "Select * from dbo.udf_list_Hcliente(?) where Codigo like ? or Nombre like ? ";
+                String stsql = "Select TOP (50) * from dbo.udf_list_Hcliente(?) where Codigo like ? or Nombre like ? ";
 
                 PreparedStatement query = connection.prepareStatement(stsql);
                 query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa

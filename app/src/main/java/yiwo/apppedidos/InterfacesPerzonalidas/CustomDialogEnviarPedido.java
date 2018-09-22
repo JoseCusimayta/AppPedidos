@@ -4,24 +4,27 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 import yiwo.apppedidos.Data.BDMotivo;
-import yiwo.apppedidos.Data.BDPedidos;
 import yiwo.apppedidos.R;
 
 public class CustomDialogEnviarPedido {
-    TextView tv_titulo, tv_motivo, tv_cliente, tv_subtotal, tv_descuento, tv_igv, tv_importe;
-    Button b_aceptar, b_cancelar;
+    private TextView tv_titulo, tv_motivo, tv_cliente, tv_subtotal, tv_descuento, tv_igv, tv_importe;
+    private Button b_aceptar, b_cancelar;
     Context context;
-    BDPedidos bdPedidos = new BDPedidos();
-    BDMotivo bdMotivo= new BDMotivo();
-    String Correlativo;
-
+    private BDMotivo bdMotivo= new BDMotivo();
+    private String Correlativo;
+    private String TAG="CustomDialogEnviarPedido";
     public interface FinalizoCuadroDialogPedido {
         void ResultadoCuadroDialogPedido(String Codigo, String Nombre);
     }
@@ -52,7 +55,14 @@ public class CustomDialogEnviarPedido {
         tv_descuento = dialogo.findViewById(R.id.tv_descuento);
         tv_igv = dialogo.findViewById(R.id.tv_igv);
         tv_importe = dialogo.findViewById(R.id.tv_importe);
-        Correlativo = bdMotivo.getNuevoCodigoPedido();
+        try {
+            BDConexionSQL bdConexionSQL= new BDConexionSQL();
+            Connection connection=bdConexionSQL.getConnection();
+            Correlativo = bdMotivo.getNuevoCodigoPedido(connection);
+            connection.close();
+        } catch (SQLException e) {
+            Log.d(TAG,"CustomDialogEnviarPedido "+e.getMessage());
+        }
 
 
         tv_motivo.setText(CodigosGenerales.Nombre_Motivo + " - " + Correlativo);

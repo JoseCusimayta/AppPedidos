@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
 public class BDUsuario {
@@ -30,6 +31,8 @@ public class BDUsuario {
                 CodigosGenerales.Nombre_Usuario = "erpsys";
                 CodigosGenerales.Moneda_Empresa = bdEmpresa.getMonedaTrabajo();
 
+                ConfiguracionEmpresa.Tipo_CambioEmpresa = bdEmpresa.getTipoCambio(); //Obtener el tipo de cambio actualL
+                Log.d(TAG,"Tipo_CambioEmpresa "+ConfiguracionEmpresa.Tipo_CambioEmpresa);
                 return true;
             }else {
 
@@ -89,6 +92,8 @@ public class BDUsuario {
                         CodigosGenerales.Nombre_Usuario = arrayList.get(7).toString();
                         CodigosGenerales.Moneda_Empresa = bdEmpresa.getMonedaTrabajo();
                         Log.d(TAG, "Datos del vendedor:\n" + arrayList);
+                        ConfiguracionEmpresa.Tipo_CambioEmpresa = bdEmpresa.getTipoCambio(); //Obtener el tipo de cambio actualL
+                        Log.d(TAG,"Tipo_CambioEmpresa "+ConfiguracionEmpresa.Tipo_CambioEmpresa);
                         return true;
                     }
                 }

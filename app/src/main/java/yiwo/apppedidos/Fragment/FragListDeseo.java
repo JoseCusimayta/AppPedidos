@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.Data.BDEmpresa;
 import yiwo.apppedidos.Data.BDFormaPago;
 import yiwo.apppedidos.Data.BDListDeseo;
@@ -160,7 +161,7 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
                 try {
                     Log.d("asdas",CodigosGenerales.Codigo_Almacen+"");
                     bdPedidos.getPreciosPedido(); //Calcular el importe, subtotal, descuento, igv, precio del pedido
-                    Tipo_CambioEmpresa = bdEmpresa.getTipoCambio(); //Obtener el tipo de cambio actual
+                    Tipo_CambioEmpresa = ConfiguracionEmpresa.Tipo_CambioEmpresa; //Obtener el tipo de cambio actual
                     TipoCambio = Tipo_CambioEmpresa.get(0); //Obtener el Tipo de cambio
                     ValorCambio = Tipo_CambioEmpresa.get(1); //Obtener el Valor de cambio
 

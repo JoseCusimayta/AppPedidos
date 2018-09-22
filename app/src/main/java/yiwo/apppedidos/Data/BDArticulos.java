@@ -27,7 +27,7 @@ String TAG="BDArticulos";
                 Connection connection = bdata.getConnection();
 
                 String stsql=
-                        "select top(100) \n" +
+                        "select top(50) \n" +
                         "ccod_articulo, \n" +
                         "cnom_articulo, \n" +
                         "cfamilia,\n" +
@@ -42,7 +42,7 @@ String TAG="BDArticulos";
                         "cmoneda_precio,\n" +
                         "erp_monto,\n" +
                         "cunidad,\n" +
-                        "Isnull((SUM(ERP_STOCOM) - SUM(ERP_STOART)),0) as stock,\n" +
+                        "Isnull(( SUM(ERP_STOART) - SUM(ERP_STOCOM)),0) as stock,\n" +
                         " Harticul.ccod_almacen\n" +
                         " from Harticul \n" +
                         " inner join Hstock\n" +
@@ -240,7 +240,7 @@ String TAG="BDArticulos";
         ArrayList<List<String>> arrayList = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM dbo.udf_list_harticul (?,?,?,?) where (codigo like ? or Nombre like ? ) and " + stsql + " and estado='Activo' order by Nombre";
+            String sql = "SELECT TOP (50) * FROM dbo.udf_list_harticul (?,?,?,?) where (codigo like ? or Nombre like ? ) and " + stsql + " and estado='Activo' order by Nombre";
             //Log.d("Asda",CodigosGenerales.Codigo_Empresa+" - "+CodigosGenerales.Codigo_PuntoVenta+ " - " +CodigosGenerales.Codigo_Almacen +" - "+Nombre +" - "+stsql +" - "+Codigo);
             Connection connection = bdata.getConnection();
             PreparedStatement query = connection.prepareStatement(sql);

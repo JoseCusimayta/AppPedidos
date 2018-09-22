@@ -3,6 +3,8 @@ package yiwo.apppedidos.AspectosGenerales;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -26,10 +28,11 @@ import yiwo.apppedidos.Data.BDPuntoVenta;
 import yiwo.apppedidos.Data.BDSubfamilia;
 import yiwo.apppedidos.Data.BDUnidNegocios;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
+import yiwo.apppedidos.R;
 
 public class CodigosGenerales {
     public static boolean Login = false;
-    public static boolean isInicio=false;
+    public static boolean isInicio = false;
     public static boolean isLogin;
 
     public static Integer ID_Concepto;
@@ -120,7 +123,7 @@ public class CodigosGenerales {
     public static String Nombre_Vendedor;
     public static String Celular_Vendedor;
     public static String email_Vendedor;
-    public static String Lista_Precio="01";
+    public static String Lista_Precio = "01";
 
     public static ArrayList<List<String>> getArrayList(String Nombre) {
         switch (TipoArray) {
@@ -223,5 +226,14 @@ public class CodigosGenerales {
         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
         view.requestFocus();
         inputMethodManager.showSoftInput(view, 0);
+    }
+
+
+    public static void CambiarFragment(Fragment fragment, FragmentTransaction transaction) {
+        if (transaction != null) {
+            transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
+            transaction.replace(R.id.frag_contenedor, fragment);
+            transaction.commit();
+        }
     }
 }

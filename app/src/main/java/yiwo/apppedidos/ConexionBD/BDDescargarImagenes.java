@@ -2,6 +2,7 @@ package yiwo.apppedidos.ConexionBD;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.util.Log;
 
 import java.io.File;
@@ -298,5 +299,18 @@ public class BDDescargarImagenes {
             return null;
         }
         return bitmap;
+    }
+    public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth, float newHeigth){
+        //Redimensionamos
+        int width = mBitmap.getWidth();
+        int height = mBitmap.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeigth) / height;
+        // create a matrix for the manipulation
+        Matrix matrix = new Matrix();
+        // resize the bit map
+        matrix.postScale(scaleWidth, scaleHeight);
+        // recreate the new Bitmap
+        return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
     }
 }

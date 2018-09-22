@@ -67,7 +67,6 @@ public class BDMotivo {
             while (rs.next()) {
                 Nombre = rs.getString("erp_nummot");
             }
-            connection.close();
             return Nombre.length() > 0;
 
         } catch (Exception e) {
@@ -77,17 +76,13 @@ public class BDMotivo {
     }
 
 
-    public boolean ActualizarCorrelativo() {
+    public boolean ActualizarCorrelativo( Connection connection) {
         try {
-
-            Connection connection = bdata.getConnection();
-
             String stsql = "update erp_motivos_tramite_detalle set erp_nummot=erp_nummot+1 where erp_codemp=? and erp_codmot=? and erp_sermot=?";
             PreparedStatement query = connection.prepareStatement(stsql);
             query.setString(1, CodigosGenerales.Codigo_Empresa);
             query.setString(2, CodigosGenerales.Codigo_Motivo);
             query.setString(3,CodigosGenerales.Year);
-
             query.execute();
             return true;
         } catch (Exception e) {
@@ -97,11 +92,10 @@ public class BDMotivo {
     }
 
 
-    public String getNuevoCodigoPedido() {
+    public String getNuevoCodigoPedido( Connection connection) {
         String NuevoCodigoPedido;
         try {
             Integer Correlativo=0;
-            Connection connection = bdata.getConnection();
 
             String stsql = "select erp_nummot from erp_motivos_tramite_detalle where erp_codemp=? and erp_codmot=? and erp_sermot=? ";
             PreparedStatement query = connection.prepareStatement(stsql);
@@ -114,7 +108,6 @@ public class BDMotivo {
             while (rs.next()) {
                 Correlativo= rs.getInt("erp_nummot");
             }
-            connection.close();
             Correlativo+=1;
             NuevoCodigoPedido= CodigosGenerales.Year +"-"+String.format("%0"+getCantidadCeros()+"d", Correlativo);
         } catch (Exception e) {

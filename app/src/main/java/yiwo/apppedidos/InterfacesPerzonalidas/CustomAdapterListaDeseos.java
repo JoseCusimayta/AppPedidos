@@ -91,15 +91,14 @@ public class CustomAdapterListaDeseos extends ArrayAdapter<CustomDataModelListaD
         // result.startAnimation(animation);
 
 
-
         viewHolder.Numero_Orden.setText(dataModel.getNumero_Orden());
         try {
             File file = new File(CodigosGenerales.myDirectorio, CodigosGenerales.Codigo_Empresa + "_" + dataModel.getCodigo_Producto() + "_1.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
             Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
             viewHolder.Imagen_Producto_url.setImageBitmap(bitmap);
-        }catch (Exception e){
-          //  viewHolder.Imagen_Producto_url.setImageResource(context.getResources().getIdentifier("logo", "drawable", Context.getPackageName()));
-            Log.d("CustomAdapter","CustomAdapterListaDeseos - "+" - No se pudo isertar imagen: "+e.getMessage());
+        } catch (Exception e) {
+            //  viewHolder.Imagen_Producto_url.setImageResource(context.getResources().getIdentifier("logo", "drawable", Context.getPackageName()));
+            Log.d("CustomAdapter", "CustomAdapterListaDeseos - " + " - No se pudo isertar imagen: " + e.getMessage());
         }
 
         viewHolder.Codigo_Producto.setText(dataModel.getCodigo_Producto());
