@@ -5,7 +5,6 @@ import android.util.Log;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
@@ -19,9 +18,8 @@ public class BDUsuario {
     public Boolean getLogin(String Usuario, String Clave) {
 
         try {
-
-            if(Usuario.equals("erpsys") && Clave.equals("2012")){
-                CodigosGenerales.Moneda_Empresa = bdEmpresa.getMonedaTrabajo();
+            Connection connection = bdata.getConnection();
+            if (Usuario.equals("erpsys") && Clave.equals("2012")) {
 
 //                CodigosGenerales.Codigo_Empresa = "01";
                 CodigosGenerales.Nombre_Vendedor = "ERP Solutions Perú";
@@ -29,16 +27,14 @@ public class BDUsuario {
                 CodigosGenerales.email_Vendedor = "erpsys@gmail.com";
                 CodigosGenerales.Codigo_Usuario = "erpsys";
                 CodigosGenerales.Nombre_Usuario = "erpsys";
-                CodigosGenerales.Moneda_Empresa = bdEmpresa.getMonedaTrabajo();
+                CodigosGenerales.Moneda_Empresa = bdEmpresa.getMonedaTrabajo(connection);
 
-                ConfiguracionEmpresa.Tipo_CambioEmpresa = bdEmpresa.getTipoCambio(); //Obtener el tipo de cambio actualL
-                Log.d(TAG,"Tipo_CambioEmpresa "+ConfiguracionEmpresa.Tipo_CambioEmpresa);
+                ConfiguracionEmpresa.Tipo_CambioEmpresa = bdEmpresa.getTipoCambio(connection); //Obtener el tipo de cambio actualL
+                Log.d(TAG, "Tipo_CambioEmpresa " + ConfiguracionEmpresa.Tipo_CambioEmpresa);
                 return true;
-            }else {
+            } else {
 
-                ArrayList arrayList = new ArrayList<String>();
                 String ClaveEncriptada = getClaveEncriptada(Clave);
-                Connection connection = bdata.getConnection();
 
                 String stsql =
                         "Select \n" +
@@ -70,34 +66,23 @@ public class BDUsuario {
 
                 ResultSet rs = query.executeQuery();
                 while (rs.next()) {
-                    arrayList.add(rs.getString("codigo_empresa"));      //Codigo de Empresa
-                    arrayList.add(rs.getString("ruc"));         //RUC
-                    arrayList.add(rs.getString("razon_social"));    //Razon Social de la empresa
-                    arrayList.add(rs.getString("nombre_vendedor"));    //nombre del vendedor
-                    arrayList.add(rs.getString("celular"));    //celular del vendedor
-                    arrayList.add(rs.getString("email"));    //email del vendedor
-                    arrayList.add(rs.getString("codigo_usuario"));     //Codigo de usuario para ingresar
-                    arrayList.add(rs.getString("nombre_usuario"));     //Nombre del Usuario para mostrar
-                }
-                connection.close();
 
-                if (arrayList.size() > 0) {
-                    String Codigo_Usuario = arrayList.get(6).toString();
+
+                    String Codigo_Usuario = rs.getString("codigo_usuario");
                     if (Usuario.equals(Codigo_Usuario)) {
-                        CodigosGenerales.Codigo_Empresa = arrayList.get(0).toString();
-                        CodigosGenerales.Nombre_Vendedor = arrayList.get(3).toString();
-                        CodigosGenerales.Celular_Vendedor = arrayList.get(4).toString();
-                        CodigosGenerales.email_Vendedor = arrayList.get(5).toString();
+                        CodigosGenerales.Codigo_Empresa = rs.getString("codigo_empresa");
+                        CodigosGenerales.Nombre_Vendedor = rs.getString("nombre_vendedor");
+                        CodigosGenerales.Celular_Vendedor = rs.getString("celular");
+                        CodigosGenerales.email_Vendedor = rs.getString("email");
                         CodigosGenerales.Codigo_Usuario = Codigo_Usuario;
-                        CodigosGenerales.Nombre_Usuario = arrayList.get(7).toString();
-                        CodigosGenerales.Moneda_Empresa = bdEmpresa.getMonedaTrabajo();
-                        Log.d(TAG, "Datos del vendedor:\n" + arrayList);
-                        ConfiguracionEmpresa.Tipo_CambioEmpresa = bdEmpresa.getTipoCambio(); //Obtener el tipo de cambio actualL
-                        Log.d(TAG,"Tipo_CambioEmpresa "+ConfiguracionEmpresa.Tipo_CambioEmpresa);
+                        CodigosGenerales.Nombre_Usuario = rs.getString("nombre_usuario");
                         return true;
                     }
                 }
+                CodigosGenerales.Moneda_Empresa = bdEmpresa.getMonedaTrabajo(connection);
+                ConfiguracionEmpresa.Tipo_CambioEmpresa = bdEmpresa.getTipoCambio(connection); //Obtener el tipo de cambio actualL
             }
+            connection.close();
         } catch (Exception e) {
             Log.d(TAG, "- getLogin: " + e.getMessage());
         }

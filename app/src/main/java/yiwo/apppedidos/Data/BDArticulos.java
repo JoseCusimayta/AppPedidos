@@ -85,12 +85,12 @@ String TAG="BDArticulos";
                 Log.d(TAG,"Codigo_Empresa: "+CodigosGenerales.Codigo_Empresa);
                 Log.d(TAG,"Codigo_PuntoVenta: "+CodigosGenerales.Codigo_PuntoVenta);
                 Log.d(TAG,"Codigo_Almacen: "+CodigosGenerales.Codigo_Almacen);
-                Log.d(TAG,"Lista_Precio: "+CodigosGenerales.Lista_Precio);
+                Log.d(TAG,"Lista_Precio: "+CodigosGenerales.ListaPrecios_Cliente);
                 Log.d(TAG,"Nombre: "+Nombre);
                 query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
                 query.setString(2, CodigosGenerales.Codigo_PuntoVenta);//ERP_CODPTV Punto de Venta
                 query.setString(3, CodigosGenerales.Codigo_Almacen);//ERP_CODALM Almacen
-                query.setString(4, CodigosGenerales.Lista_Precio);//erp_codigo_concepto Lista de precios del cliente
+                query.setString(4, CodigosGenerales.ListaPrecios_Cliente);//erp_codigo_concepto Lista de precios del cliente
                 query.setString(5, Nombre + "%"); //Codigo del producto
                 query.setString(6, Nombre + "%"); //Nombre del producto
 
@@ -272,7 +272,10 @@ String TAG="BDArticulos";
     }
 
     public List<String> getDescripcionArticulo(String Codigo_Articulo) {
-        List<String> arrayArticuloSeleccionado = new ArrayList<>();
+
+        return getList(Codigo_Articulo).get(0);
+
+       /* List<String> arrayArticuloSeleccionado = new ArrayList<>();
         try {
             Connection connection = bdata.getConnection();
             String stsql = "SELECT * FROM dbo.udf_list_harticul (?,?,?,?) ";
@@ -297,7 +300,7 @@ String TAG="BDArticulos";
         } catch (Exception e) {
             Log.d("BDArticulos", "- getDescripcionArticulo: " + e.getMessage());
         }
-        return arrayArticuloSeleccionado;
+        return arrayArticuloSeleccionado;*/
     }
 
 

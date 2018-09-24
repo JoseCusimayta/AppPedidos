@@ -1,6 +1,8 @@
 package yiwo.apppedidos.Fragment;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -18,7 +21,9 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
+import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.Data.BDClientes;
+import yiwo.apppedidos.Data.BDFormaPago;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomAdapterCodNom;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
 import yiwo.apppedidos.R;
@@ -37,7 +42,10 @@ public class LateralClientes extends Fragment {
     CustomAdapterCodNom adapter;
     ArrayList<List<String>> arrayList;
     BDClientes bdClientes = new BDClientes();
+    String TAG = "LateralClientes";
+    BackGroundTask task = new BackGroundTask();
 
+    BDFormaPago bdFormaPago= new BDFormaPago();
     public LateralClientes() {
         // Required empty public constructor
     }
@@ -52,13 +60,15 @@ public class LateralClientes extends Fragment {
         et_bucar = view.findViewById(R.id.et_buscar);
         progressBar = view.findViewById(R.id.progressBar);
 
+        CodigosGenerales.CantidadDatosDialog = 6;
+        CodigosGenerales.TipoArray = "Cliente";
 //        CodigosGenerales.Filtro=false;
 
         try {
             app_barLayout = getActivity().findViewById(R.id.app_barLayout);
             app_barLayout.setVisibility(View.VISIBLE);
         } catch (Exception e) {
-            Log.d("FragList", "app_barLayout: " + e.getMessage());
+            Log.d(TAG, "app_barLayout: " + e.getMessage());
         }
 
         et_bucar.addTextChangedListener(new TextWatcher() {
@@ -69,10 +79,12 @@ public class LateralClientes extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    BackGroundTask task = new BackGroundTask();
+                    task.cancel(true);
+                    task.onPostExecute("");
+                    task = new BackGroundTask();
                     task.execute("");
                 } catch (Exception e) {
-                    Log.d("FragList", "et_buscar: " + e.getMessage());
+                    Log.d(TAG, "et_buscar: " + e.getMessage());
                 }
             }
 
@@ -82,8 +94,8 @@ public class LateralClientes extends Fragment {
         });
 
 
-        BackGroundTask task1 = new BackGroundTask();
-        task1.execute("");
+        task = new BackGroundTask();
+        task.execute("");
         return view;
     }
 
@@ -103,10 +115,21 @@ public class LateralClientes extends Fragment {
 //                arrayList = CodigosGenerales.getArrayList(et_bucar.getText().toString());
                 arrayList = bdClientes.getList(et_bucar.getText().toString());
                 for (int i = 0; i < arrayList.size(); i++) {
-                    dataModels.add(new CustomDataModel(arrayList.get(i).get(0), arrayList.get(i).get(1), null, null, null, null, null));
+                    if (task.isCancelled())
+                        break;
+                    dataModels.add(
+                            new CustomDataModel(
+                                    arrayList.get(i).get(0),
+                                    arrayList.get(i).get(1),
+                                    arrayList.get(i).get(2),
+                                    arrayList.get(i).get(3),
+                                    arrayList.get(i).get(4),
+                                    arrayList.get(i).get(5),
+                                    null
+                            ));
                 }
             } catch (Exception e) {
-                Log.d("FragList", "BackGroundTask: " + e.getMessage());
+                Log.d(TAG, "BackGroundTask: " + e.getMessage());
             }
             return null;
         }
@@ -114,13 +137,53 @@ public class LateralClientes extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             try {
+
                 progressBar.setVisibility(View.GONE);
 
                 adapter = new CustomAdapterCodNom(dataModels, getContext());
 
                 lv_items.setAdapter(adapter);
+
+                lv_items.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+                        final String Codigo = dataModels.get(i).getCod();
+                        adb.setTitle("¿Elegir?");
+                        adb.setMessage("¿Está seguro de elegir el cliente " + dataModels.get(i).getName() + "?");
+                        final int positionToRemove = i;
+                        adb.setNegativeButton("Cancel", null);
+                        adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                CodigosGenerales.Nombre_Cliente = dataModels.get(positionToRemove).getName();
+                                CodigosGenerales.Direccion_Cliente = dataModels.get(positionToRemove).getDireccion();
+                                CodigosGenerales.Codigo_Cliente = dataModels.get(positionToRemove).getCod();
+                                CodigosGenerales.Codigo_ListaPrecios = dataModels.get(positionToRemove).getListaPrecios();
+                                CodigosGenerales.Nombre_Cliente= dataModels.get(positionToRemove).getName();
+                                CodigosGenerales.RUC_Cliente= dataModels.get(positionToRemove).getRuc();
+                                CodigosGenerales.DNI_Cliente= dataModels.get(positionToRemove).getRuc();
+
+                                Log.d(TAG, "Nombre_Cliente " + CodigosGenerales.Nombre_Cliente+" ...");
+                                Log.d(TAG, "Direccion_Cliente " + CodigosGenerales.Direccion_Cliente+" ...");
+                                Log.d(TAG, "Codigo_Cliente " + CodigosGenerales.Codigo_Cliente+" ...");
+                                Log.d(TAG, "Codigo_ListaPrecios " + CodigosGenerales.Codigo_ListaPrecios+" ...");
+                                Log.d(TAG, "Nombre_Cliente " + CodigosGenerales.Nombre_Cliente+" ...");
+                                Log.d(TAG, "RUC_Cliente " + CodigosGenerales.RUC_Cliente+" ...");
+
+                                try {
+                                    List<String> FormPago = bdFormaPago.getPredeterminado();
+                                    CodigosGenerales.Codigo_FormaPago= FormPago.get(0);
+                                    CodigosGenerales.Dias_FormaPago = Integer.parseInt(FormPago.get(2));
+                                } catch (Exception e) {
+                                    CodigosGenerales.Dias_FormaPago = 0;
+                                }
+                            }
+                        });
+                        adb.show();
+                    }
+                });
             } catch (Exception e) {
-                Log.d("FragList", "BackGroundTask: " + e.getMessage());
+                Log.d(TAG, "BackGroundTask: " + e.getMessage());
             }
             super.onPostExecute(s);
         }

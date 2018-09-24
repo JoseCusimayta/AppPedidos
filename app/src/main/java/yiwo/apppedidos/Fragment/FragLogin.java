@@ -47,7 +47,8 @@ public class FragLogin extends Fragment implements View.OnClickListener, CustomD
     BDUnidNegocios bdUnidNegocios = new BDUnidNegocios();
     BDConexionSQLite myDb;
     LinearLayout ly_login_datos;
-    BDConexionSQL bdata= new BDConexionSQL();
+    BDConexionSQL bdata = new BDConexionSQL();
+
     public FragLogin() {
         // Required empty public constructor
     }
@@ -70,7 +71,7 @@ public class FragLogin extends Fragment implements View.OnClickListener, CustomD
         et_centro_costo = view.findViewById(R.id.et_centro_costo);
         et_unidad_negocio = view.findViewById(R.id.et_unidad_negocio);
         drawer = getActivity().findViewById(R.id.drawer_layout);
-        ly_login_datos=view.findViewById(R.id.ly_login_datos);
+        ly_login_datos = view.findViewById(R.id.ly_login_datos);
 
         b_ingresar.setOnClickListener(this);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//Bloquear el menu lateral
@@ -98,24 +99,25 @@ public class FragLogin extends Fragment implements View.OnClickListener, CustomD
         CodigosGenerales.CantidadDatosDialog = 3;
         switch (v.getId()) {
             case (R.id.b_ingresar):
-                b_ingresar.setEnabled(false);
+
                 BackGroundTask task = new BackGroundTask();
                 task.execute("");
                 break;
             case (R.id.et_rucEmp):
-                try{
-                if (isStoragePermissionGranted()) {
-                    CodigosGenerales.TipoArray = "Empresa";
-                    new CustomDialog2Datos(getActivity(), this);
-                }}catch (Exception e){
+                try {
+                    if (isStoragePermissionGranted()) {
+                        CodigosGenerales.TipoArray = "Empresa";
+                        new CustomDialog2Datos(getActivity(), this);
+                    }
+                } catch (Exception e) {
                     Toast.makeText(getContext(), "No se puede conectar a Internet", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case (R.id.et_punto_venta):
-                CodigosGenerales.CantidadDatosDialog=4;
+                CodigosGenerales.CantidadDatosDialog = 4;
                 CodigosGenerales.TipoArray = "PuntoVenta";
                 new CustomDialog2Datos(getActivity(), this);
-                CodigosGenerales.CantidadDatosDialog=3;
+                CodigosGenerales.CantidadDatosDialog = 3;
                 break;
             case (R.id.et_centro_costo):
                 CodigosGenerales.TipoArray = "CentroCosto";
@@ -151,14 +153,14 @@ public class FragLogin extends Fragment implements View.OnClickListener, CustomD
                     list = bdPuntoVenta.getPredeterminado(connection, cod);
                     CodigosGenerales.Codigo_PuntoVenta = list.get(0);
                     CodigosGenerales.Codigo_Almacen = list.get(2);
-                    CodigosGenerales.Direccion_Almacen=list.get(3);
+                    CodigosGenerales.Direccion_Almacen = list.get(3);
                     et_punto_venta.setText(list.get(0) + "-" + list.get(1));
 
-                    list = bdCentroCostos.getPredeterminado(connection,cod);
+                    list = bdCentroCostos.getPredeterminado(connection, cod);
                     CodigosGenerales.Codigo_CentroCostos = list.get(0);
                     et_centro_costo.setText(list.get(0) + "-" + list.get(1));
 
-                    list = bdUnidNegocios.getPredeterminado(connection,cod);
+                    list = bdUnidNegocios.getPredeterminado(connection, cod);
                     CodigosGenerales.Codigo_UnidadNegocio = list.get(0);
                     et_unidad_negocio.setText(list.get(0) + "-" + list.get(1));
 
@@ -170,7 +172,7 @@ public class FragLogin extends Fragment implements View.OnClickListener, CustomD
             case "PuntoVenta":
                 CodigosGenerales.Codigo_PuntoVenta = cod;
                 CodigosGenerales.Codigo_Almacen = ruc;
-                CodigosGenerales.Direccion_Almacen=direccion;
+                CodigosGenerales.Direccion_Almacen = direccion;
                 et_punto_venta.setText(cod + "-" + name);
                 break;
             case "CentroCosto":
@@ -186,7 +188,7 @@ public class FragLogin extends Fragment implements View.OnClickListener, CustomD
 
 
     public class BackGroundTask extends AsyncTask<String, String, String> {
-        String Mensaje;
+        String Mensaje = "No se ha podido conectar al servidor";
         Boolean exito = false;
 
         @Override
@@ -205,7 +207,7 @@ public class FragLogin extends Fragment implements View.OnClickListener, CustomD
                 if (data.getLogin(et_usuario.getText().toString(), et_clave.getText().toString()))
                     exito = true;
                 else
-                    Mensaje = "Usuario y/o contraseña";
+                    Mensaje = "Usuario y/o contraseña incorrectas";
             } catch (Exception e) {
                 Mensaje = "Error en las credenciales";
             }
@@ -224,7 +226,7 @@ public class FragLogin extends Fragment implements View.OnClickListener, CustomD
                 b_ingresar.setEnabled(true);
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//Desbloquear el menu lateral
 
-                Mensaje = "Bienvenido: " + CodigosGenerales.Nombre_Usuario;
+                String Mensaje = "Bienvenido: " + CodigosGenerales.Nombre_Usuario;
 
                 boolean isInserted =
                         myDb.insertarLogin(
@@ -247,6 +249,7 @@ public class FragLogin extends Fragment implements View.OnClickListener, CustomD
                     Fragment fragment = new FragMenuPrincipal();
                     CambiarFragment(fragment);
                 }
+                Toast.makeText(getActivity(), Mensaje, Toast.LENGTH_SHORT).show();
             } else {
                 et_usuario.setEnabled(true);
                 et_clave.setEnabled(true);

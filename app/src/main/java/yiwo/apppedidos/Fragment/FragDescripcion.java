@@ -3,13 +3,11 @@ package yiwo.apppedidos.Fragment;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,14 +23,14 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileInputStream;
+import com.github.chrisbanes.photoview.PhotoView;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.chrisbanes.photoview.PhotoView;
-
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.ConexionBD.BDDescargarImagenes;
 import yiwo.apppedidos.Data.BDArticulos;
 import yiwo.apppedidos.Data.BDListDeseo;
 import yiwo.apppedidos.InterfacesPerzonalidas.frag_dialog_galeria;
@@ -58,7 +56,8 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
 
     TextView et_nombre, tv_cantidad, tv_precio;
     PhotoView iv_imagen;
-    String Codigo_Articulo, Nombre_Articulo, Unidad_Articulo, Precio_Articulo;
+    String Codigo_Articulo, Nombre_Articulo, Unidad_Articulo;
+    Double Precio_Articulo,PrecioFinal=0.00;
     EditText et_cantidad;
     TextView tv_origen_popup;
     AppBarLayout app_barLayout;
@@ -98,11 +97,43 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
             informacion = bdArticulos.getDescripcionArticulo(CodigosGenerales.Codigo_Articulo);
             Codigo_Articulo = informacion.get(0);
             Nombre_Articulo = informacion.get(1);
-            Unidad_Articulo = informacion.get(2);
-            Precio_Articulo = informacion.get(4);
-            Stock = Double.parseDouble(informacion.get(3));
+            Unidad_Articulo = informacion.get(3);
+            Precio_Articulo  = CodigosGenerales.tryParseDouble(informacion.get(4));
+            Log.d(TAG,"Moneda de Articulo " +informacion.get(5));
+            Stock  = CodigosGenerales.tryParseDouble(informacion.get(2));
+            Double Tipo_Cambio  = CodigosGenerales.tryParseDouble(ConfiguracionEmpresa.Tipo_CambioEmpresa.get(1));
+
+            String Tipo_Moneda=informacion.get(5);
+            switch (CodigosGenerales.Moneda_Empresa){
+                case "S/.":
+                    if( Tipo_Moneda.equals("S/."))
+                        PrecioFinal=Precio_Articulo;
+                    else
+                        PrecioFinal=Precio_Articulo*Tipo_Cambio;
+                    break;
+                case "$":
+                    if( Tipo_Moneda.equals("$"))
+                        PrecioFinal=Precio_Articulo;
+                    else
+                        PrecioFinal=Precio_Articulo*Tipo_Cambio;
+                    break;
+            }
+            switch (informacion.get(5)){
+                case "S/.":
+                    if( CodigosGenerales.Moneda_Empresa.equals("S/."))
+                        PrecioFinal=Precio_Articulo;
+                    else
+                        PrecioFinal=Precio_Articulo*Tipo_Cambio;
+                    break;
+                case "$":
+                    if( CodigosGenerales.Moneda_Empresa.equals("$"))
+                        PrecioFinal=Precio_Articulo;
+                    else
+                        PrecioFinal=Precio_Articulo/Tipo_Cambio;
+                    break;
+            }
             tv_cantidad.setText(Stock + " " + Unidad_Articulo);
-            tv_precio.setText(CodigosGenerales.Moneda_Empresa + " " + Precio_Articulo);
+            tv_precio.setText(CodigosGenerales.Moneda_Empresa + " " + CodigosGenerales.RedondearDecimales(PrecioFinal,2));
             et_nombre.setText(CodigosGenerales.Nombre_Categoria + Nombre_Articulo);
 
             app_barLayout = getActivity().findViewById(R.id.app_barLayout);
@@ -209,13 +240,8 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
 
     public class BackGroundTask extends AsyncTask<String, String, String> {
 
-        Bitmap bitmap1, bitmap2, bitmap3, bitmap4;
-        String Imagen_nombre1, Imagen_nombre2, Imagen_nombre3, Imagen_nombre4;
-        File imgFile1, imgFile2, imgFile3, imgFile4;
-
         @Override
         protected void onPreExecute() {
-//            progressBar.setVisibility(View.VISIBLE);
 
             super.onPreExecute();
         }
@@ -223,36 +249,11 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
         @Override
         protected String doInBackground(String... strings) {
             try {
-
-                try {
-                    Imagen_nombre1 = CodigosGenerales.Codigo_Empresa + "_" + CodigosGenerales.Codigo_Articulo + "_1.jpg";
-                    Imagen_nombre2 = CodigosGenerales.Codigo_Empresa + "_" + CodigosGenerales.Codigo_Articulo + "_2.jpg";
-                    Imagen_nombre3 = CodigosGenerales.Codigo_Empresa + "_" + CodigosGenerales.Codigo_Articulo + "_3.jpg";
-                    Imagen_nombre4 = CodigosGenerales.Codigo_Empresa + "_" + CodigosGenerales.Codigo_Articulo + "_4.jpg";
-
-                    imgFile1 = new File(CodigosGenerales.myDirectorio, Imagen_nombre1); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-                    bitmap1 = BitmapFactory.decodeStream(new FileInputStream(imgFile1));
-                    CodigosGenerales.ImagenGaleria1 = bitmap1;
-
-
-                    imgFile2 = new File(CodigosGenerales.myDirectorio, Imagen_nombre2); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-                    bitmap2 = BitmapFactory.decodeStream(new FileInputStream(imgFile2));
-                    CodigosGenerales.ImagenGaleria2 = bitmap2;
-
-
-                    imgFile3 = new File(CodigosGenerales.myDirectorio, Imagen_nombre3); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-                    bitmap3 = BitmapFactory.decodeStream(new FileInputStream(imgFile3));
-                    CodigosGenerales.ImagenGaleria3 = bitmap3;
-
-
-                    imgFile4 = new File(CodigosGenerales.myDirectorio, Imagen_nombre4); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-                    bitmap4 = BitmapFactory.decodeStream(new FileInputStream(imgFile4));
-                    CodigosGenerales.ImagenGaleria4 = bitmap4;
-
-                } catch (Exception e) {
-
-                    Log.d(TAG, "doInBackground: DOWNLOAD_URL: " + e.getMessage());
-                }
+                BDDescargarImagenes bdDescargarImagenes = new BDDescargarImagenes();
+                CodigosGenerales.ImagenGaleria1 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_1.jpg");
+                CodigosGenerales.ImagenGaleria2 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_2.jpg");
+                CodigosGenerales.ImagenGaleria3 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_3.jpg");
+                CodigosGenerales.ImagenGaleria4 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_4.jpg");
             } catch (Exception e) {
                 Log.d("FragList", "BackGroundTask: " + e.getMessage());
             }
@@ -262,10 +263,9 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
         @Override
         protected void onPostExecute(String s) {
             try {
-                iv_imagen.setImageBitmap(bitmap1);
+                iv_imagen.setImageBitmap(CodigosGenerales.ImagenGaleria1);
             } catch (Exception e) {
                 Log.d("FragList", e.getMessage());
-
             }
             super.onPostExecute(s);
         }
@@ -274,7 +274,7 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
     private void AgregarProductosListaDeseo(Double Cantidad) {
         if (Cantidad > 0) {
             if (Cantidad <= Stock) {
-                if (bdListDeseo.GuardarListaDeseo(Codigo_Articulo, Nombre_Articulo, Cantidad.toString(), Unidad_Articulo, Precio_Articulo, "")) {
+                if (bdListDeseo.GuardarListaDeseo(Codigo_Articulo, Nombre_Articulo, Cantidad.toString(), Unidad_Articulo, CodigosGenerales.RedondearDecimales(PrecioFinal,2), "")) {
                     Toast.makeText(getActivity(), "Se ha(n) agregado " + Cantidad + " elemento(s)", Toast.LENGTH_SHORT).show();
                     et_cantidad.setText("");
                 } else

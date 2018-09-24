@@ -77,9 +77,9 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
     Double TipCambio = 1.00;
     String ValorCambio = "";
     String Moneda_ListaDeseo;
-    String TAG="FragListDeseo";
+    String TAG = "FragListDeseo";
     String Dialog_ID = ""; //Variable para saber que Dialog se ha activado y saber los valores que retornará
-    Double Monto_SubTotal_Pedido=0.00, Monto_Descontado_Pedido=0.00, Monto_IGV_Pedido=0.00, Monto_Importe_Pedido=0.00;
+    Double Monto_SubTotal_Pedido = 0.00, Monto_Descontado_Pedido = 0.00, Monto_IGV_Pedido = 0.00, Monto_Importe_Pedido = 0.00;
     //endregion
 
     public FragListDeseo() {
@@ -158,23 +158,28 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
     public void onClick(View view) {
         switch (view.getId()) {
             case (R.id.b_enviar_pedido):
-                try {
-                    Log.d("asdas",CodigosGenerales.Codigo_Almacen+"");
-                    bdPedidos.getPreciosPedido(); //Calcular el importe, subtotal, descuento, igv, precio del pedido
-                    Tipo_CambioEmpresa = ConfiguracionEmpresa.Tipo_CambioEmpresa; //Obtener el tipo de cambio actual
-                    TipoCambio = Tipo_CambioEmpresa.get(0); //Obtener el Tipo de cambio
-                    ValorCambio = Tipo_CambioEmpresa.get(1); //Obtener el Valor de cambio
+                if (CodigosGenerales.Codigo_Cliente == null || CodigosGenerales.Codigo_Cliente.isEmpty()) {
+                    Snackbar.make(view, "Eliga primero un cliente por favor", Snackbar.LENGTH_SHORT).setAction("No action", null).show();
 
-                    if (Double.parseDouble(ValorCambio) > 0 && Ruc_Cliente != null) {
-                        CodigosGenerales.CantidadDatosDialog = 3;
-                        CodigosGenerales.TipoArray = Dialog_ID = "EnviarPedido";
-                        new CustomDialogEnviarPedido(getContext(), this, Monto_SubTotal_Pedido, Monto_Descontado_Pedido, Monto_IGV_Pedido, Monto_Importe_Pedido); //Mostrar el dialog de Enviar Pedido
-                    } else {
-                        Snackbar.make(view, "No existe valor del tipo de cambio para la fecha actual", Snackbar.LENGTH_LONG).setAction("No action", null).show();
-                    }
-                } catch (Exception e) {
-                    Log.d("onClic", e.getMessage());
-                    Snackbar.make(view, "No hay tipo de cambio en el sistema", Snackbar.LENGTH_LONG).setAction("No action", null).show();
+                } else {
+/*
+                    try {
+                        bdPedidos.getPreciosPedido(); //Calcular el importe, subtotal, descuento, igv, precio del pedido
+                        Tipo_CambioEmpresa = ConfiguracionEmpresa.Tipo_CambioEmpresa; //Obtener el tipo de cambio actual
+                        TipoCambio = Tipo_CambioEmpresa.get(0); //Obtener el Tipo de cambio
+                        ValorCambio = Tipo_CambioEmpresa.get(1); //Obtener el Valor de cambio
+
+                        if (Double.parseDouble(ValorCambio) > 0 && Ruc_Cliente != null) {
+                            CodigosGenerales.CantidadDatosDialog = 3;
+                            CodigosGenerales.TipoArray = Dialog_ID = "EnviarPedido";
+                            new CustomDialogEnviarPedido(getContext(), this, Monto_SubTotal_Pedido, Monto_Descontado_Pedido, Monto_IGV_Pedido, Monto_Importe_Pedido); //Mostrar el dialog de Enviar Pedido
+                        } else {
+                            Snackbar.make(view, "No existe valor del tipo de cambio para la fecha actual", Snackbar.LENGTH_LONG).setAction("No action", null).show();
+                        }
+                    } catch (Exception e) {
+                        Log.d("onClic", e.getMessage());
+                        Snackbar.make(view, "No hay tipo de cambio en el sistema", Snackbar.LENGTH_LONG).setAction("No action", null).show();
+                    }*/
                 }
                 break;
             case (R.id.et_cod_cliente):
@@ -193,10 +198,15 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
                 new CustomDialog2Datos(getActivity(), this);
                 break;
             case (R.id.flb_datosCliente):
-                if (ly_datosCliente.getVisibility() == View.GONE)
-                    ly_datosCliente.setVisibility(View.VISIBLE);
-                else
-                    ly_datosCliente.setVisibility(View.GONE);
+                if (CodigosGenerales.Codigo_Cliente == null || CodigosGenerales.Codigo_Cliente.isEmpty()) {
+                    Snackbar.make(view, "Eliga primero un cliente por favor", Snackbar.LENGTH_SHORT).setAction("No action", null).show();
+                } else {
+                    if (ConfiguracionEmpresa.Tipo_CambioEmpresa == null || ConfiguracionEmpresa.Tipo_CambioEmpresa.isEmpty()) {
+                        Snackbar.make(view, "Debe ingresar el tipo de cambio en el erp", Snackbar.LENGTH_SHORT).setAction("No action", null).show();
+                    } else {
+                        new CustomDialogEnviarPedido(getContext(), this, Monto_SubTotal_Pedido, Monto_Descontado_Pedido, Monto_IGV_Pedido, Monto_Importe_Pedido); //Mostrar el dialog de Enviar Pedido
+                    }
+                }
                 break;
             case (R.id.simpleSwitch):
                 String statusSwitch1;
@@ -246,7 +256,7 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
                             BackGroundTask task = new BackGroundTask();
                             task.execute("");
                         } else {
-                            TipCambio = Double.parseDouble(bdEmpresa.getTipoCambio().get(0));
+                            TipCambio = Double.parseDouble(ConfiguracionEmpresa.Tipo_CambioEmpresa.get(0));
                             TipCambio = Math.pow(TipCambio, -1);
 
                             Moneda_ListaDeseo = "$  ";
@@ -262,7 +272,7 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
                             BackGroundTask task = new BackGroundTask();
                             task.execute("");
                         } else {
-                            TipCambio = Double.parseDouble(bdEmpresa.getTipoCambio().get(0));
+                            TipCambio = Double.parseDouble(ConfiguracionEmpresa.Tipo_CambioEmpresa.get(0));
 //                        TipCambio = Math.pow(TipCambio, -1);
 
                             Moneda_ListaDeseo = "S/ ";
@@ -297,7 +307,7 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
                 Cod_Motivo.trim(), et_cod_cliente.getText().toString(), et_Nombre.getText().toString(),
                 Ruc_Cliente, Cod_FormaPago, CodigosGenerales.Moneda_Empresa, "S",
                 ValorCambio, String.valueOf(CodigosGenerales.Precio_ImporteTotalPedido), "0",
-                CodigosGenerales.Codigo_ListaPrecios, CodigosGenerales.Codigo_CentroCostos, CodigosGenerales.Codigo_UnidadNegocio,
+                CodigosGenerales.ListaPrecios_Cliente, CodigosGenerales.Codigo_CentroCostos, CodigosGenerales.Codigo_UnidadNegocio,
                 CodigosGenerales.Direccion_Cliente, String.valueOf(CodigosGenerales.Precio_SubTotalPedido),
                 String.valueOf(CodigosGenerales.Precio_DescuentoPedido), String.valueOf(CodigosGenerales.Precio_IGVCalcPedido),
                 String.valueOf(CodigosGenerales.Precio_ImporteTotalPedido), "0.00", String.valueOf(CodigosGenerales.Precio_ImporteTotalPedido),
@@ -358,10 +368,10 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
 
 
                     //region Sumar los valores para el pedido
-                    Monto_SubTotal_Pedido+=BaseImponible;
-                    Monto_IGV_Pedido+=MontoIGV;
-                    Monto_Descontado_Pedido+=MontoADescontar;
-                    Monto_Importe_Pedido+=ImporteTotal;
+                    Monto_SubTotal_Pedido += BaseImponible;
+                    Monto_IGV_Pedido += MontoIGV;
+                    Monto_Descontado_Pedido += MontoADescontar;
+                    Monto_Importe_Pedido += ImporteTotal;
 
                     //endregion
 
@@ -396,10 +406,10 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
                                     descuento_2.toString(),
                                     descuento_3.toString(),
                                     descuento_4.toString(),
-                                    CodigosGenerales.RedondearDecimales(BaseImponible,2),
-                                    CodigosGenerales.RedondearDecimales(BaseCalculada,2),
-                                    CodigosGenerales.RedondearDecimales(MontoIGV,2),
-                                    CodigosGenerales.RedondearDecimales(ImporteTotal,2)
+                                    CodigosGenerales.RedondearDecimales(BaseImponible, 2),
+                                    CodigosGenerales.RedondearDecimales(BaseCalculada, 2),
+                                    CodigosGenerales.RedondearDecimales(MontoIGV, 2),
+                                    CodigosGenerales.RedondearDecimales(ImporteTotal, 2)
                             ));
                 }
             } catch (Exception e) {
@@ -412,7 +422,7 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
         protected void onPostExecute(String s) {
             progressBar.setVisibility(View.GONE);
             try {
-                adapter_listaDeseos= new CustomAdapterListaDeseos(dataModels_listaDeseos,getContext());
+                adapter_listaDeseos = new CustomAdapterListaDeseos(dataModels_listaDeseos, getContext());
                 lv_items.setAdapter(adapter_listaDeseos);
 
                 lv_items.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -446,5 +456,4 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
             super.onPostExecute(s);
         }
     }
-
 }

@@ -24,8 +24,11 @@ public class BDClientes {
                 return  CodigosGenerales.listCliente;
             }else {
                 Connection connection = bdata.getConnection();
-
-                String stsql = "Select TOP (50) * from dbo.udf_list_Hcliente(?) where Codigo like ? or Nombre like ? ";
+                String stsql=
+                        "Select TOP (50) ccod_cliente, cnom_cliente, cdireccion, cnum_ruc,cnum_dni, lista_precios  \n" +
+                        "From Hcliente \n" +
+                        "Where \n" +
+                        "ccod_empresa = ? And cgrupo_cliente = '12' and lista_precios!='' and (ccod_cliente like ? or cnom_cliente like ?)";
 
                 PreparedStatement query = connection.prepareStatement(stsql);
                 query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
@@ -36,12 +39,12 @@ public class BDClientes {
 
                 while (rs.next()) {
                     arrayList.add(Arrays.asList(
-                            rs.getString("Codigo"),
-                            rs.getString("Nombre"),
-                            rs.getString("Ruc"),
-                            rs.getString("Direccion"),
-                            rs.getString("ListaPrecios"),
-                            rs.getString("DNI")
+                            rs.getString("ccod_cliente"),
+                            rs.getString("cnom_cliente"),
+                            rs.getString("cnum_ruc"),
+                            rs.getString("cdireccion"),
+                            rs.getString("lista_precios"),
+                            rs.getString("cnum_dni")
                     ));
                 }
                 connection.close();

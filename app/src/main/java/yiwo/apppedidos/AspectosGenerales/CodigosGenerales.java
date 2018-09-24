@@ -123,7 +123,11 @@ public class CodigosGenerales {
     public static String Nombre_Vendedor;
     public static String Celular_Vendedor;
     public static String email_Vendedor;
-    public static String Lista_Precio = "01";
+    public static String RUC_Cliente;
+    public static String ListaPrecios_Cliente = "01";
+    public static String DNI_Cliente;
+    public static Object Codigo_FormaPago;
+    public static int Dias_FormaPago;
 
     public static ArrayList<List<String>> getArrayList(String Nombre) {
         switch (TipoArray) {
