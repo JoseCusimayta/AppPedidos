@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.Data.BDPedidos;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomAdapterNumerado;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
@@ -102,6 +103,7 @@ public class LateralPedidos extends Fragment {
     }
 
     public void CambiarFragment(Fragment fragment) {
+        CodigosGenerales.hideSoftKeyboard(getActivity());
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.frag_contenedor, fragment);
         transaction.addToBackStack(null);
@@ -167,7 +169,7 @@ public class LateralPedidos extends Fragment {
                         CustomDataModel dataModel = dataModels.get(position);
                         Log.d("asdasd", dataModel + "");
                         CodigosGenerales.Codigo_Pedido = dataModel.getListaPrecios();
-                        CodigosGenerales.Codigo_Motivo = dataModel.getDni();
+                        ConfiguracionEmpresa.Codigo_Motivo = dataModel.getDni();
 //                    CodigosGenerales.Cod_Articulo = ListPedidos.get(position).get(0);
                         Fragment fragment = new LateralPedidoDetalle();
                         CambiarFragment(fragment);

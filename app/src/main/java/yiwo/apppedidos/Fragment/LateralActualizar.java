@@ -162,7 +162,7 @@ public class LateralActualizar extends Fragment {
         GuardarMenu_Conceptos(DOWNLOAD_URL);
 
         BDArticulos bdArticulos = new BDArticulos();
-        ArrayList<List<String>> arrayList = bdArticulos.getListFull("");
+        ArrayList<List<String>> arrayList = bdArticulos.getListFull();
         articulos_totales = arrayList.size();
         for (int i = 0; i < arrayList.size(); i++) {
             if (task.isCancelled())

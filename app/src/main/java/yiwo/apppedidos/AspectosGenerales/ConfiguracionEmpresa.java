@@ -1,5 +1,6 @@
 package yiwo.apppedidos.AspectosGenerales;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConfiguracionEmpresa {
@@ -7,6 +8,9 @@ public class ConfiguracionEmpresa {
     public static Boolean isLAN=false;
     public static Boolean isLANAviable=false;
     public static Boolean isPublicaAviable=false;
+    public static Boolean isIncluidoIGV=false;
+
+    public static ArrayList<List<String>> Tipo_Monedas;
 
     public static List<String> Tipo_CambioEmpresa;
 
@@ -15,6 +19,9 @@ public class ConfiguracionEmpresa {
 
     public static String UsuarioSQL="sa";
     public static String PasswordSQL="Solu123456";
+    public static String Moneda_Trabajo;
+    public static String Codigo_Motivo;
+    public static String Nombre_Motivo;
 
 
     public static String CarpetaImagenes="Imagenes";

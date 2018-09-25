@@ -3,11 +3,13 @@ package yiwo.apppedidos.Fragment;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,13 +25,14 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.chrisbanes.photoview.PhotoView;
-
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.chrisbanes.photoview.PhotoView;
+
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
-import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.ConexionBD.BDDescargarImagenes;
 import yiwo.apppedidos.Data.BDArticulos;
 import yiwo.apppedidos.Data.BDListDeseo;
@@ -57,14 +60,19 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
     TextView et_nombre, tv_cantidad, tv_precio;
     PhotoView iv_imagen;
     String Codigo_Articulo, Nombre_Articulo, Unidad_Articulo;
-    Double Precio_Articulo,PrecioFinal=0.00;
+
     EditText et_cantidad;
     TextView tv_origen_popup;
     AppBarLayout app_barLayout;
     FrameLayout id_lyContent;
-    Double Stock;
+    Double Precio_Articulo, Stock, PorcentajeIGV;
     BDArticulos bdArticulos = new BDArticulos();
     BDListDeseo bdListDeseo = new BDListDeseo();
+
+    ArrayList<List<String>> FichaTecnica = null;
+
+    BDDescargarImagenes bdDescargarImagenes = new BDDescargarImagenes();
+    Boolean isGalleryReady=false;
     //endregion
 
     public FragDescripcion() {
@@ -94,46 +102,15 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
 
 
         try {
-            informacion = bdArticulos.getDescripcionArticulo(CodigosGenerales.Codigo_Articulo);
+            informacion = bdArticulos.getList(CodigosGenerales.Codigo_Articulo).get(0);
             Codigo_Articulo = informacion.get(0);
             Nombre_Articulo = informacion.get(1);
+            Stock = Double.parseDouble(informacion.get(2));
             Unidad_Articulo = informacion.get(3);
-            Precio_Articulo  = CodigosGenerales.tryParseDouble(informacion.get(4));
-            Log.d(TAG,"Moneda de Articulo " +informacion.get(5));
-            Stock  = CodigosGenerales.tryParseDouble(informacion.get(2));
-            Double Tipo_Cambio  = CodigosGenerales.tryParseDouble(ConfiguracionEmpresa.Tipo_CambioEmpresa.get(1));
-
-            String Tipo_Moneda=informacion.get(5);
-            switch (CodigosGenerales.Moneda_Empresa){
-                case "S/.":
-                    if( Tipo_Moneda.equals("S/."))
-                        PrecioFinal=Precio_Articulo;
-                    else
-                        PrecioFinal=Precio_Articulo*Tipo_Cambio;
-                    break;
-                case "$":
-                    if( Tipo_Moneda.equals("$"))
-                        PrecioFinal=Precio_Articulo;
-                    else
-                        PrecioFinal=Precio_Articulo*Tipo_Cambio;
-                    break;
-            }
-            switch (informacion.get(5)){
-                case "S/.":
-                    if( CodigosGenerales.Moneda_Empresa.equals("S/."))
-                        PrecioFinal=Precio_Articulo;
-                    else
-                        PrecioFinal=Precio_Articulo*Tipo_Cambio;
-                    break;
-                case "$":
-                    if( CodigosGenerales.Moneda_Empresa.equals("$"))
-                        PrecioFinal=Precio_Articulo;
-                    else
-                        PrecioFinal=Precio_Articulo/Tipo_Cambio;
-                    break;
-            }
+            Precio_Articulo = CodigosGenerales.tryParseDouble(informacion.get(4));
+            PorcentajeIGV= CodigosGenerales.tryParseDouble(informacion.get(8));
             tv_cantidad.setText(Stock + " " + Unidad_Articulo);
-            tv_precio.setText(CodigosGenerales.Moneda_Empresa + " " + CodigosGenerales.RedondearDecimales(PrecioFinal,2));
+            tv_precio.setText(CodigosGenerales.Moneda_Empresa + " " + CodigosGenerales.RedondearDecimales(Precio_Articulo, 2));
             et_nombre.setText(CodigosGenerales.Nombre_Categoria + Nombre_Articulo);
 
             app_barLayout = getActivity().findViewById(R.id.app_barLayout);
@@ -184,14 +161,13 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
                 break;
             case (R.id.ib_galeria):
                 try {
-                    new frag_dialog_galeria(getContext(), this);
+                    if (isGalleryReady)
+                        new frag_dialog_galeria(getContext(), this);
+                    else
+                        Toast.makeText(getActivity(), "Cargando imagenes... Intente de nuevo por favor", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     Log.d(TAG, e.getMessage());
                 }
-                /*FragmentManager manager= getSupportFragmentManager();
-                DialogFragmentGaleria galeria= new DialogFragmentGaleria();
-                galeria.setStyle(DialogFragment.STYLE_NO_FRAME,R.style.transparente);
-                galeria.show(manager,"");*/
                 break;
         }
     }
@@ -203,25 +179,24 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
 
         TextView tv_nombre = popupView.findViewById(R.id.tv_nombre);
         TextView tv_detalle = popupView.findViewById(R.id.tv_detalle);
+        if (FichaTecnica == null) {
+            FichaTecnica = bdArticulos.getFichaTecnica(Codigo_Articulo);
+            //tv_nombre.setText("Ficha Técnica");
 
-        ArrayList<List<String>> FichaTecnica = bdArticulos.getFichaTecnica(Codigo_Articulo);
-        //tv_nombre.setText("Ficha Técnica");
 
-
-        if (FichaTecnica != null) {
-            String Detalle = "";
-            for (int i = 0; i < FichaTecnica.size(); i++) {
-                Detalle += FichaTecnica.get(i).get(0) + "\n\t " + FichaTecnica.get(i).get(1) + "\n\n";
+            if (FichaTecnica != null) {
+                String Detalle = "";
+                for (int i = 0; i < FichaTecnica.size(); i++) {
+                    Detalle += FichaTecnica.get(i).get(0) + "\n\t " + FichaTecnica.get(i).get(1) + "\n\n";
+                }
+                tv_detalle.setText(Detalle);
             }
-            tv_detalle.setText(Detalle);
         }
-
         popupWindow.setOutsideTouchable(true);
         popupWindow.setFocusable(true);
 
         b_cerrar_popup = popupView.findViewById(R.id.id_cerrar);
         b_cerrar_popup.setOnClickListener(new Button.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
@@ -242,30 +217,26 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
 
         @Override
         protected void onPreExecute() {
-
             super.onPreExecute();
         }
 
         @Override
         protected String doInBackground(String... strings) {
-            try {
-                BDDescargarImagenes bdDescargarImagenes = new BDDescargarImagenes();
-                CodigosGenerales.ImagenGaleria1 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_1.jpg");
-                CodigosGenerales.ImagenGaleria2 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_2.jpg");
-                CodigosGenerales.ImagenGaleria3 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_3.jpg");
-                CodigosGenerales.ImagenGaleria4 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_4.jpg");
-            } catch (Exception e) {
-                Log.d("FragList", "BackGroundTask: " + e.getMessage());
-            }
+            CodigosGenerales.ImagenGaleria1 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_1.jpg");
+            CodigosGenerales.ImagenGaleria2 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_2.jpg");
+            CodigosGenerales.ImagenGaleria3 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_3.jpg");
+            CodigosGenerales.ImagenGaleria4 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_4.jpg");
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
             try {
+                isGalleryReady=true;
                 iv_imagen.setImageBitmap(CodigosGenerales.ImagenGaleria1);
             } catch (Exception e) {
                 Log.d("FragList", e.getMessage());
+
             }
             super.onPostExecute(s);
         }
@@ -274,7 +245,7 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
     private void AgregarProductosListaDeseo(Double Cantidad) {
         if (Cantidad > 0) {
             if (Cantidad <= Stock) {
-                if (bdListDeseo.GuardarListaDeseo(Codigo_Articulo, Nombre_Articulo, Cantidad.toString(), Unidad_Articulo, CodigosGenerales.RedondearDecimales(PrecioFinal,2), "")) {
+                if (bdListDeseo.GuardarListaDeseo(Codigo_Articulo, Nombre_Articulo, Cantidad.toString(), Unidad_Articulo, Precio_Articulo.toString(), "",PorcentajeIGV.toString())) {
                     Toast.makeText(getActivity(), "Se ha(n) agregado " + Cantidad + " elemento(s)", Toast.LENGTH_SHORT).show();
                     et_cantidad.setText("");
                 } else

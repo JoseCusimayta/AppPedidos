@@ -137,6 +137,7 @@ public class FragList extends Fragment {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Fragment fragment;
                         CodigosGenerales.Filtro = false;
+                        Log.d("FragList", "TipoArray " + CodigosGenerales.TipoArray);
                         if (CodigosGenerales.TipoArray.equals("Articulos")) {
                             try {
                                 if (Double.parseDouble(arrayList.get(position).get(3)) > 0) {
@@ -153,7 +154,9 @@ public class FragList extends Fragment {
                         } else {
                             CodigosGenerales.Nombre_Categoria = arrayList.get(position).get(1) + " - ";
                             CodigosGenerales.Codigo_Categoria = arrayList.get(position).get(0);
-                            fragment = new FragArticulos();
+                            Log.d("FragList", "Codigo_Categoria " + CodigosGenerales.Codigo_Categoria);
+                            Log.d("FragList", "Nombre_Categoria " + CodigosGenerales.Nombre_Categoria);
+                            fragment = new FragArticulosCardView();
                             CambiarFragment(fragment);
                         }
                     }

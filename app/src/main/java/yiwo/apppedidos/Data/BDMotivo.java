@@ -10,26 +10,24 @@ import java.util.Arrays;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
 public class BDMotivo {
 
     BDConexionSQL bdata= new BDConexionSQL();
 
-    public ArrayList<List<String>> getList(String Nombre) {
+    public ArrayList<List<String>> getList( Connection connection) {
 
         ArrayList<List<String>> arrayList = new ArrayList<>();
 
         try {
 
-            Connection connection = bdata.getConnection();
 
-            String stsql = "SELECT erp_codmot, erp_nommot FROM erp_motivos_tramite WHERE erp_codemp = ? and erp_codtid = 'PED' and (erp_codmot like ? or erp_nommot like ?) ORDER BY erp_predeterminado DESC, erp_codmot";
+            String stsql = "SELECT erp_codmot, erp_nommot FROM erp_motivos_tramite WHERE erp_codemp = ? and erp_codtid = 'PED'  ORDER BY erp_predeterminado DESC, erp_codmot";
 
             PreparedStatement query = connection.prepareStatement(stsql);
             query.setString(1, CodigosGenerales.Codigo_Empresa); // Código de la empresa
-            query.setString(2, Nombre+"%"); //Código del Motivo
-            query.setString(3, Nombre+"%"); //Nombre del Motivo
 
             ResultSet rs = query.executeQuery();
 
@@ -41,7 +39,6 @@ public class BDMotivo {
                         )
                 );
             }
-            connection.close();
 
         } catch (Exception e) {
             Log.d("BDMotivo", "- getList: " + e.getMessage());
@@ -81,7 +78,7 @@ public class BDMotivo {
             String stsql = "update erp_motivos_tramite_detalle set erp_nummot=erp_nummot+1 where erp_codemp=? and erp_codmot=? and erp_sermot=?";
             PreparedStatement query = connection.prepareStatement(stsql);
             query.setString(1, CodigosGenerales.Codigo_Empresa);
-            query.setString(2, CodigosGenerales.Codigo_Motivo);
+            query.setString(2, ConfiguracionEmpresa.Codigo_Motivo);
             query.setString(3,CodigosGenerales.Year);
             query.execute();
             return true;
@@ -100,7 +97,7 @@ public class BDMotivo {
             String stsql = "select erp_nummot from erp_motivos_tramite_detalle where erp_codemp=? and erp_codmot=? and erp_sermot=? ";
             PreparedStatement query = connection.prepareStatement(stsql);
             query.setString(1, CodigosGenerales.Codigo_Empresa);
-            query.setString(2, CodigosGenerales.Codigo_Motivo);
+            query.setString(2, ConfiguracionEmpresa.Codigo_Motivo);
             query.setString(3, CodigosGenerales.Year);
 
             ResultSet rs = query.executeQuery();

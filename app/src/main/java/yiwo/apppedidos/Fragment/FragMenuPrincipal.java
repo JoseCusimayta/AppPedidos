@@ -89,7 +89,7 @@ public class FragMenuPrincipal extends Fragment implements View.OnClickListener 
         //endregion
 
         try {
-            ImageView iv_logo = getActivity().findViewById(R.id.iv_logo);
+            ImageView iv_logo= getActivity().findViewById(R.id.iv_logo);
             iv_logo.setEnabled(false);
             CodigosGenerales.Filtro = false;
 
@@ -102,21 +102,15 @@ public class FragMenuPrincipal extends Fragment implements View.OnClickListener 
             TextView tv_descripcion_nav = getActivity().findViewById(R.id.tv_descripcion_nav);
             tv_descripcion_nav.setText(CodigosGenerales.Celular_Vendedor + "\n" + CodigosGenerales.email_Vendedor);
 
-        } catch (Exception e) {
-            Log.d(TAG, "onPostExecute " + e.getMessage());
+        }catch (Exception e){
+            Log.d(TAG,"onPostExecute "+e.getMessage());
         }
 
-        if (RedDisponible.serverAvailable(getActivity(), ConfiguracionEmpresa.IP_Publica, ConfiguracionEmpresa.PuertoImagenes)) {
+        if(RedDisponible.serverAvailable(getActivity(), ConfiguracionEmpresa.IP_Publica,ConfiguracionEmpresa.PuertoImagenes)) {
             DetectarVariacionPesoCarpeta();
         }
-
-        Log.d(TAG, "Codigo_Cliente      : " + CodigosGenerales.Codigo_Cliente);
-        Log.d(TAG, "Nombre_Cliente      : " + CodigosGenerales.Nombre_Cliente);
-        Log.d(TAG, "RUC_Cliente         : " + CodigosGenerales.RUC_Cliente);
-        Log.d(TAG, "ListaPrecios_Cliente: " + CodigosGenerales.ListaPrecios_Cliente);
-        Log.d(TAG, "DNI_Cliente         : " + CodigosGenerales.DNI_Cliente);
         CargarImagenesMenuPrincipal();
-        CodigosGenerales.isInicio = true;
+        CodigosGenerales.isInicio=true;
         return view;
     }
 
@@ -191,11 +185,8 @@ public class FragMenuPrincipal extends Fragment implements View.OnClickListener 
     }
 
     public void CambiarFragment(Fragment fragment) {
-        assert getFragmentManager() != null;
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.frag_contenedor, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+
+        CodigosGenerales.CambiarFragment2(fragment,getFragmentManager().beginTransaction());
     }
 
     public void DetectarVariacionPesoCarpeta() {

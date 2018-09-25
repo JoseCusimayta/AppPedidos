@@ -1,6 +1,7 @@
 package yiwo.apppedidos.AspectosGenerales;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -31,17 +32,15 @@ import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
 import yiwo.apppedidos.R;
 
 public class CodigosGenerales {
+    public static SimpleDateFormat FormatoFechas = new SimpleDateFormat("dd-MM-yyyy");
     public static boolean Login = false;
     public static boolean isInicio = false;
-    public static boolean isLogin;
 
     public static Integer ID_Concepto;
     public static String Codigo_Empresa;
     public static String Codigo_Usuario;
     public static String Nombre_Usuario;
     public static String Codigo_Cliente;
-    public static String Codigo_Motivo;
-    public static String Nombre_Motivo;
     public static String Codigo_PuntoVenta;
     public static String Codigo_CentroCostos;
     public static String Codigo_UnidadNegocio;
@@ -52,11 +51,11 @@ public class CodigosGenerales {
     public static String Codigo_Pedido;
     public static String Codigo_ListaPrecios;
     public static String Direccion_Cliente;
-    public static int CantidadDatosDialog;
-    public static String Year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-    public static SimpleDateFormat FormatoFechas = new SimpleDateFormat("dd-MM-yyyy");
     public static String FechaActual = FormatoFechas.format(new Date());
     public static String Nombre_Cliente;
+
+    public static int CantidadDatosDialog;
+    public static String Year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
 
     public static String TipoArray = "";
     public static ArrayList<List<String>> arrayListEmpresas = new ArrayList<>();
@@ -123,10 +122,10 @@ public class CodigosGenerales {
     public static String Nombre_Vendedor;
     public static String Celular_Vendedor;
     public static String email_Vendedor;
+    public static String Lista_Precio = "01";
     public static String RUC_Cliente;
-    public static String ListaPrecios_Cliente = "01";
     public static String DNI_Cliente;
-    public static Object Codigo_FormaPago;
+    public static String Codigo_FormaPago;
     public static int Dias_FormaPago;
 
     public static ArrayList<List<String>> getArrayList(String Nombre) {
@@ -149,8 +148,6 @@ public class CodigosGenerales {
                 return bdConceptos.getList(Nombre);
             case "Cliente":
                 return bdClientes.getList(Nombre);
-            case "Motivo":
-                return bdMotivo.getList(Nombre);
             case "FormaPago":
                 return bdFormaPago.getList(Nombre);
             case "Moneda":
@@ -172,17 +169,6 @@ public class CodigosGenerales {
                     list_concepto5,
                     list_concepto6,
                     list_concepto7, Nombre);
-        } else {
-            switch (TipoArray) {
-                case "Familia":
-                    return bdArticulos.getListFamilia(Nombre, Codigo_Categoria);
-                case "SubFamilia":
-                    return bdArticulos.getListSubFamilia(Nombre, Codigo_Categoria);
-                case "Concepto":
-                    return bdArticulos.getListConcepto(Nombre, Codigo_Categoria);
-                case "Articulos":
-                    return bdArticulos.getList(Nombre);
-            }
         }
         return null;
     }
@@ -239,5 +225,13 @@ public class CodigosGenerales {
             transaction.replace(R.id.frag_contenedor, fragment);
             transaction.commit();
         }
+    }
+
+    public static void CambiarFragment2(Fragment fragment, FragmentTransaction transaction) {
+        transaction
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .addToBackStack(null)
+                .replace(R.id.frag_contenedor, fragment)
+                .commit();
     }
 }

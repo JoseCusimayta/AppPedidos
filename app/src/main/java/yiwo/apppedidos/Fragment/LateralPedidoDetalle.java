@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.Data.BDEmpresa;
 import yiwo.apppedidos.Data.BDListDeseo;
 import yiwo.apppedidos.Data.BDPedidos;
@@ -86,7 +87,7 @@ public class LateralPedidoDetalle extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                ArrayList<List<String>> listaDeseos = bdPedidos.getDetalle(CodigosGenerales.Codigo_Pedido,CodigosGenerales.Codigo_Motivo);
+                ArrayList<List<String>> listaDeseos = bdPedidos.getDetalle(CodigosGenerales.Codigo_Pedido,ConfiguracionEmpresa.Codigo_Motivo);
 
                 for (int i = 0; i < listaDeseos.size(); i++) {
 
@@ -108,7 +109,7 @@ public class LateralPedidoDetalle extends Fragment {
                     Descuento_Unico = CodigosGenerales.getDescuenetoUnico(descuento_1, descuento_2, descuento_3, descuento_4);
                     BaseImponible = precio_unitario * ncantidad;
 
-                    if (bdEmpresa.isIncluidoIGV()) {
+                    if (ConfiguracionEmpresa.isIncluidoIGV) {
                         MontoADescontar = (BaseImponible / (1 + (IGV_Articulo / 100))) * (Descuento_Unico) / 100;
                         BaseCalculada = (BaseImponible / (1 + (IGV_Articulo / 100))) * (100 - Descuento_Unico) / 100;
                     } else {

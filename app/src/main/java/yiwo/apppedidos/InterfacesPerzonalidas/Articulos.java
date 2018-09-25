@@ -8,14 +8,16 @@ public class Articulos {
     String unidad_articulo;
     String precio_articulo;
     String moneda_articulo;
+    String porcentaje_igv;
 
-    public Articulos(String codigo_articulo, String nombre_articulo, String cantidad_articulo, String unidad_articulo, String precio_articulo, String moneda_articulo) {
+    public Articulos(String codigo_articulo, String nombre_articulo, String cantidad_articulo, String unidad_articulo, String precio_articulo, String moneda_articulo, String porcentaje_igv) {
         this.codigo_articulo = codigo_articulo;
         this.nombre_articulo = nombre_articulo;
         this.cantidad_articulo = cantidad_articulo;
         this.unidad_articulo = unidad_articulo;
         this.precio_articulo = precio_articulo;
         this.moneda_articulo = moneda_articulo;
+        this.porcentaje_igv = porcentaje_igv;
     }
 
     public String getCodigo_articulo() {
@@ -40,5 +42,9 @@ public class Articulos {
 
     public String getMoneda_articulo() {
         return moneda_articulo;
+    }
+
+    public String getPorcentaje_igv() {
+        return porcentaje_igv;
     }
 }

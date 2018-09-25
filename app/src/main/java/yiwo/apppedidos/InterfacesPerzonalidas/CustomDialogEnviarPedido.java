@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 import yiwo.apppedidos.Data.BDMotivo;
 import yiwo.apppedidos.R;
@@ -65,7 +66,7 @@ public class CustomDialogEnviarPedido {
         }
 
 
-        tv_motivo.setText(CodigosGenerales.Nombre_Motivo + " - " + Correlativo);
+        tv_motivo.setText(ConfiguracionEmpresa.Nombre_Motivo + " - " + Correlativo);
 
         //tv_cliente.setText("Cliente: "+CodigosGenerales.Codigo_Cliente+" - "+CodigosGenerales.Nombre_Cliente);
 

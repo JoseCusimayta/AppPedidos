@@ -22,6 +22,7 @@ public class BDListDeseo {
 
     public ArrayList<List<String>> getList() {
 
+        Log.d(TAG,"Inicio...");
         ArrayList<List<String>> arrayArticulos = new ArrayList<>();
 
         try {
@@ -68,10 +69,11 @@ public class BDListDeseo {
         } catch (Exception e) {
             Log.d(TAG, "- getList: " + e.getMessage());
         }
+        Log.d(TAG,"Final...");
         return arrayArticulos;
     }
 
-    public boolean GuardarListaDeseo(String CodigoArticulo, String NombreArticulo, String Cantidad, String Unidad, String PrecioUnitario, String ListaPrecios) {
+    public boolean GuardarListaDeseo(String CodigoArticulo, String NombreArticulo, String Cantidad, String Unidad, String PrecioUnitario, String ListaPrecios, String PorcentajeIGV) {
         try {
             Connection connection = bdata.getConnection();
             List<String> list = new ArrayList<>();
@@ -101,7 +103,7 @@ public class BDListDeseo {
             if (list.size() > 0)
                 return UpdateArticulo(connection,CodigoArticulo, Cantidad, Unidad);
             else
-                return InsertarNuevoArticulo(connection,CodigoArticulo, NombreArticulo, Cantidad, Unidad, PrecioUnitario, ListaPrecios);
+                return InsertarNuevoArticulo(connection,CodigoArticulo, NombreArticulo, Cantidad, Unidad, PrecioUnitario, ListaPrecios,PorcentajeIGV );
 
 
 
@@ -208,9 +210,8 @@ public class BDListDeseo {
         return false;
     }
 
-    private Boolean InsertarNuevoArticulo(Connection connection, String CodigoArticulo, String NombreArticulo, String Cantidad, String Unidad, String PrecioUnitario, String ListaPrecios) {
+    private Boolean InsertarNuevoArticulo(Connection connection, String CodigoArticulo, String NombreArticulo, String Cantidad, String Unidad, String PrecioUnitario, String ListaPrecios, String PorcentajeIGV) {
         try {
-            Double IGV_Articulo = bdArticulos.getIGVArticulo(connection, CodigoArticulo, Unidad);
             //Connection connection = bdata.getConnection();
             List<String> promociones = bdPromociones.getPromociones(connection, CodigoArticulo, Cantidad);
             String sql = "insert into " + Tabla + " values (" +
@@ -242,7 +243,7 @@ public class BDListDeseo {
             insert.setString(8, Unidad);//Tipo de Unidad de medida
             insert.setString(9, Cantidad);//Cantidad de artículos
             insert.setString(10, PrecioUnitario);//Precio del articulo
-            insert.setString(11, IGV_Articulo.toString());//IGV del articulo
+            insert.setString(11, PorcentajeIGV);//IGV del articulo
             insert.setString(12, promociones.get(0));//Descuento 1
             insert.setString(13, promociones.get(1));//Descuento 2
             insert.setString(14, promociones.get(2));//Descuento 3

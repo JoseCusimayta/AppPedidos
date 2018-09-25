@@ -10,6 +10,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <Button
+            android:id="@+id/b_filtro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Filtro" />
+
         <EditText
             android:id="@+id/et_buscar"
             android:layout_width="match_parent"

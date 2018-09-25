@@ -46,7 +46,7 @@ public class BDDescargarImagenes {
         GuardarMenu_Conceptos(DOWNLOAD_URL);
 
         BDArticulos bdArticulos = new BDArticulos();
-        ArrayList<List<String>> arrayList = bdArticulos.getListFull("");
+        ArrayList<List<String>> arrayList = bdArticulos.getListFull();
         for (int i = 0; i < arrayList.size(); i++) {
             GuardarArticulos(DOWNLOAD_URL, arrayList.get(i).get(0));
         }

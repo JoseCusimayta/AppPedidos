@@ -15,82 +15,91 @@ import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 public class BDArticulos {
 
     BDConexionSQL bdata = new BDConexionSQL();
-String TAG="BDArticulos";
-    public ArrayList<List<String>> getList(String Nombre) {
+    String TAG = "BDArticulos";
 
+    public ArrayList<List<String>> getArticulos(
+            String Nombre,
+            String Busqueda_categoria) {
+
+        Log.d(TAG, "Inicio...");
         ArrayList<List<String>> arrayList = new ArrayList<>();
 
         try {
-            if (CodigosGenerales.listArticulos.size() > 0 && Nombre.equals("")) {
+            if (CodigosGenerales.listArticulos.size() > 0 && Nombre.equals("") && Busqueda_categoria.equals("")) {
                 return CodigosGenerales.listArticulos;
             } else {
                 Connection connection = bdata.getConnection();
 
-                String stsql=
+                String stsql =
                         "select top(50) \n" +
-                        "ccod_articulo, \n" +
-                        "cnom_articulo, \n" +
-                        "cfamilia,\n" +
-                        "ccod_subfamilia,\n" +
-                        "codmarca,\n" +
-                        "modelo,\n" +
-                        "color,\n" +
-                        "tratamiento,\n" +
-                        "fuelle,\n" +
-                        "azas,\n" +
-                        "solapa,\n" +
-                        "cmoneda_precio,\n" +
-                        "erp_monto,\n" +
-                        "cunidad,\n" +
-                        "Isnull(( SUM(ERP_STOART) - SUM(ERP_STOCOM)),0) as stock,\n" +
-                        " Harticul.ccod_almacen\n" +
-                        " from Harticul \n" +
-                        " inner join Hstock\n" +
-                        " on \n" +
-                        " Harticul.ccod_articulo=HSTOCK.ERP_CODART and\n" +
-                        " Harticul.ccod_empresa=HSTOCK.ERP_CODEMP and \n" +
-                        " Harticul.ccod_almacen=HSTOCK.ERP_CODALM\n" +
-                        " inner join Erp_Lista_Precio_Cliente\n" +
-                        " on\n" +
-                        " Harticul.ccod_articulo=Erp_Lista_Precio_Cliente.ERP_CODART and\n" +
-                        " Harticul.ccod_empresa=Erp_Lista_Precio_Cliente.ERP_CODEMP and \n" +
-                        " Harticul.cunidad=Erp_Lista_Precio_Cliente.erp_unidad\n" +
-                        "where \n" +
-                        "ccod_empresa = ? \n" +
-                        "and ERP_CODPTV = ? \n" +
-                        "and ERP_CODALM = ? \n" +
-                        "and erp_tipo = '12 '\n" +
-                        "and erp_codigo_concepto = ? \n" +
-                        "and (ccod_articulo like ? or cnom_articulo like ? ) \n" +
-                        "group by \n" +
-                        "ccod_articulo, \n" +
-                        "cnom_articulo,\n" +
-                        "cfamilia,\n" +
-                        "ccod_subfamilia,\n" +
-                        "codmarca,\n" +
-                        "modelo,\n" +
-                        "color,\n" +
-                        "tratamiento,\n" +
-                        "fuelle,\n" +
-                        "azas,\n" +
-                        "solapa,\n" +
-                        "cmoneda_precio,\n" +
-                        "erp_monto,\n" +
-                        "cunidad,\n" +
-                        "ccod_almacen";
+                                "ccod_articulo, \n" +
+                                "cnom_articulo, \n" +
+                                "cfamilia,\n" +
+                                "ccod_subfamilia,\n" +
+                                "codmarca,\n" +
+                                "modelo,\n" +
+                                "color,\n" +
+                                "tratamiento,\n" +
+                                "fuelle,\n" +
+                                "azas,\n" +
+                                "solapa,\n" +
+                                "cmoneda_precio,\n" +
+                                "erp_monto,\n" +
+                                "cunidad,\n" +
+                                "Isnull(( SUM(ERP_STOART) - SUM(ERP_STOCOM)),0) as stock,\n" +
+                                "Harticul.ccod_almacen, \n" +
+                                "nigv \n" +
+                                "from Harticul \n" +
+                                "inner join Hstock\n" +
+                                "on \n" +
+                                "Harticul.ccod_articulo=HSTOCK.ERP_CODART and\n" +
+                                "Harticul.ccod_empresa=HSTOCK.ERP_CODEMP and \n" +
+                                "Harticul.ccod_almacen=HSTOCK.ERP_CODALM\n" +
+                                "inner join Erp_Lista_Precio_Cliente\n" +
+                                "on\n" +
+                                "Harticul.ccod_articulo=Erp_Lista_Precio_Cliente.ERP_CODART and\n" +
+                                "Harticul.ccod_empresa=Erp_Lista_Precio_Cliente.ERP_CODEMP and \n" +
+                                "Harticul.cunidad=Erp_Lista_Precio_Cliente.erp_unidad\n" +
+                                "where \n" +
+                                "ccod_empresa = ? \n" +
+                                "and ERP_CODPTV = ? \n" +
+                                "and ERP_CODALM = ? \n" +
+                                "and erp_tipo = '12 '\n" +
+                                "and erp_codigo_concepto = ? \n" +
+                                "and (\n" +
+                                "(ccod_articulo like ? or cnom_articulo like ? ) \n"
+                                + Busqueda_categoria +
+                                " )" +
+                                "group by \n" +
+                                "ccod_articulo, \n" +
+                                "cnom_articulo,\n" +
+                                "cfamilia,\n" +
+                                "ccod_subfamilia,\n" +
+                                "codmarca,\n" +
+                                "modelo,\n" +
+                                "color,\n" +
+                                "tratamiento,\n" +
+                                "fuelle,\n" +
+                                "azas,\n" +
+                                "solapa,\n" +
+                                "cmoneda_precio, \n" +
+                                "erp_monto, \n" +
+                                "cunidad, \n" +
+                                "ccod_almacen, \n" +
+                                "nigv";
 //                String stsql = "SELECT TOP(100) * FROM dbo.udf_list_harticul (?,?,?,?) where codigo like ? or Nombre like ?  and cfamilia!='656' and cfamilia!='655' and estado='Activo' order by Nombre";
 
                 PreparedStatement query = connection.prepareStatement(stsql);
 
-                Log.d(TAG,"Codigo_Empresa: "+CodigosGenerales.Codigo_Empresa);
-                Log.d(TAG,"Codigo_PuntoVenta: "+CodigosGenerales.Codigo_PuntoVenta);
-                Log.d(TAG,"Codigo_Almacen: "+CodigosGenerales.Codigo_Almacen);
-                Log.d(TAG,"Lista_Precio: "+CodigosGenerales.ListaPrecios_Cliente);
-                Log.d(TAG,"Nombre: "+Nombre);
+                Log.d(TAG, "Codigo_Empresa: " + CodigosGenerales.Codigo_Empresa);
+                Log.d(TAG, "Codigo_PuntoVenta: " + CodigosGenerales.Codigo_PuntoVenta);
+                Log.d(TAG, "Codigo_Almacen: " + CodigosGenerales.Codigo_Almacen);
+                Log.d(TAG, "Lista_Precio: " + CodigosGenerales.Lista_Precio);
+                Log.d(TAG, "Nombre: " + Nombre);
                 query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
                 query.setString(2, CodigosGenerales.Codigo_PuntoVenta);//ERP_CODPTV Punto de Venta
                 query.setString(3, CodigosGenerales.Codigo_Almacen);//ERP_CODALM Almacen
-                query.setString(4, CodigosGenerales.ListaPrecios_Cliente);//erp_codigo_concepto Lista de precios del cliente
+                query.setString(4, CodigosGenerales.Lista_Precio);//erp_codigo_concepto Lista de precios del cliente
                 query.setString(5, Nombre + "%"); //Codigo del producto
                 query.setString(6, Nombre + "%"); //Nombre del producto
 
@@ -98,8 +107,8 @@ String TAG="BDArticulos";
 
                 while (rs.next()) {
                     arrayList.add(Arrays.asList(
-                           rs.getString("ccod_articulo"),
-                           rs.getString("cnom_articulo"),
+                            rs.getString("ccod_articulo"),
+                            rs.getString("cnom_articulo"),
 //                           rs.getString("cfamilia"),
 //                           rs.getString("ccod_subfamilia"),
 //                           rs.getString("codmarca"),
@@ -113,7 +122,8 @@ String TAG="BDArticulos";
                             rs.getString("cunidad"),
                             rs.getString("erp_monto"),
                             rs.getString("cmoneda_precio"),
-                           rs.getString("ccod_almacen")
+                            rs.getString("ccod_almacen"),
+                            rs.getString("nigv")
                     ));
                 }
 
@@ -125,68 +135,80 @@ String TAG="BDArticulos";
         } catch (Exception e) {
             Log.d("BDArticulos", "- getList: " + e.getMessage());
         }
+        Log.d(TAG, "Final...");
         return arrayList;
     }
-    public ArrayList<List<String>> getListFull(String Nombre) {
 
-        ArrayList<List<String>> arrayList = new ArrayList<>();
 
-        try {
-                Connection connection = bdata.getConnection();
-
-                String stsql = "select ccod_articulo from Harticul where ccod_empresa = ? and ccod_almacen = ?";
-
-                PreparedStatement query = connection.prepareStatement(stsql);
-            Log.d(TAG,"Codigo_PuntoVenta "+CodigosGenerales.Codigo_PuntoVenta);
-            Log.d(TAG,"Codigo_Almacen "+CodigosGenerales.Codigo_Almacen);
-                query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
-                query.setString(2, CodigosGenerales.Codigo_PuntoVenta);//Punto de Venta
-//                query.setString(4, CodigosGenerales.Codigo_Almacen);//Almacen
-                ResultSet rs = query.executeQuery();
-
-                while (rs.next()) {
-                    arrayList.add(Arrays.asList(
-                            rs.getString("ccod_articulo")
-                    ));
+    public ArrayList<List<String>> getList(String Nombre) {
+        String Codigo = CodigosGenerales.Codigo_Categoria;
+        Log.d(TAG, "TipoArray " + CodigosGenerales.TipoArray);
+        Log.d(TAG, "Codigo_Categoria " + CodigosGenerales.Codigo_Categoria);
+        Log.d(TAG, "Nombre_Categoria " + CodigosGenerales.Nombre_Categoria);
+        if (Codigo != null)
+            Codigo = Codigo.replace("'", "''");
+        switch (CodigosGenerales.TipoArray) {
+            case "Articulos":
+                return getArticulos(Nombre, "");
+            case "Familia":
+                return getArticulos(Nombre, " and cfamilia = '" + Codigo + "'");
+            case "SubFamilia":
+                return getArticulos(Nombre, " and ccod_subfamilia = '" + Codigo + "'");
+            case "Concepto":
+                String stsql = "";
+                switch (CodigosGenerales.ID_Concepto) {
+                    case 1:
+                        stsql += " codmarca ";
+                        break;
+                    case 2:
+                        stsql += " modelo ";
+                        break;
+                    case 3:
+                        stsql += " color ";
+                        break;
+                    case 4:
+                        stsql += " tratamiento ";
+                        break;
+                    case 5:
+                        stsql += " fuelle ";
+                        break;
+                    case 6:
+                        stsql += " azas ";
+                        break;
+                    case 7:
+                        stsql += " solapa ";
+                        break;
                 }
+                return getArticulos(Nombre, " and " + stsql + " = '" + Codigo + "'");
 
-                connection.close();
-
-        } catch (Exception e) {
-            Log.d("BDArticulos", "- getList: " + e.getMessage());
         }
-        return arrayList;
+        return null;
+
     }
 
-
-    public ArrayList<List<String>> getListLan(String Nombre) {
+    public ArrayList<List<String>> getListFull() {
 
         ArrayList<List<String>> arrayList = new ArrayList<>();
 
         try {
             Connection connection = bdata.getConnection();
 
-            String stsql = "SELECT * FROM dbo.udf_list_harticul (?,?,?,?) where codigo like ? or Nombre like ?  and cfamilia!='656' and cfamilia!='655' and estado='Activo' order by Nombre";
+            String stsql = "select ccod_articulo from Harticul where ccod_empresa = ? and ccod_almacen = ?";
 
             PreparedStatement query = connection.prepareStatement(stsql);
+            Log.d(TAG, "Codigo_PuntoVenta " + CodigosGenerales.Codigo_PuntoVenta);
+            Log.d(TAG, "Codigo_Almacen " + CodigosGenerales.Codigo_Almacen);
             query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
-            query.setString(2, "");         //Codigo del producto
-            query.setString(3, CodigosGenerales.Codigo_PuntoVenta);//Punto de Venta
-            query.setString(4, CodigosGenerales.Codigo_Almacen);//Almacen
-            query.setString(5, Nombre + "%"); //Codigo del producto
-            query.setString(6, Nombre + "%"); //Nombre del producto
-
+            query.setString(2, CodigosGenerales.Codigo_PuntoVenta);//Punto de Venta
+//                query.setString(4, CodigosGenerales.Codigo_Almacen);//Almacen
             ResultSet rs = query.executeQuery();
 
             while (rs.next()) {
                 arrayList.add(Arrays.asList(
-                        rs.getString("codigo"),
-                        rs.getString("Nombre"),
-                        rs.getString("cunidad"),
-                        rs.getString("stock"),
-                        rs.getString("monto")
+                        rs.getString("ccod_articulo")
                 ));
             }
+
             connection.close();
 
         } catch (Exception e) {
@@ -195,139 +217,6 @@ String TAG="BDArticulos";
         return arrayList;
     }
 
-    public ArrayList<List<String>> getListFamilia(String Nombre, String Codigo_Familia) {
-
-        return getListFiltrado("cfamilia=?", Nombre, Codigo_Familia);
-    }
-
-    public ArrayList<List<String>> getListSubFamilia(String Nombre, String Codigo_SubFamilia) {
-
-        return getListFiltrado("ccod_subfamilia=?", Nombre, Codigo_SubFamilia);
-    }
-
-    public ArrayList<List<String>> getListConcepto(String Nombre, String Codigo_Concepto) {
-
-        String stsql = "";
-
-        switch (CodigosGenerales.ID_Concepto) {
-            case 1:
-                stsql += " codmarca = ? ";
-                break;
-            case 2:
-                stsql += " modelo = ? ";
-                break;
-            case 3:
-                stsql += " color = ? ";
-                break;
-            case 4:
-                stsql += " tratamiento = ? ";
-                break;
-            case 5:
-                stsql += " fuelle = ? ";
-                break;
-            case 6:
-                stsql += " azas = ? ";
-                break;
-            case 7:
-                stsql += " solapa = ? ";
-                break;
-        }
-
-        return getListFiltrado(stsql, Nombre, Codigo_Concepto);
-    }
-
-    private ArrayList<List<String>> getListFiltrado(String stsql, String Nombre, String Codigo) {
-        ArrayList<List<String>> arrayList = new ArrayList<>();
-
-        try {
-            String sql = "SELECT TOP (50) * FROM dbo.udf_list_harticul (?,?,?,?) where (codigo like ? or Nombre like ? ) and " + stsql + " and estado='Activo' order by Nombre";
-            //Log.d("Asda",CodigosGenerales.Codigo_Empresa+" - "+CodigosGenerales.Codigo_PuntoVenta+ " - " +CodigosGenerales.Codigo_Almacen +" - "+Nombre +" - "+stsql +" - "+Codigo);
-            Connection connection = bdata.getConnection();
-            PreparedStatement query = connection.prepareStatement(sql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Código de la empresa
-            query.setString(2, "");         //Código del producto
-            query.setString(3, CodigosGenerales.Codigo_PuntoVenta);//Punto de Venta
-            query.setString(4, CodigosGenerales.Codigo_Almacen);//Almacen
-            query.setString(5, Nombre + "%"); //Código del producto
-            query.setString(6, Nombre + "%"); //Nombre del producto
-            query.setString(7, Codigo); //Código de Familia
-
-            ResultSet rs = query.executeQuery();
-
-            while (rs.next()) {
-                arrayList.add(Arrays.asList(
-                        rs.getString("codigo"),//Codigo
-                        rs.getString("Nombre"),//Nombre
-                        rs.getString("cunidad"),//Tipo de Unidad
-                        rs.getString("stock"), //¨cantidad
-                        rs.getString("monto")//precio
-                ));
-            }
-            connection.close();
-
-        } catch (Exception e) {
-            Log.d("BDArticulos", "- getListFiltrado: " + e.getMessage());
-        }
-        return arrayList;
-    }
-
-    public List<String> getDescripcionArticulo(String Codigo_Articulo) {
-
-        return getList(Codigo_Articulo).get(0);
-
-       /* List<String> arrayArticuloSeleccionado = new ArrayList<>();
-        try {
-            Connection connection = bdata.getConnection();
-            String stsql = "SELECT * FROM dbo.udf_list_harticul (?,?,?,?) ";
-
-            PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa);
-            query.setString(2, Codigo_Articulo);
-            query.setString(3, CodigosGenerales.Codigo_PuntoVenta);//Punto de Venta
-            query.setString(4, CodigosGenerales.Codigo_Almacen);//Almacen
-
-            ResultSet rs = query.executeQuery();
-
-            while (rs.next()) {
-                arrayArticuloSeleccionado.add(rs.getString("codigo"));
-                arrayArticuloSeleccionado.add(rs.getString("Nombre"));
-                arrayArticuloSeleccionado.add(rs.getString("cunidad"));
-                arrayArticuloSeleccionado.add(rs.getString("stock"));
-                arrayArticuloSeleccionado.add(rs.getString("monto"));
-
-            }
-            connection.close();
-        } catch (Exception e) {
-            Log.d("BDArticulos", "- getDescripcionArticulo: " + e.getMessage());
-        }
-        return arrayArticuloSeleccionado;*/
-    }
-
-
-    public Integer getCantidadTotal() {
-
-        Integer cantidad_articulos = 0;
-
-        try {
-            Connection connection = bdata.getConnection();
-
-            String stsql = "SELECT Count(*) as cantidad FROM dbo.udf_list_harticul (?,'','','') where estado='Activo' ";
-
-            PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
-
-            ResultSet rs = query.executeQuery();
-
-            while (rs.next()) {
-                cantidad_articulos = rs.getInt("cantidad");
-            }
-            connection.close();
-
-        } catch (Exception e) {
-            Log.d("BDArticulos", "- getLength: " + e.getMessage());
-        }
-        return cantidad_articulos;
-    }
 
     public ArrayList<List<String>> getFichaTecnica(String Codigo_Articulo) {
         try {
@@ -343,15 +232,15 @@ String TAG="BDArticulos";
             ResultSet rs = query.executeQuery();
 
             while (rs.next()) {
-                ficha_tecnica.add( Arrays.asList(
+                ficha_tecnica.add(Arrays.asList(
                         rs.getString("erp_titulo"),
                         rs.getString("erp_descripcion")
-                        ));
+                ));
             }
             connection.close();
             return ficha_tecnica;
         } catch (Exception e) {
-            Log.d("BDArticulos", "- getFichaTecnica: " + e.getMessage());
+            Log.d(TAG, "- getFichaTecnica: " + e.getMessage());
         }
         return null;
     }
@@ -393,33 +282,9 @@ String TAG="BDArticulos";
             connection.close();
 
         } catch (Exception e) {
-            Log.d("BDArticulos", "- getPromociones: " + e.getMessage());
+            Log.d(TAG, "- getPromociones: " + e.getMessage());
         }
         return null;
     }
 
-    public Double getIGVArticulo(Connection connection, String Codigo_Articulo, String Tipo_Unidad){
-        Double IGV=0.00;
-        try {
-//            Connection connection = bdata.getConnection();
-
-            String stsql = "select nigv from Harticul where ccod_empresa=? and ccod_articulo=? and cunidad=?";
-
-            PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
-            query.setString(2, Codigo_Articulo); // Codigo Articulo
-            query.setString(3, Tipo_Unidad); // Codigo Articulo
-
-            ResultSet rs = query.executeQuery();
-
-            while (rs.next()) {
-                IGV= rs.getDouble("nigv");
-            }
-            //connection.close();
-            return IGV;
-        } catch (Exception e) {
-            Log.d("BDArticulos", "- getFichaTecnica: " + e.getMessage());
-        }
-        return IGV;
-    }
 }

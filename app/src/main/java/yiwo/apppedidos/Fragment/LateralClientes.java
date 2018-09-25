@@ -24,6 +24,7 @@ import java.util.List;
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.Data.BDClientes;
 import yiwo.apppedidos.Data.BDFormaPago;
+import yiwo.apppedidos.Data.BDPedidos;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomAdapterCodNom;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
 import yiwo.apppedidos.R;
@@ -42,10 +43,8 @@ public class LateralClientes extends Fragment {
     CustomAdapterCodNom adapter;
     ArrayList<List<String>> arrayList;
     BDClientes bdClientes = new BDClientes();
-    String TAG = "LateralClientes";
-    BackGroundTask task = new BackGroundTask();
-
-    BDFormaPago bdFormaPago= new BDFormaPago();
+    String TAG="LateralClientes";
+    BDFormaPago bdFormaPago = new BDFormaPago();
     public LateralClientes() {
         // Required empty public constructor
     }
@@ -60,15 +59,13 @@ public class LateralClientes extends Fragment {
         et_bucar = view.findViewById(R.id.et_buscar);
         progressBar = view.findViewById(R.id.progressBar);
 
-        CodigosGenerales.CantidadDatosDialog = 6;
-        CodigosGenerales.TipoArray = "Cliente";
 //        CodigosGenerales.Filtro=false;
 
         try {
             app_barLayout = getActivity().findViewById(R.id.app_barLayout);
             app_barLayout.setVisibility(View.VISIBLE);
         } catch (Exception e) {
-            Log.d(TAG, "app_barLayout: " + e.getMessage());
+            Log.d("FragList", "app_barLayout: " + e.getMessage());
         }
 
         et_bucar.addTextChangedListener(new TextWatcher() {
@@ -79,12 +76,10 @@ public class LateralClientes extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    task.cancel(true);
-                    task.onPostExecute("");
-                    task = new BackGroundTask();
+                    BackGroundTask task = new BackGroundTask();
                     task.execute("");
                 } catch (Exception e) {
-                    Log.d(TAG, "et_buscar: " + e.getMessage());
+                    Log.d("FragList", "et_buscar: " + e.getMessage());
                 }
             }
 
@@ -94,8 +89,8 @@ public class LateralClientes extends Fragment {
         });
 
 
-        task = new BackGroundTask();
-        task.execute("");
+        BackGroundTask task1 = new BackGroundTask();
+        task1.execute("");
         return view;
     }
 
@@ -112,24 +107,12 @@ public class LateralClientes extends Fragment {
         protected String doInBackground(String... strings) {
             try {
                 dataModels = new ArrayList<>();
-//                arrayList = CodigosGenerales.getArrayList(et_bucar.getText().toString());
                 arrayList = bdClientes.getList(et_bucar.getText().toString());
                 for (int i = 0; i < arrayList.size(); i++) {
-                    if (task.isCancelled())
-                        break;
-                    dataModels.add(
-                            new CustomDataModel(
-                                    arrayList.get(i).get(0),
-                                    arrayList.get(i).get(1),
-                                    arrayList.get(i).get(2),
-                                    arrayList.get(i).get(3),
-                                    arrayList.get(i).get(4),
-                                    arrayList.get(i).get(5),
-                                    null
-                            ));
+                    dataModels.add(new CustomDataModel(arrayList.get(i).get(0), arrayList.get(i).get(1), null, null, null, null, null));
                 }
             } catch (Exception e) {
-                Log.d(TAG, "BackGroundTask: " + e.getMessage());
+                Log.d("FragList", "BackGroundTask: " + e.getMessage());
             }
             return null;
         }
@@ -137,12 +120,10 @@ public class LateralClientes extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             try {
-
                 progressBar.setVisibility(View.GONE);
-
                 adapter = new CustomAdapterCodNom(dataModels, getContext());
-
                 lv_items.setAdapter(adapter);
+
 
                 lv_items.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -155,6 +136,7 @@ public class LateralClientes extends Fragment {
                         adb.setNegativeButton("Cancel", null);
                         adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+
                                 CodigosGenerales.Nombre_Cliente = dataModels.get(positionToRemove).getName();
                                 CodigosGenerales.Direccion_Cliente = dataModels.get(positionToRemove).getDireccion();
                                 CodigosGenerales.Codigo_Cliente = dataModels.get(positionToRemove).getCod();
@@ -182,8 +164,9 @@ public class LateralClientes extends Fragment {
                         adb.show();
                     }
                 });
+
             } catch (Exception e) {
-                Log.d(TAG, "BackGroundTask: " + e.getMessage());
+                Log.d("FragList", "BackGroundTask: " + e.getMessage());
             }
             super.onPostExecute(s);
         }

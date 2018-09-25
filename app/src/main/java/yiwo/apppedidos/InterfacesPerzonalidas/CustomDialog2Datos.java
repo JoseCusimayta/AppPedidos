@@ -2,6 +2,7 @@ package yiwo.apppedidos.InterfacesPerzonalidas;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,11 +53,11 @@ public class CustomDialog2Datos {
         dialogo = new Dialog(context);
         dialogo.setContentView(R.layout.custom_dialog);
         dialogo.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+
         interfaz = actividad;
         listView = dialogo.findViewById(R.id.list);
         et_buscar = dialogo.findViewById(R.id.et_buscar);
-        TextView tv_titulo = dialogo.findViewById(R.id.tv_titulo);
-        tv_titulo.setText("Elegir "+CodigosGenerales.TipoArray);
         progressBar = dialogo.findViewById(R.id.progressBar);
         et_buscar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -107,7 +107,6 @@ public class CustomDialog2Datos {
             switch (CodigosGenerales.CantidadDatosDialog) {
                 case 3:
                     for (int i = 0; i < arrayListDialog.size(); i++) {
-
                         dataModels.add(new CustomDataModel(
                                 arrayListDialog.get(i).get(0),
                                 arrayListDialog.get(i).get(1),
@@ -127,19 +126,6 @@ public class CustomDialog2Datos {
                                 arrayListDialog.get(i).get(2),
                                 arrayListDialog.get(i).get(3),
                                 null,
-                                null,
-                                null
-                        ));
-                    }
-                    break;
-                case 5:
-                    for (int i = 0; i < arrayListDialog.size(); i++) {
-                        dataModels.add(new CustomDataModel(
-                                arrayListDialog.get(i).get(0),
-                                arrayListDialog.get(i).get(1),
-                                arrayListDialog.get(i).get(2),
-                                arrayListDialog.get(i).get(3),
-                                arrayListDialog.get(i).get(4),
                                 null,
                                 null
                         ));
@@ -165,7 +151,7 @@ public class CustomDialog2Datos {
         @Override
         protected void onPostExecute(String s) {
             progressBar.setVisibility(View.GONE);
-            try {
+            try{
                 listView.setAdapter(null);
                 adapter = new CustomAdapterCodNom(dataModels, context);
 
@@ -176,14 +162,6 @@ public class CustomDialog2Datos {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                         CustomDataModel dataModel = dataModels.get(position);
-                        Log.d("CustomDialog", "CantidadDatosDialog " + CodigosGenerales.CantidadDatosDialog);
-                        Log.d("CustomDialog", "getCod " + dataModel.getCod());
-                        Log.d("CustomDialog", "getName " + dataModel.getName());
-                        Log.d("CustomDialog", "getRuc " + dataModel.getRuc());
-                        Log.d("CustomDialog", "getDireccion " + dataModel.getDireccion());
-                        Log.d("CustomDialog", "getListaPrecios " + dataModel.getListaPrecios());
-                        Log.d("CustomDialog", "getDni " + dataModel.getDni());
-
                         interfaz.ResultadoCuadroDialogo2Datos(
                                 dataModel.getCod(),
                                 dataModel.getName(),
@@ -195,8 +173,8 @@ public class CustomDialog2Datos {
                         dialogo.dismiss();
                     }
                 });
-            } catch (Exception e) {
-                Log.d("CustomDialog2Datos", e.getMessage());
+            }catch (Exception e){
+                Log.d("CustomDialog2Datos",e.getMessage());
             }
             super.onPostExecute(s);
         }

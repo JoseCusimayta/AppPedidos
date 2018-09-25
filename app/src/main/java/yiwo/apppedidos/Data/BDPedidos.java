@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
 public class BDPedidos {
@@ -199,40 +200,41 @@ public class BDPedidos {
         try {
             Log.d("Codigo_Empresa", CodigosGenerales.Codigo_Empresa + "");
             Log.d("Unidad_Negocio", CodigosGenerales.Codigo_UnidadNegocio + "");
+            Log.d(TAG,"Tipo_Moneda "+Tipo_Moneda);
             String sql = "exec insertarHpedidoC "
-                    + "'" + CodigosGenerales.Codigo_Empresa + "', "
-                    + "'" + idmotivo_venta + "', "
-                    + "'" + CodPedido + "', "
-                    + "'" + CodigosGenerales.Codigo_Almacen + "', "
-                    + "'" + CodigosGenerales.FechaActual + "', "
-                    + "'" + CodigosGenerales.FechaActual + "', "
-                    + "'" + Cod_Cliente + "', "
-                    + "'" + Nom_Cliente + "', "
-                    + "'" + Ruc_Cliente + "', "
-                    + "'" + Cod_FormaPago + "', "
-                    + "'" + CodigosGenerales.Codigo_Usuario + "', "//BDUsuario.CodUsu
-                    + "'" + Tipo_Moneda + "', "
-                    + "'" + SI_IGV + "', "
-                    + "'" + Tipo_Cambio + "', "
-                    + "'" + Importe + "', "
-                    + "'" + Descuento + "', "
-                    + "'" + Lista_Precios + "', "
-                    + "'" + Centro_Costo + "', " //ccod_cencos
-                    + "'" + Unidad_Negocio + "', " //erp_codune
-                    + "'" + CodigosGenerales.Direccion_Almacen + "', "
-                    + "'" + Lugar_Entrega + "', "
-                    + "'" + CodigosGenerales.Codigo_Usuario + "', "
-                    + "'" + CodigosGenerales.FechaActual + "', "
-                    + "'" + Erp_Subtotal + "', "
-                    + "'" + Erp_Descuento + "', "
-                    + "'" + Erp_IGV + "', "
-                    + "'" + Erp_Importe + "', "
-                    + "'" + Erp_Percepcion + "', "
-                    + "'" + Erp_Total + "', "
-                    + "'" + Erp_dfecha_val + "', "//Fecha de entrega ed la factura
-                    + "'" + Comentario + "', "
-                    + "'" + cTipoCambio + "' "; //Tipo de cambio Vta Especial o Compra
-            Log.d("adas","sql- "+sql);
+                    + "'" + CodigosGenerales.Codigo_Empresa + "', "                             //ccod_empresa
+                    + "'" + idmotivo_venta + "', "                  //idmotivo_venta
+                    + "'" + CodPedido + "', "                   //cnum_doc
+                    + "'" + CodigosGenerales.Codigo_Almacen + "', "                 //ccod_almacen
+                    + "'" + CodigosGenerales.FechaActual + "', "                    //dfecha_doc
+                    + "'" + CodigosGenerales.FechaActual + "', "                    //dfecha_entr
+                    + "'" + Cod_Cliente + "', "                 //ccod_cliente
+                    + "'" + Nom_Cliente + "', "                 //cnom_cliente
+                    + "'" + Ruc_Cliente + "', "                 //cnum_ruc_cliente
+                    + "'" + Cod_FormaPago + "', "                   //ccod_forpago
+                    + "'" + CodigosGenerales.Codigo_Usuario + "', "//BDUsuario.CodUsu                   //ccod_person
+                    + "'" + Tipo_Moneda + "', "                 //cmoneda
+                    + "'" + SI_IGV + "', "                  //si_igv
+                    + "'" + Tipo_Cambio + "', "                 //tipo_cambio
+                    + "'" + Importe + "', "                 //nimporte
+                    + "'" + Descuento + "', "                   //dscto
+                    + "'" + Lista_Precios + "', "                   //lista_precios
+                    + "'" + Centro_Costo + "', " //ccod_cencos                  //ccod_cencos
+                    + "'" + Unidad_Negocio + "', " //erp_codune                 //erp_codune
+                    + "'" + CodigosGenerales.Direccion_Almacen + "', "                  //punto_partida
+                    + "'" + Lugar_Entrega + "', "                   //lugar_entrega
+                    + "'" + CodigosGenerales.Codigo_Usuario + "', "                 //Usuario
+                    + "'" + CodigosGenerales.FechaActual + "', "                    //Pc_Fecha
+                    + "'" + Erp_Subtotal + "', "                    //erp_Dsubtotal
+                    + "'" + Erp_Descuento + "', "                   //erp_Ddescuento
+                    + "'" + Erp_IGV + "', "                 //erp_Digv
+                    + "'" + Erp_Importe + "', "                 //erp_Dimporte
+                    + "'" + Erp_Percepcion + "', "                  //erp_Dpercepcion
+                    + "'" + Erp_Total + "', "                   //erp_Dtotal
+                    + "'" + Erp_dfecha_val + "', "//Fecha de entrega ed la factura                  //dfecha_val
+                    + "'" + Comentario + "', "                  //observacion
+                    + "'" + cTipoCambio + "' "; //Tipo de cambio Vta Especial o Compra                  //ctipo_cambio
+            Log.d(TAG,"sql- "+sql);
             Statement statement = connection.createStatement();
             statement.execute(sql);
             return true;
@@ -272,7 +274,7 @@ public class BDPedidos {
                 Descuento_Unico = CodigosGenerales.getDescuenetoUnico(descuento_1,descuento_2,descuento_3,descuento_4);
                 BaseImponible = precio_unitario * ncantidad;
 
-                if(bdEmpresa.isIncluidoIGV()) {
+                if(ConfiguracionEmpresa.isIncluidoIGV) {
                     MontoADescontar=(BaseImponible / (1 + (IGV_Articulo / 100)))*(Descuento_Unico)/100;
                     BaseCalculada = (BaseImponible / (1 + (IGV_Articulo / 100)))*(100-Descuento_Unico)/100;
                 }else {
