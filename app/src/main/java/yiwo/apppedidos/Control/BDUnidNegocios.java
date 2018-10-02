@@ -1,4 +1,4 @@
-package yiwo.apppedidos.Data;
+package yiwo.apppedidos.Control;
 
 import android.util.Log;
 
@@ -10,62 +10,64 @@ import java.util.Arrays;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
-public class BDCentroCostos {
+public class BDUnidNegocios {
 
     BDConexionSQL bdata= new BDConexionSQL();
 
     public ArrayList<List<String>> getList(String Nombre){
+
         ArrayList<List<String>> arrayList = new ArrayList<>();
+
         try {
             Connection connection = bdata.getConnection();
 
-            String stsql = "select * from dbo.udf_list_hcencos(?) where codigo like ? or nombre like ? order by codigo";
+            String stsql = "Select erp_codune, erp_nomune from erp_unidad_negocio where erp_codemp = ? and ( erp_nomune like ? or erp_codune like ?) order by erp_codune";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Código de la empresa
-            query.setString(2, Nombre+"%"); //Código del Centro de Costos
-            query.setString(3, Nombre+"%"); //Nombre del Centro de Costos
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
+            query.setString(2, Nombre+"%"); //Codigo de la Unidad de Negocio
+            query.setString(3, Nombre+"%"); //Nombre de la Unidad de Negocio
 
             ResultSet rs = query.executeQuery();
 
             while (rs.next()) {
                 arrayList.add(Arrays.asList(
-                        rs.getString("codigo"),
-                        rs.getString("Nombre"),
-                        null
-                ));
+                        rs.getString("erp_codune"),
+                        rs.getString("erp_nomune"),
+                        rs.getString("erp_nomune")));
             }
             connection.close();
 
         } catch (Exception e) {
-            Log.d("BDCentroCostos", "- getList: "+e.getMessage());
+            Log.d("BDUNegocios", "- getList: "+e.getMessage());
         }
         return arrayList;
     }
 
-
-    public List<String> getPredeterminado(Connection connection, String cod_emp) {
+    public List<String> getPredeterminado(Connection connection) {
 
         List<String> list=new ArrayList<>();
 
         try {
 //            Connection connection = bdata.getConnection();
 
-            String stsql = "select TOP(1) * from dbo.udf_list_hcencos(?) order by codigo";
+            String stsql = "Select TOP(1) erp_codune, erp_nomune from erp_unidad_negocio where erp_codemp = ? order by erp_codune";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, cod_emp);
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
+
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
-                list.add(rs.getString("codigo"));
-                list.add(rs.getString("nombre"));
+                list.add(rs.getString("erp_codune"));
+                list.add(rs.getString("erp_nomune"));
             }
 //            connection.close();
 
         } catch (Exception e) {
-            Log.d("BDEmpresa", "- getListaArticulos: "+e.getMessage());
+            Log.d("BDEmpresa", "- getUnidadNegocioPredeterminado: "+e.getMessage());
         }
         return list;
     }

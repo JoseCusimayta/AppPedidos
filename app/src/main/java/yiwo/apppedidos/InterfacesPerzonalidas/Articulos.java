@@ -2,13 +2,13 @@ package yiwo.apppedidos.InterfacesPerzonalidas;
 
 public class Articulos {
 
-    String codigo_articulo;
-    String nombre_articulo;
-    String cantidad_articulo;
-    String unidad_articulo;
-    String precio_articulo;
-    String moneda_articulo;
-    String porcentaje_igv;
+    private String codigo_articulo;
+    private String nombre_articulo;
+    private String cantidad_articulo;
+    private String unidad_articulo;
+    private String precio_articulo;
+    private String moneda_articulo;
+    private String porcentaje_igv;
 
     public Articulos(String codigo_articulo, String nombre_articulo, String cantidad_articulo, String unidad_articulo, String precio_articulo, String moneda_articulo, String porcentaje_igv) {
         this.codigo_articulo = codigo_articulo;

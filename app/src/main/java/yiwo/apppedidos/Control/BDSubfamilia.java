@@ -1,4 +1,4 @@
-package yiwo.apppedidos.Data;
+package yiwo.apppedidos.Control;
 
 import android.util.Log;
 
@@ -10,32 +10,31 @@ import java.util.Arrays;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
-public class BDFamilia {
+public class BDSubfamilia    {
 
     BDConexionSQL bdata= new BDConexionSQL();
 
-    public List<String> getNombres() {
+    public List<String> getNombres(Connection connection) {
         List<String>listaNombres = new ArrayList<String>();
 
         try {
-            Connection connection = bdata.getConnection();
 
-            String stsql = "select cnom_familia from Hfam_art where ccod_empresa=? and cfamilia!='656' and cfamilia!='655' ";
+            String stsql = "select cnom_subfamilia from Hsubfamilia_art where ccod_empresa=? ";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
 
             ResultSet rs = query.executeQuery();
 
             while (rs.next()) {
-                listaNombres.add(rs.getString("cnom_familia"));
+                listaNombres.add(rs.getString("cnom_subfamilia"));
             }
-            connection.close();
 
         } catch (Exception e) {
-            Log.d("BDFamilia", "- getNombres: "+e.getMessage());
+            Log.d("BDSubfamilia", "- getNombres: "+e.getMessage());
         }
         return listaNombres;
     }
@@ -48,25 +47,25 @@ public class BDFamilia {
 
             Connection connection = bdata.getConnection();
 
-            String stsql = "select cfamilia, cnom_familia from Hfam_art where ccod_empresa=? and (cfamilia like ? or cnom_familia like ?) and cfamilia!='656' and cfamilia!='655'";
+            String stsql = "select ccod_subfamilia, cnom_subfamilia from Hsubfamilia_art where ccod_empresa=? and (ccod_subfamilia like ? or cnom_subfamilia like ?)";
+
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Código de la empresa
-            query.setString(2, Nombre+"%"); //Código de la Familia
-            query.setString(3, Nombre+"%"); //Nombre de la Familia
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Código de la empresa
+            query.setString(2, Nombre+"%"); //Código de la SubFamilia
+            query.setString(3, Nombre+"%"); //Nombre de la SubFamilia
 
             ResultSet rs = query.executeQuery();
 
             while (rs.next()) {
                 arrayList.add(Arrays.asList(
-                        rs.getString("cfamilia"),       //Código de Familia
-                        rs.getString("cnom_familia") //Nombre de Familia
-                ));
+                        rs.getString("ccod_subfamilia"),       //Código de Familia
+                        rs.getString("cnom_subfamilia"))); //Nombre de Familia
             }
             connection.close();
-        } catch (Exception e) {
-            Log.d("BDFamilia", "- getList: "+e.getMessage());
-        }
 
+        } catch (Exception e) {
+            Log.d("BDSubfamilia", "- getList: "+e.getMessage());
+        }
         return arrayList;
     }
 }

@@ -16,6 +16,8 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.AspectosGenerales.DatosConexiones;
 import yiwo.apppedidos.R;
 
 public class CustomAdapterListaDeseos extends ArrayAdapter<CustomDataModelListaDeseos> {
@@ -93,7 +95,7 @@ public class CustomAdapterListaDeseos extends ArrayAdapter<CustomDataModelListaD
 
         viewHolder.Numero_Orden.setText(dataModel.getNumero_Orden());
         try {
-            File file = new File(CodigosGenerales.myDirectorio, CodigosGenerales.Codigo_Empresa + "_" + dataModel.getCodigo_Producto() + "_1.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
+            File file = new File(DatosConexiones.myDirectorio, ConfiguracionEmpresa.Codigo_Empresa + "_" + dataModel.getCodigo_Producto() + "_1.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
             Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
             viewHolder.Imagen_Producto_url.setImageBitmap(bitmap);
         } catch (Exception e) {

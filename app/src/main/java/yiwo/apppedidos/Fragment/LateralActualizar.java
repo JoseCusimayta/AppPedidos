@@ -24,8 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.CodigosUtiles;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
-import yiwo.apppedidos.Data.BDArticulos;
+import yiwo.apppedidos.AspectosGenerales.DatosConexiones;
+import yiwo.apppedidos.Control.BDArticulos;
 import yiwo.apppedidos.R;
 
 /**
@@ -42,6 +44,9 @@ public class LateralActualizar extends Fragment {
     BackGroundTask task;
     Boolean Online = true, descarga_exitosa = false;
     Integer articulos_descargados=0, articulos_no_descargados=0, articulos_totales=0;
+
+    private DatosConexiones datosConexiones= new DatosConexiones();
+
     public LateralActualizar() {
         // Required empty public constructor
     }
@@ -61,8 +66,13 @@ public class LateralActualizar extends Fragment {
             @Override
             public void onClick(View view) {
                 try {
-                    task = new BackGroundTask();
-                    task.execute("");
+                    if(CodigosUtiles.isExternalStorageWritable()) {
+                        CodigosUtiles.crearCarpetaAlmInterno();
+                        task = new BackGroundTask();
+                        task.execute("");
+                    }else{
+                        Toast.makeText(getActivity(), "No se puede crear la carpeta en la memoria externa", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (Exception e) {
                     Log.d("CreateView", "Task " + e.getMessage());
                 }
@@ -146,14 +156,16 @@ public class LateralActualizar extends Fragment {
         String ip;
 
         if (ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isLANAviable)
-            ip = ConfiguracionEmpresa.IP_LAN;
+            ip = datosConexiones.getIP_LAN();
         else if (!ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isPublicaAviable)
-            ip = ConfiguracionEmpresa.IP_Publica;
+            ip = datosConexiones.getIP_Publica();
         else
             return false;
 
 
-        String DOWNLOAD_URL = "http://" + ip + ":" + ConfiguracionEmpresa.PuertoImagenes + "/" + ConfiguracionEmpresa.IP_LAN + "/" + ConfiguracionEmpresa.CarpetaImagenes + "/";
+        String DOWNLOAD_URL
+                = "http://" + ip + ":" + datosConexiones.getPuertoImagenes() + "/" +
+                datosConexiones.getIP_LAN() + "/" + datosConexiones.getCarpetaImagenes() + "/";
         Log.d(TAG, "Conectandose a :" + DOWNLOAD_URL);
 
         GuardarMenu_Articulos(DOWNLOAD_URL);
@@ -178,7 +190,7 @@ public class LateralActualizar extends Fragment {
 
     private void GuardarMenu_Articulos(String DOWNLOAD_URL) {
         try {
-            String Nombre_Imagen = CodigosGenerales.Codigo_Empresa + "_articulos.jpg";
+            String Nombre_Imagen = ConfiguracionEmpresa.Codigo_Empresa + "_articulos.jpg";
 
             URL url = new URL(DOWNLOAD_URL + Nombre_Imagen);
 
@@ -191,7 +203,7 @@ public class LateralActualizar extends Fragment {
             Bitmap bitmap = BitmapFactory.decodeStream(input);
 
             //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-            File imgFile = new File(CodigosGenerales.myDirectorio, Nombre_Imagen);
+            File imgFile = new File(DatosConexiones.myDirectorio, Nombre_Imagen);
 
             FileOutputStream out = new FileOutputStream(imgFile);
 
@@ -208,7 +220,7 @@ public class LateralActualizar extends Fragment {
 
     private void GuardarMenu_Familia(String DOWNLOAD_URL) {
         try {
-            String Nombre_Imagen = CodigosGenerales.Codigo_Empresa + "_familia.jpg";
+            String Nombre_Imagen = ConfiguracionEmpresa.Codigo_Empresa + "_familia.jpg";
 
             URL url = new URL(DOWNLOAD_URL + Nombre_Imagen);
 
@@ -221,7 +233,7 @@ public class LateralActualizar extends Fragment {
             Bitmap bitmap = BitmapFactory.decodeStream(input);
 
             //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-            File imgFile = new File(CodigosGenerales.myDirectorio, Nombre_Imagen);
+            File imgFile = new File(DatosConexiones.myDirectorio, Nombre_Imagen);
 
             FileOutputStream out = new FileOutputStream(imgFile);
 
@@ -239,7 +251,7 @@ public class LateralActualizar extends Fragment {
 
     private void GuardarMenu_SubFamilia(String DOWNLOAD_URL) {
         try {
-            String Nombre_Imagen = CodigosGenerales.Codigo_Empresa + "_subfamilia.jpg";
+            String Nombre_Imagen = ConfiguracionEmpresa.Codigo_Empresa + "_subfamilia.jpg";
 
             URL url = new URL(DOWNLOAD_URL + Nombre_Imagen);
 
@@ -252,7 +264,7 @@ public class LateralActualizar extends Fragment {
             Bitmap bitmap = BitmapFactory.decodeStream(input);
 
             //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-            File imgFile = new File(CodigosGenerales.myDirectorio, Nombre_Imagen);
+            File imgFile = new File(DatosConexiones.myDirectorio, Nombre_Imagen);
 
             FileOutputStream out = new FileOutputStream(imgFile);
 
@@ -271,7 +283,7 @@ public class LateralActualizar extends Fragment {
     private void GuardarMenu_Conceptos(String DOWNLOAD_URL) {
         try {
             for (int i = 1; i <= 7; i++) {
-                String Nombre_Imagen = CodigosGenerales.Codigo_Empresa + "_concepto" + i + ".jpg";
+                String Nombre_Imagen = ConfiguracionEmpresa.Codigo_Empresa + "_concepto" + i + ".jpg";
 
                 URL url = new URL(DOWNLOAD_URL + Nombre_Imagen);
 
@@ -284,7 +296,7 @@ public class LateralActualizar extends Fragment {
                 Bitmap bitmap = BitmapFactory.decodeStream(input);
 
                 //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-                File imgFile = new File(CodigosGenerales.myDirectorio, Nombre_Imagen);
+                File imgFile = new File(DatosConexiones.myDirectorio, Nombre_Imagen);
 
                 FileOutputStream out = new FileOutputStream(imgFile);
 
@@ -303,7 +315,7 @@ public class LateralActualizar extends Fragment {
     private Boolean GuardarArticulos(String DOWNLOAD_URL, String Codigo_Articulo) {
         try {
             for (int i = 1; i <= 4; i++) {
-                String Nombre_Imagen = CodigosGenerales.Codigo_Empresa + "_" + Codigo_Articulo + "_" + i + ".jpg";
+                String Nombre_Imagen = ConfiguracionEmpresa.Codigo_Empresa + "_" + Codigo_Articulo + "_" + i + ".jpg";
                 URL url = new URL(DOWNLOAD_URL + Nombre_Imagen);
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -315,7 +327,7 @@ public class LateralActualizar extends Fragment {
                 Bitmap bitmap = BitmapFactory.decodeStream(input);
 
                 //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-                File imgFile = new File(CodigosGenerales.myDirectorio, Nombre_Imagen);
+                File imgFile = new File(DatosConexiones.myDirectorio, Nombre_Imagen);
 
                 FileOutputStream out = new FileOutputStream(imgFile);
 

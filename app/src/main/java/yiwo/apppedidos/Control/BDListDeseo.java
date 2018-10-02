@@ -1,4 +1,4 @@
-package yiwo.apppedidos.Data;
+package yiwo.apppedidos.Control;
 
 import android.util.Log;
 
@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.AspectosGenerales.DatosUsuario;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
 public class BDListDeseo {
@@ -46,8 +48,8 @@ public class BDListDeseo {
                     "and erp_coduser = ? ";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
-            query.setString(2, CodigosGenerales.Codigo_Usuario); // Codigo del Usuario
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
+            query.setString(2, DatosUsuario.Codigo_Usuario); // Codigo del Usuario
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
                 arrayArticulos.add(Arrays.asList(
@@ -88,10 +90,10 @@ public class BDListDeseo {
                             " and cunidad = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, CodigosGenerales.Codigo_Empresa);
-            preparedStatement.setString(2, CodigosGenerales.Codigo_Usuario);
-            preparedStatement.setString(3, CodigosGenerales.Codigo_PuntoVenta);
-            preparedStatement.setString(4, CodigosGenerales.Codigo_Almacen);
+            preparedStatement.setString(1, ConfiguracionEmpresa.Codigo_Empresa);
+            preparedStatement.setString(2,DatosUsuario.Codigo_Usuario);
+            preparedStatement.setString(3,DatosUsuario.Codigo_PuntoVenta);
+            preparedStatement.setString(4,DatosUsuario.Codigo_Almacen);
             preparedStatement.setString(5, CodigoArticulo);
             preparedStatement.setString(6, Unidad);
 
@@ -138,7 +140,7 @@ public class BDListDeseo {
                         " where ccod_empresa=? and ccod_articulo=? and erp_coduser=?";
 
                 PreparedStatement update = connection.prepareStatement(sql);
-                update.setString(1, CodigosGenerales.Codigo_Empresa);
+                update.setString(1, ConfiguracionEmpresa.Codigo_Empresa);
                 update.setString(2, CodigoArticulo);
                 update.setString(3, CodigosGenerales.Codigo_Usuario);
                 update.execute();
@@ -166,7 +168,7 @@ public class BDListDeseo {
                         "?)";       //Lista de Precios
 
                 PreparedStatement insert = connection.prepareStatement(sql);
-                insert.setString(1, CodigosGenerales.Codigo_Empresa);//Código de Empresa
+                insert.setString(1, ConfiguracionEmpresa.Codigo_Empresa);//Código de Empresa
                 insert.setString(2, CodigosGenerales.Codigo_Usuario);//Código de Usuario
                 insert.setString(3, CodigosGenerales.Codigo_PuntoVenta);//Código de Punto de Venta
                 insert.setString(4, CodigosGenerales.Codigo_Almacen);//Código de Almacen
@@ -196,10 +198,10 @@ public class BDListDeseo {
 
             String sql = "delete from " + Tabla + " where ccod_empresa=? and erp_coduser=? and ccod_ptovta =? and ccod_almacen =? and ccod_articulo =? ";
             PreparedStatement query = connection.prepareStatement(sql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa);
-            query.setString(2, CodigosGenerales.Codigo_Usuario);
-            query.setString(3, CodigosGenerales.Codigo_PuntoVenta);
-            query.setString(4, CodigosGenerales.Codigo_Almacen);
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa);
+            query.setString(2, DatosUsuario.Codigo_Usuario);
+            query.setString(3, DatosUsuario.Codigo_PuntoVenta);
+            query.setString(4, DatosUsuario.Codigo_Almacen);
             query.setString(5, Codigo_Producto);
             query.execute();
             connection.close();
@@ -233,10 +235,10 @@ public class BDListDeseo {
                     "?)";       //Lista de Precios
 
             PreparedStatement insert = connection.prepareStatement(sql);
-            insert.setString(1, CodigosGenerales.Codigo_Empresa);//Código de Empresa
-            insert.setString(2, CodigosGenerales.Codigo_Usuario);//Código de Usuario
-            insert.setString(3, CodigosGenerales.Codigo_PuntoVenta);//Código de Punto de Venta
-            insert.setString(4, CodigosGenerales.Codigo_Almacen);//Código de Almacen
+            insert.setString(1, ConfiguracionEmpresa.Codigo_Empresa);//Código de Empresa
+            insert.setString(2, DatosUsuario.Codigo_Usuario);//Código de Usuario
+            insert.setString(3, DatosUsuario.Codigo_PuntoVenta);//Código de Punto de Venta
+            insert.setString(4, DatosUsuario.Codigo_Almacen);//Código de Almacen
             insert.setString(5, getNumeroItem());//Numero del Artículo
             insert.setString(6, CodigoArticulo);//Código del Artículo
             insert.setString(7, NombreArticulo);//Nombre del Artículo
@@ -279,10 +281,10 @@ public class BDListDeseo {
                             " and cunidad=?";
 
             PreparedStatement insert = connection.prepareStatement(sql);
-            insert.setString(1, CodigosGenerales.Codigo_Empresa);//Código de Empresa
-            insert.setString(2, CodigosGenerales.Codigo_Usuario);//Código de Usuario
-            insert.setString(3, CodigosGenerales.Codigo_PuntoVenta);//Código de Punto de Venta
-            insert.setString(4, CodigosGenerales.Codigo_Almacen);//Código de Almacen
+            insert.setString(1, ConfiguracionEmpresa.Codigo_Empresa);//Código de Empresa
+            insert.setString(2, DatosUsuario.Codigo_Usuario);//Código de Usuario
+            insert.setString(3, DatosUsuario.Codigo_PuntoVenta);//Código de Punto de Venta
+            insert.setString(4, DatosUsuario.Codigo_Almacen);//Código de Almacen
             insert.setString(5, CodigoArticulo);//Código del Artículo
             insert.setString(6, Unidad);//Tipo de Unidad de medida
             insert.execute();
@@ -301,10 +303,10 @@ public class BDListDeseo {
             String stsql = "select 1+ ( select TOP(1) nitem from " + Tabla + " where ccod_empresa= ? and erp_coduser=? and ccod_ptovta =? and ccod_almacen=? order by nitem desc)  ";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
-            query.setString(2, CodigosGenerales.Codigo_Usuario); // Codigo del Usuario
-            query.setString(3, CodigosGenerales.Codigo_PuntoVenta); // Codigo del Punto de Venta
-            query.setString(4, CodigosGenerales.Codigo_Almacen); // Codigo del Almacen
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
+            query.setString(2, DatosUsuario.Codigo_Usuario); // Codigo del Usuario
+            query.setString(3, DatosUsuario.Codigo_PuntoVenta); // Codigo del Punto de Venta
+            query.setString(4, DatosUsuario.Codigo_Almacen); // Codigo del Almacen
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
                 NroItem = rs.getInt(1);
@@ -326,10 +328,10 @@ public class BDListDeseo {
             String stsql = "select ncantidad from " + Tabla + " where ccod_empresa=? and erp_coduser=? and ccod_ptovta=? and ccod_almacen=? and ccod_articulo=?";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
-            query.setString(2, CodigosGenerales.Codigo_Usuario); // Codigo del Usuario
-            query.setString(3, CodigosGenerales.Codigo_PuntoVenta); // Codigo del Punto de Venta
-            query.setString(4, CodigosGenerales.Codigo_Almacen); // Codigo del Almacen
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
+            query.setString(2, DatosUsuario.Codigo_Usuario); // Codigo del Usuario
+            query.setString(3, DatosUsuario.Codigo_PuntoVenta); // Codigo del Punto de Venta
+            query.setString(4, DatosUsuario.Codigo_Almacen); // Codigo del Almacen
             query.setString(5, Codigo_Producto); // Codigo del Producto
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
@@ -351,10 +353,10 @@ public class BDListDeseo {
             String stsql = "select precio from " + Tabla + " where ccod_empresa=? and erp_coduser=? and ccod_ptovta=? and ccod_almacen=? and ccod_articulo=?";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
-            query.setString(2, CodigosGenerales.Codigo_Usuario); // Codigo del Usuario
-            query.setString(3, CodigosGenerales.Codigo_PuntoVenta); // Codigo del Punto de Venta
-            query.setString(4, CodigosGenerales.Codigo_Almacen); // Codigo del Almacen
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
+            query.setString(2, DatosUsuario.Codigo_Usuario); // Codigo del Usuario
+            query.setString(3, DatosUsuario.Codigo_PuntoVenta); // Codigo del Punto de Venta
+            query.setString(4, DatosUsuario.Codigo_Almacen); // Codigo del Almacen
             query.setString(5, Codigo_Producto); // Codigo del Producto
 
             ResultSet rs = query.executeQuery();
@@ -373,20 +375,17 @@ public class BDListDeseo {
 
     }
 
-    public Boolean LimpiarListaDeseo() {
+    public Boolean LimpiarListaDeseo(Connection connection) {
         try {
-
-            Connection connection = bdata.getConnection();
 
             String sql = "delete from "+Tabla+" where ccod_empresa = ? and erp_coduser = ? and ccod_ptovta = ? and ccod_almacen = ?";
             PreparedStatement query = connection.prepareStatement(sql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa);
-            query.setString(2, CodigosGenerales.Codigo_Usuario);
-            query.setString(3, CodigosGenerales.Codigo_PuntoVenta);
-            query.setString(4, CodigosGenerales.Codigo_Almacen);
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa);
+            query.setString(2, DatosUsuario.Codigo_Usuario);
+            query.setString(3, DatosUsuario.Codigo_PuntoVenta);
+            query.setString(4, DatosUsuario.Codigo_Almacen);
 
             query.execute();
-            connection.close();
             return true;
         } catch (Exception e) {
             Log.d(TAG, "- LimpiarListaDeseo: " + e.getMessage());

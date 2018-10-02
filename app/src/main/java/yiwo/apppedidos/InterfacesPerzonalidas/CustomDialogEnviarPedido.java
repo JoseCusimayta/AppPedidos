@@ -15,8 +15,9 @@ import java.sql.SQLException;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.AspectosGenerales.DatosCliente;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
-import yiwo.apppedidos.Data.BDMotivo;
+import yiwo.apppedidos.Control.BDMotivo;
 import yiwo.apppedidos.R;
 
 public class CustomDialogEnviarPedido {
@@ -70,13 +71,13 @@ public class CustomDialogEnviarPedido {
 
         //tv_cliente.setText("Cliente: "+CodigosGenerales.Codigo_Cliente+" - "+CodigosGenerales.Nombre_Cliente);
 
-        tv_cliente.setText("Cliente: " + CodigosGenerales.Nombre_Cliente);
-        tv_subtotal.setText("SubTotal: " + CodigosGenerales.Moneda_Empresa + " " + CodigosGenerales.RedondearDecimales(Monto_SubTotal_Pedido,2));
-        tv_descuento.setText("Descuento:  "+ CodigosGenerales.Moneda_Empresa + " " + CodigosGenerales.RedondearDecimales(Monto_Descontado_Pedido,2));
-        tv_igv.setText("IGV:  "+ CodigosGenerales.Moneda_Empresa + " " + CodigosGenerales.RedondearDecimales(Monto_IGV_Pedido,2));
-        tv_importe.setText("Importe:  "+ CodigosGenerales.Moneda_Empresa + " " + CodigosGenerales.RedondearDecimales(Monto_Importe_Pedido,2));
+        tv_cliente.setText("Cliente: " + DatosCliente.Nombre_Cliente);
+        tv_subtotal.setText("SubTotal: " + ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimales(Monto_SubTotal_Pedido,2));
+        tv_descuento.setText("Descuento:  "+ ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimales(Monto_Descontado_Pedido,2));
+        tv_igv.setText("IGV:  "+ ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimales(Monto_IGV_Pedido,2));
+        tv_importe.setText("Importe:  "+ ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimales(Monto_Importe_Pedido,2));
 
-        tv_cliente.setText(CodigosGenerales.Nombre_Cliente);
+        tv_cliente.setText(DatosCliente.Nombre_Cliente);
 
         b_aceptar.setOnClickListener(new View.OnClickListener() {
             @Override

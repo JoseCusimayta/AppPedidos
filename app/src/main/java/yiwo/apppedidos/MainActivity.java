@@ -170,7 +170,6 @@ public class MainActivity extends AppCompatActivity
 
         CodigosGenerales.isInicio=false;
 
-        CodigosGenerales.hideSoftKeyboard(this);
 
         getSupportFragmentManager()
                 .beginTransaction()

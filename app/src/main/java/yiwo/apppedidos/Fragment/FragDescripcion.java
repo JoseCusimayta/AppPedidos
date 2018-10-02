@@ -3,13 +3,11 @@ package yiwo.apppedidos.Fragment;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,17 +23,17 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.AspectosGenerales.DatosCliente;
 import yiwo.apppedidos.ConexionBD.BDDescargarImagenes;
-import yiwo.apppedidos.Data.BDArticulos;
-import yiwo.apppedidos.Data.BDListDeseo;
+import yiwo.apppedidos.Control.BDArticulos;
+import yiwo.apppedidos.Control.BDListDeseo;
 import yiwo.apppedidos.InterfacesPerzonalidas.frag_dialog_galeria;
 import yiwo.apppedidos.R;
 
@@ -108,9 +106,9 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
             Stock = Double.parseDouble(informacion.get(2));
             Unidad_Articulo = informacion.get(3);
             Precio_Articulo = CodigosGenerales.tryParseDouble(informacion.get(4));
-            PorcentajeIGV= CodigosGenerales.tryParseDouble(informacion.get(8));
+            PorcentajeIGV= CodigosGenerales.tryParseDouble(informacion.get(7));
             tv_cantidad.setText(Stock + " " + Unidad_Articulo);
-            tv_precio.setText(CodigosGenerales.Moneda_Empresa + " " + CodigosGenerales.RedondearDecimales(Precio_Articulo, 2));
+            tv_precio.setText(ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimales(Precio_Articulo, 2));
             et_nombre.setText(CodigosGenerales.Nombre_Categoria + Nombre_Articulo);
 
             app_barLayout = getActivity().findViewById(R.id.app_barLayout);
@@ -119,7 +117,7 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
             BackGroundTask task = new BackGroundTask();
             task.execute("");
         } catch (Exception e) {
-            Log.d(TAG, "FragDescripcion: " + e.getMessage());
+            Log.d(TAG, "onCreateView: " + e.getMessage());
         }
 
         iv_imagen.setOnClickListener(this);
@@ -140,6 +138,8 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
                 return false;
             }
         });
+        CodigosGenerales.ImagenGaleria1 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_1.jpg");
+        iv_imagen.setImageBitmap(CodigosGenerales.ImagenGaleria1);
         return view;
     }
 
@@ -222,7 +222,6 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
 
         @Override
         protected String doInBackground(String... strings) {
-            CodigosGenerales.ImagenGaleria1 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_1.jpg");
             CodigosGenerales.ImagenGaleria2 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_2.jpg");
             CodigosGenerales.ImagenGaleria3 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_3.jpg");
             CodigosGenerales.ImagenGaleria4 = bdDescargarImagenes.getImageFromDirectory(CodigosGenerales.Codigo_Articulo + "_4.jpg");
@@ -233,7 +232,6 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
         protected void onPostExecute(String s) {
             try {
                 isGalleryReady=true;
-                iv_imagen.setImageBitmap(CodigosGenerales.ImagenGaleria1);
             } catch (Exception e) {
                 Log.d("FragList", e.getMessage());
 
@@ -245,7 +243,7 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
     private void AgregarProductosListaDeseo(Double Cantidad) {
         if (Cantidad > 0) {
             if (Cantidad <= Stock) {
-                if (bdListDeseo.GuardarListaDeseo(Codigo_Articulo, Nombre_Articulo, Cantidad.toString(), Unidad_Articulo, Precio_Articulo.toString(), "",PorcentajeIGV.toString())) {
+                if (bdListDeseo.GuardarListaDeseo(Codigo_Articulo, Nombre_Articulo, Cantidad.toString(), Unidad_Articulo, Precio_Articulo.toString(), DatosCliente.Codigo_ListaPrecios,PorcentajeIGV.toString())) {
                     Toast.makeText(getActivity(), "Se ha(n) agregado " + Cantidad + " elemento(s)", Toast.LENGTH_SHORT).show();
                     et_cantidad.setText("");
                 } else

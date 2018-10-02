@@ -13,18 +13,18 @@ import java.util.ArrayList;
 
 import yiwo.apppedidos.R;
 
-public class CustomAdapterCodNom extends ArrayAdapter<CustomDataModel>{
+public class ClientesAdapter extends ArrayAdapter<Clientes> {
 
-    ArrayList<CustomDataModel> data;
+    ArrayList<Clientes> data;
     Context context;
 
 
-    static class ViewHolder {
+    private static class ViewHolder {
         TextView tv_code;
         TextView tv_name;
     }
 
-    public CustomAdapterCodNom(ArrayList<CustomDataModel> data, Context context) {
+    public ClientesAdapter(ArrayList<Clientes> data, Context context) {
         super(context, R.layout.custom_row_item, data);
         this.data = data;
         this.context = context;
@@ -33,7 +33,7 @@ public class CustomAdapterCodNom extends ArrayAdapter<CustomDataModel>{
     private int lastPosition = -1;
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        CustomDataModel dataModel = getItem(position);
+        Clientes dataModel = getItem(position);
         CustomAdapterCodNom.ViewHolder viewHolder;
 
         final View result;
@@ -55,8 +55,8 @@ public class CustomAdapterCodNom extends ArrayAdapter<CustomDataModel>{
         result.startAnimation(animation);
         lastPosition = position;
 
-        viewHolder.tv_code.setText(dataModel.getCod());
-        viewHolder.tv_name.setText(dataModel.getName());
+        viewHolder.tv_code.setText(dataModel.getCodigo_Cliente());
+        viewHolder.tv_name.setText(dataModel.getNombre_Cliente());
 
         // Return the completed view to render on screen
         return convertView;

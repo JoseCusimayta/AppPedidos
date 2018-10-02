@@ -1,4 +1,4 @@
-package yiwo.apppedidos.Data;
+package yiwo.apppedidos.Control;
 
 import android.util.Log;
 
@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
 public class BDPuntoVenta {
@@ -22,10 +23,10 @@ public class BDPuntoVenta {
         try {
             Connection connection = bdata.getConnection();
 
-            String stsql = "Select ccod_almacen, cnom_almacen, erp_codalmacen_ptovta from Halmacen where ccod_empresa = ? and  ( cnom_almacen like ? or ccod_almacen like ? )  order by ccod_almacen";
+            String stsql = "Select ccod_almacen, cnom_almacen, erp_codalmacen_ptovta, cdireccion from Halmacen where ccod_empresa = ? and  ( cnom_almacen like ? or ccod_almacen like ? )  order by ccod_almacen";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
             query.setString(2, Nombre + "%"); //Codigo del Punto de Venta
             query.setString(3, Nombre + "%"); //Nombre del Punto de Venta
 
@@ -36,7 +37,8 @@ public class BDPuntoVenta {
                         rs.getString("ccod_almacen"),
                         rs.getString("cnom_almacen"),
                         rs.getString("erp_codalmacen_ptovta"),
-                        rs.getString("cdireccion")));
+                        rs.getString("cdireccion")
+                ));
             }
             connection.close();
 
@@ -46,7 +48,7 @@ public class BDPuntoVenta {
         return arrayList;
     }
 
-    public List<String> getPredeterminado(Connection connection, String cod_emp) {
+    public List<String> getPredeterminado(Connection connection) {
 
         List<String> list = new ArrayList<>();
 
@@ -56,7 +58,7 @@ public class BDPuntoVenta {
             String stsql = "Select TOP(1) ccod_almacen, cnom_almacen, erp_codalmacen_ptovta, cdireccion from Halmacen where ccod_empresa = ?  and ccod_almacen!='00' order by ccod_almacen";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Codigo de la empresa
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
 
             ResultSet rs = query.executeQuery();
             while (rs.next()) {

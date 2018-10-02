@@ -1,8 +1,6 @@
 package yiwo.apppedidos.Fragment;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -11,22 +9,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
-import yiwo.apppedidos.Data.BDEmpresa;
-import yiwo.apppedidos.Data.BDListDeseo;
-import yiwo.apppedidos.Data.BDPedidos;
+import yiwo.apppedidos.Control.BDEmpresa;
+import yiwo.apppedidos.Control.BDPedidos;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomAdapterListaDeseos;
-import yiwo.apppedidos.InterfacesPerzonalidas.CustomAdapterNumerado;
-import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModelListaDeseos;
 import yiwo.apppedidos.R;
 
@@ -144,7 +137,7 @@ public class LateralPedidoDetalle extends Fragment {
                                     nitem,
                                     ccod_articulo,
                                     nom_articulo,
-                                    CodigosGenerales.Moneda_Empresa,
+                                    ConfiguracionEmpresa.Moneda_Trabajo,
                                     precio_unitario.toString(),
                                     ncantidad.toString(),
                                     cunidad,

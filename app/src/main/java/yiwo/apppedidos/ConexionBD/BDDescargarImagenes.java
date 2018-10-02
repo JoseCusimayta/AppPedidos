@@ -15,25 +15,29 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
-import yiwo.apppedidos.Data.BDArticulos;
+import yiwo.apppedidos.AspectosGenerales.DatosConexiones;
+import yiwo.apppedidos.Control.BDArticulos;
 
 public class BDDescargarImagenes {
 
     private String TAG = "BDDescargarImagenes";
+
+    private DatosConexiones datosConexiones= new DatosConexiones();
 
     public Boolean GuardarMenu() {
 
         String ip;
 
         if (ConfiguracionEmpresa.isLAN)
-            ip = ConfiguracionEmpresa.IP_LAN;
+            ip = datosConexiones.getIP_LAN();
         else
-            ip = ConfiguracionEmpresa.IP_Publica;
+            ip = datosConexiones.getIP_Publica();
 
 
-        String DOWNLOAD_URL = "http://" + ip + ":" + ConfiguracionEmpresa.PuertoImagenes + "/" + ConfiguracionEmpresa.IP_LAN + "/" + ConfiguracionEmpresa.CarpetaImagenes + "/";
+        String DOWNLOAD_URL =
+                "http://" + ip + ":" + datosConexiones.getPuertoImagenes() +
+                        "/" + datosConexiones.getIP_LAN() + "/" + datosConexiones.getCarpetaImagenes() + "/";
         Log.d(TAG, "Conectandose a :" + DOWNLOAD_URL);
 //        if (LAN)
 //            DOWNLOAD_URL = "http://192.168.1.111:8080/192.168.1.111/Imagenes/";//IP LAN ERP SOLUTIONS
@@ -55,7 +59,7 @@ public class BDDescargarImagenes {
 
     private void GuardarMenu_Articulos(String DOWNLOAD_URL) {
         try {
-            String Nombre_Imagen = CodigosGenerales.Codigo_Empresa + "_articulos.jpg";
+            String Nombre_Imagen = ConfiguracionEmpresa.Codigo_Empresa + "_articulos.jpg";
 
             URL url = new URL(DOWNLOAD_URL + Nombre_Imagen);
 
@@ -68,7 +72,7 @@ public class BDDescargarImagenes {
             Bitmap bitmap = BitmapFactory.decodeStream(input);
 
             //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-            File imgFile = new File(CodigosGenerales.myDirectorio, Nombre_Imagen);
+            File imgFile = new File(DatosConexiones.myDirectorio, Nombre_Imagen);
 
             FileOutputStream out = new FileOutputStream(imgFile);
 
@@ -85,7 +89,7 @@ public class BDDescargarImagenes {
 
     private void GuardarMenu_Familia(String DOWNLOAD_URL) {
         try {
-            String Nombre_Imagen = CodigosGenerales.Codigo_Empresa + "_familia.jpg";
+            String Nombre_Imagen = ConfiguracionEmpresa.Codigo_Empresa + "_familia.jpg";
 
             URL url = new URL(DOWNLOAD_URL + Nombre_Imagen);
 
@@ -98,7 +102,7 @@ public class BDDescargarImagenes {
             Bitmap bitmap = BitmapFactory.decodeStream(input);
 
             //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-            File imgFile = new File(CodigosGenerales.myDirectorio, Nombre_Imagen);
+            File imgFile = new File(DatosConexiones.myDirectorio, Nombre_Imagen);
 
             FileOutputStream out = new FileOutputStream(imgFile);
 
@@ -116,7 +120,7 @@ public class BDDescargarImagenes {
 
     private void GuardarMenu_SubFamilia(String DOWNLOAD_URL) {
         try {
-            String Nombre_Imagen = CodigosGenerales.Codigo_Empresa + "_subfamilia.jpg";
+            String Nombre_Imagen = ConfiguracionEmpresa.Codigo_Empresa + "_subfamilia.jpg";
 
             URL url = new URL(DOWNLOAD_URL + Nombre_Imagen);
 
@@ -129,7 +133,7 @@ public class BDDescargarImagenes {
             Bitmap bitmap = BitmapFactory.decodeStream(input);
 
             //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-            File imgFile = new File(CodigosGenerales.myDirectorio, Nombre_Imagen);
+            File imgFile = new File(DatosConexiones.myDirectorio, Nombre_Imagen);
 
             FileOutputStream out = new FileOutputStream(imgFile);
 
@@ -148,7 +152,7 @@ public class BDDescargarImagenes {
     private void GuardarMenu_Conceptos(String DOWNLOAD_URL) {
         try {
             for (int i = 1; i <= 7; i++) {
-                String Nombre_Imagen = CodigosGenerales.Codigo_Empresa + "_concepto" + i + ".jpg";
+                String Nombre_Imagen = ConfiguracionEmpresa.Codigo_Empresa + "_concepto" + i + ".jpg";
 
                 URL url = new URL(DOWNLOAD_URL + Nombre_Imagen);
 
@@ -161,7 +165,7 @@ public class BDDescargarImagenes {
                 Bitmap bitmap = BitmapFactory.decodeStream(input);
 
                 //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-                File imgFile = new File(CodigosGenerales.myDirectorio, Nombre_Imagen);
+                File imgFile = new File(DatosConexiones.myDirectorio, Nombre_Imagen);
 
                 FileOutputStream out = new FileOutputStream(imgFile);
 
@@ -180,7 +184,7 @@ public class BDDescargarImagenes {
     private void GuardarArticulos(String DOWNLOAD_URL, String Codigo_Articulo) {
         try {
             for (int i = 1; i <= 4; i++) {
-                String Nombre_Imagen = CodigosGenerales.Codigo_Empresa + "_" + Codigo_Articulo + "_" + i + ".jpg";
+                String Nombre_Imagen = ConfiguracionEmpresa.Codigo_Empresa + "_" + Codigo_Articulo + "_" + i + ".jpg";
                 URL url = new URL(DOWNLOAD_URL + Nombre_Imagen);
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -192,7 +196,7 @@ public class BDDescargarImagenes {
                 Bitmap bitmap = BitmapFactory.decodeStream(input);
 
                 //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
-                File imgFile = new File(CodigosGenerales.myDirectorio, Nombre_Imagen);
+                File imgFile = new File(DatosConexiones.myDirectorio, Nombre_Imagen);
 
                 FileOutputStream out = new FileOutputStream(imgFile);
 
@@ -217,13 +221,15 @@ public class BDDescargarImagenes {
             String ip="";
 
             if (ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isLANAviable)
-                ip = ConfiguracionEmpresa.IP_LAN;
+                ip = datosConexiones.getIP_LAN();
             else if (!ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isPublicaAviable)
-                ip = ConfiguracionEmpresa.IP_Publica;
+                ip = datosConexiones.getIP_Publica();
             else
                 return false;
 
-            String DOWNLOAD_URL = "http://" + ip + ":" + ConfiguracionEmpresa.PuertoImagenes + "/" + ConfiguracionEmpresa.IP_LAN + "/" + ConfiguracionEmpresa.CarpetaImagenes + "/";
+            String DOWNLOAD_URL
+                    = "http://" + ip + ":" + datosConexiones.getPuertoImagenes() + "/" + datosConexiones.getIP_LAN() +
+                    "/" + datosConexiones.getCarpetaImagenes() + "/";
             Log.d(TAG, "Conectandose a :" + DOWNLOAD_URL);
 
             URL url = new URL(DOWNLOAD_URL);
@@ -235,9 +241,9 @@ public class BDDescargarImagenes {
             connection.connect();
 
             int length = connection.getContentLength();
-            Log.d("DetectarVariacion", "Peso Local " + CodigosGenerales.myDirectorio.length());
+            Log.d("DetectarVariacion", "Peso Local " + DatosConexiones.myDirectorio.length());
             Log.d("DetectarVariacion", "Peso Online " + length);
-            if (length > CodigosGenerales.myDirectorio.length())
+            if (length > DatosConexiones.myDirectorio.length())
                 return true;
         } catch (Exception e) {
             Log.d(TAG, "EsNecesarioActualizar: " + e.getMessage());
@@ -285,15 +291,13 @@ public class BDDescargarImagenes {
     }
 
     public Bitmap getImageFromDirectory(String Imagen_nombre) {
-        Log.d(TAG, "Descargando Imagen: ");
 
         Bitmap bitmap;
         try {
-            Log.d(TAG, "Descargando Imagen: " + Imagen_nombre);
             File imgFile;
-            Imagen_nombre = CodigosGenerales.Codigo_Empresa + "_" + Imagen_nombre;
+            Imagen_nombre = ConfiguracionEmpresa.Codigo_Empresa + "_" + Imagen_nombre;
             Log.d(TAG, "Descargando Imagen: " + Imagen_nombre);
-            imgFile = new File(CodigosGenerales.myDirectorio, Imagen_nombre);
+            imgFile = new File(DatosConexiones.myDirectorio, Imagen_nombre);
             bitmap = BitmapFactory.decodeStream(new FileInputStream(imgFile));
         } catch (FileNotFoundException e) {
             return null;

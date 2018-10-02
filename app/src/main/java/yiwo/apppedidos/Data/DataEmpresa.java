@@ -6,27 +6,33 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.CodigosPreGuardados;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
+import yiwo.apppedidos.Control.BDEmpresa;
+import yiwo.apppedidos.Control.BDMotivo;
 
 public class DataEmpresa {
-    BDConexionSQL bdata = new BDConexionSQL();
-    BDEmpresa bdEmpresa = new BDEmpresa();
-    BDMotivo bdMotivo = new BDMotivo();
-    String TAG = "DataEmpresa";
+    private BDConexionSQL bdata = new BDConexionSQL();
+    private BDEmpresa bdEmpresa = new BDEmpresa();
+    private BDMotivo bdMotivo = new BDMotivo();
+    private String TAG = "DataEmpresa";
 
     public void CargarDatosEmpresa() {
         try {
             Connection connection = bdata.getConnection();
+            List<String> DatosTipoCambio=bdEmpresa.getDatosTipoCambio(connection);
+            ConfiguracionEmpresa.CodigoTipoCambio=DatosTipoCambio.get(0);
+            ConfiguracionEmpresa.ValorTipoCambio= CodigosGenerales.tryParseDouble(DatosTipoCambio.get(1));
 
             ConfiguracionEmpresa.Tipo_Monedas = bdEmpresa.getMonedas(connection);
-            ConfiguracionEmpresa.isIncluidoIGV = bdEmpresa.isIncluidoIGV(connection);
             ConfiguracionEmpresa.Moneda_Trabajo = bdEmpresa.getMonedaTrabajo(connection);
-            ConfiguracionEmpresa.Tipo_CambioEmpresa = bdEmpresa.getTipoCambio(connection);
             List<String> MotivoPredeterminado = bdMotivo.getList(connection).get(0);
             ConfiguracionEmpresa.Codigo_Motivo = MotivoPredeterminado.get(0);
             ConfiguracionEmpresa.Nombre_Motivo = MotivoPredeterminado.get(1);
+            ConfiguracionEmpresa.ifIGV = bdEmpresa.isIncluidoIGV(connection);
+            ConfiguracionEmpresa.isIncluidoIGV=ConfiguracionEmpresa.ifIGV.equals("S");
             connection.close();
         } catch (Exception e) {
             Log.d(TAG, "CargarDatosEmpresa " + e.getMessage());

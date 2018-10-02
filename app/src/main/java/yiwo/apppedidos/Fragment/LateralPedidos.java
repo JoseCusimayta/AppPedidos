@@ -24,7 +24,7 @@ import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
-import yiwo.apppedidos.Data.BDPedidos;
+import yiwo.apppedidos.Control.BDPedidos;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomAdapterNumerado;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
 import yiwo.apppedidos.R;
@@ -167,7 +167,6 @@ public class LateralPedidos extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         CustomDataModel dataModel = dataModels.get(position);
-                        Log.d("asdasd", dataModel + "");
                         CodigosGenerales.Codigo_Pedido = dataModel.getListaPrecios();
                         ConfiguracionEmpresa.Codigo_Motivo = dataModel.getDni();
 //                    CodigosGenerales.Cod_Articulo = ListPedidos.get(position).get(0);

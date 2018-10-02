@@ -28,6 +28,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.AspectosGenerales.DatosConexiones;
 import yiwo.apppedidos.Fragment.FragDescripcion;
 import yiwo.apppedidos.R;
 
@@ -164,10 +166,10 @@ public class CustomAdapterArticulos extends ArrayAdapter<CustomDataModelArticulo
         viewHolder.iv_urlA.setOnClickListener(this);
         viewHolder.txtnombreA.setText(dataModel.getCodA());
         viewHolder.txtprecioA.setText(dataModel.getNombreA());
-        viewHolder.tv_centeredA.setText(CodigosGenerales.Moneda_Empresa + " " + dataModel.getPrecioA() + "\n" + dataModel.getCantidadA() + " " + dataModel.getUrlA());
+        viewHolder.tv_centeredA.setText(ConfiguracionEmpresa.Moneda_Trabajo + " " + dataModel.getPrecioA() + "\n" + dataModel.getCantidadA() + " " + dataModel.getUrlA());
 
         try {
-            File file = new File(CodigosGenerales.myDirectorio, CodigosGenerales.Codigo_Empresa+"_"+dataModel.getCodA() + "_1.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
+            File file = new File(DatosConexiones.myDirectorio, ConfiguracionEmpresa.Codigo_Empresa+"_"+dataModel.getCodA() + "_1.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
             if (file.exists()) {
                 Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
                 viewHolder.iv_urlA.setImageBitmap(bitmap);
@@ -191,11 +193,11 @@ public class CustomAdapterArticulos extends ArrayAdapter<CustomDataModelArticulo
                 viewHolder.iv_urlB.setOnClickListener(this);
                 viewHolder.txtnombreB.setText(dataModel.getCodB());
                 viewHolder.txtprecioB.setText(dataModel.getNombreB());
-                viewHolder.tv_centeredB.setText(CodigosGenerales.Moneda_Empresa + " " + dataModel.getPrecioB() + "\n" + dataModel.getCantidadB() + " " + dataModel.getUrlB());
+                viewHolder.tv_centeredB.setText(ConfiguracionEmpresa.Moneda_Trabajo + " " + dataModel.getPrecioB() + "\n" + dataModel.getCantidadB() + " " + dataModel.getUrlB());
 
 
                 try {
-                    File file = new File(CodigosGenerales.myDirectorio, CodigosGenerales.Codigo_Empresa+"_"+ dataModel.getCodB() + "_1.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
+                    File file = new File(DatosConexiones.myDirectorio, ConfiguracionEmpresa.Codigo_Empresa+"_"+ dataModel.getCodB() + "_1.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
                     if (file.exists()) {
                         Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
                         viewHolder.iv_urlB.setImageBitmap(bitmap);

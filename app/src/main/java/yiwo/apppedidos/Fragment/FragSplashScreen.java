@@ -10,18 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
-import yiwo.apppedidos.ConexionBD.BDConexionSQL;
+import yiwo.apppedidos.AspectosGenerales.DatosUsuario;
 import yiwo.apppedidos.ConexionBD.BDConexionSQLite;
 import yiwo.apppedidos.ConexionBD.RedDisponible;
-import yiwo.apppedidos.Data.BDActivarFunciones;
-import yiwo.apppedidos.Data.BDEmpresa;
-import yiwo.apppedidos.Data.BDMotivo;
+import yiwo.apppedidos.Control.BDActivarFunciones;
 import yiwo.apppedidos.Data.DataEmpresa;
 import yiwo.apppedidos.R;
 
@@ -34,7 +31,9 @@ public class FragSplashScreen extends Fragment {
     BDActivarFunciones bdActivarFunciones = new BDActivarFunciones();
     Boolean isLogin;
     Fragment fragment;
-    DataEmpresa dataEmpresa= new DataEmpresa();
+    DataEmpresa dataEmpresa = new DataEmpresa();
+    RedDisponible redDisponible = new RedDisponible();
+
     public FragSplashScreen() {
         // Required empty public constructor
     }
@@ -46,14 +45,14 @@ public class FragSplashScreen extends Fragment {
         View view = inflater.inflate(R.layout.frag_splash_screen, container, false);
         tv_link = view.findViewById(R.id.tv_link);
         myDb = new BDConexionSQLite(getContext());
-        fragment= new FragLogin();
+        fragment = new FragLogin();
         try {
 
             BackGroundTask task = new BackGroundTask();
             task.execute("");
 
         } catch (Exception e) {
-            Log.d(TAG, "onCreateView "+e.getMessage());
+            Log.d(TAG, "onCreateView " + e.getMessage());
         }
         return view;
     }
@@ -69,7 +68,7 @@ public class FragSplashScreen extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
 
-            RedDisponible.isLAN(getActivity());
+            redDisponible.isLAN(getActivity());
             ComprobarLogin();
             return null;
         }
@@ -83,11 +82,11 @@ public class FragSplashScreen extends Fragment {
 
 
     public void CambiarFragment(Fragment fragment) {
-        CodigosGenerales.CambiarFragment(fragment,getFragmentManager().beginTransaction());
+        CodigosGenerales.CambiarFragment(fragment, getFragmentManager().beginTransaction());
     }
 
 
-    public void ComprobarLogin(){
+    public void ComprobarLogin() {
 
         bdActivarFunciones.ActualizarFunciones();
         Cursor datos_login = myDb.getDataLogin();
@@ -111,18 +110,18 @@ public class FragSplashScreen extends Fragment {
                 datos_usuario.add(datos_login.getString(10));//Obtener el Celular del Vendedor
                 datos_usuario.add(datos_login.getString(11));//Obtener el email del Vendedor
             }
-            CodigosGenerales.Codigo_Empresa = datos_usuario.get(0);   //Guardar el Codigo_Empresa en CodigosGenerales
-            CodigosGenerales.Codigo_PuntoVenta = datos_usuario.get(1);   //Guardar el Codigo_PuntoVenta en CodigosGenerales
-            CodigosGenerales.Codigo_Almacen = datos_usuario.get(2);   //Guardar el Codigo_Almacen en CodigosGenerales
-            CodigosGenerales.Codigo_Usuario = datos_usuario.get(3);   //Guardar el Codigo_Usuario en CodigosGenerales
-            CodigosGenerales.Codigo_CentroCostos = datos_usuario.get(4);   //Guardar el Codigo_CentroCostos en CodigosGenerales
-            CodigosGenerales.Codigo_UnidadNegocio = datos_usuario.get(5);   //Guardar el Codigo_UnidadNegocio en CodigosGenerales
-            CodigosGenerales.Moneda_Empresa = datos_usuario.get(6);   //Guardar el Codigo_UnidadNegocio en CodigosGenerales
-            CodigosGenerales.Direccion_Almacen = datos_usuario.get(7);   //Guardar la direccion del almacen en CodigosGenerales
-            CodigosGenerales.Nombre_Vendedor = datos_usuario.get(8);   //Guardar el Nombre del Vendedor
-            CodigosGenerales.Celular_Vendedor = datos_usuario.get(9);   //Guardar el Celular del Vendedor
-            CodigosGenerales.email_Vendedor = datos_usuario.get(10);   //Guardar el email del Vendedor
-            Log.d(TAG,"Codigo_Empresa "+CodigosGenerales.Codigo_Empresa);
+            ConfiguracionEmpresa.Codigo_Empresa = datos_usuario.get(0);   //Guardar el Codigo_Empresa en CodigosGenerales
+            DatosUsuario.Codigo_PuntoVenta = datos_usuario.get(1);   //Guardar el Codigo_PuntoVenta en CodigosGenerales
+            DatosUsuario.Codigo_Almacen = datos_usuario.get(2);   //Guardar el Codigo_Almacen en CodigosGenerales
+            DatosUsuario.Codigo_Usuario = datos_usuario.get(3);   //Guardar el Codigo_Usuario en CodigosGenerales
+            DatosUsuario.Codigo_CentroCostos = datos_usuario.get(4);   //Guardar el Codigo_CentroCostos en CodigosGenerales
+            DatosUsuario.Codigo_UnidadNegocio = datos_usuario.get(5);   //Guardar el Codigo_UnidadNegocio en CodigosGenerales
+            ConfiguracionEmpresa.Moneda_Trabajo = datos_usuario.get(6);   //Guardar el Codigo_UnidadNegocio en CodigosGenerales
+            DatosUsuario.Direccion_Almacen = datos_usuario.get(7);   //Guardar la direccion del almacen en CodigosGenerales
+            DatosUsuario.Nombre_Vendedor = datos_usuario.get(8);   //Guardar el Nombre del Vendedor
+            DatosUsuario.Celular_Vendedor = datos_usuario.get(9);   //Guardar el Celular del Vendedor
+            DatosUsuario.email_Vendedor = datos_usuario.get(10);   //Guardar el email del Vendedor
+            Log.d(TAG, "Codigo_Empresa " + ConfiguracionEmpresa.Codigo_Empresa);
             dataEmpresa.CargarDatosEmpresa();
             //endregion
             Log.d(TAG, "datos_usuario - " + datos_usuario.get(0));

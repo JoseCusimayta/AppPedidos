@@ -14,9 +14,9 @@
             android:id="@+id/et_buscar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableRight="@android:drawable/ic_search_category_default"
             android:ems="10"
             android:hint="Buscar...."
-            android:drawableLeft="@android:drawable/ic_menu_search"
             android:inputType="textPersonName" />
 
         <ProgressBar

@@ -1,4 +1,4 @@
-package yiwo.apppedidos.Data;
+package yiwo.apppedidos.Control;
 
 import android.util.Log;
 
@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.AspectosGenerales.DatosUsuario;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
 public class BDFiltros {
@@ -32,7 +34,7 @@ public class BDFiltros {
         try {
             Connection connection = bdata.getConnection();
 
-            sql= "SELECT * FROM dbo.udf_list_harticul ('"+ CodigosGenerales.Codigo_Empresa+"','%','"+CodigosGenerales.Codigo_PuntoVenta+"','"+CodigosGenerales.Codigo_Almacen+"') where ";
+            sql= "SELECT * FROM dbo.udf_list_harticul ('"+ ConfiguracionEmpresa.Codigo_Empresa+"','%','"+ DatosUsuario.Codigo_PuntoVenta+"','"+DatosUsuario.Codigo_Almacen+"') where ";
 
             if(Familia.size()>0) {
                 sql +=" cfamilia in ( ";

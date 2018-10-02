@@ -17,6 +17,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.AspectosGenerales.DatosConexiones;
 import yiwo.apppedidos.R;
 
 public class CustomAdapterNumerado  extends ArrayAdapter<CustomDataModel> {
@@ -84,7 +86,7 @@ public class CustomAdapterNumerado  extends ArrayAdapter<CustomDataModel> {
             viewHolder.iv_url.setVisibility(View.VISIBLE);
             viewHolder.iv_url.setImageResource(mContext.getResources().getIdentifier(dataModel.getName(), "drawable", mContext.getPackageName()));
             try {
-                File file = new File(CodigosGenerales.myDirectorio,CodigosGenerales.Codigo_Empresa+"_"+ dataModel.getDni() + "_1.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
+                File file = new File(DatosConexiones.myDirectorio, ConfiguracionEmpresa.Codigo_Empresa+"_"+ dataModel.getDni() + "_1.jpg"); //guardar el archivo con el nombre de la imagen en el directorio "myDirectorio"
                 Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
                 viewHolder.iv_url.setImageBitmap(bitmap);
 

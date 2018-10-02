@@ -19,6 +19,8 @@ import java.util.Objects;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.AspectosGenerales.DatosConexiones;
+import yiwo.apppedidos.AspectosGenerales.DatosUsuario;
 import yiwo.apppedidos.ConexionBD.BDDescargarImagenes;
 import yiwo.apppedidos.ConexionBD.RedDisponible;
 import yiwo.apppedidos.R;
@@ -42,6 +44,8 @@ public class FragMenuPrincipal extends Fragment implements View.OnClickListener 
     //endregion
 
     BDDescargarImagenes bdDescargarImagenes=new BDDescargarImagenes();
+    RedDisponible redDisponible= new RedDisponible();
+    DatosConexiones datosConexiones= new DatosConexiones();
     //endregion
 
 
@@ -97,16 +101,16 @@ public class FragMenuPrincipal extends Fragment implements View.OnClickListener 
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//Desbloquear el menu lateral
 
             TextView tv_titlo_nav = Objects.requireNonNull(getActivity()).findViewById(R.id.tv_titulo_nav);
-            tv_titlo_nav.setText(CodigosGenerales.Nombre_Vendedor);
+            tv_titlo_nav.setText(DatosUsuario.Nombre_Vendedor);
 
             TextView tv_descripcion_nav = getActivity().findViewById(R.id.tv_descripcion_nav);
-            tv_descripcion_nav.setText(CodigosGenerales.Celular_Vendedor + "\n" + CodigosGenerales.email_Vendedor);
+            tv_descripcion_nav.setText(DatosUsuario.Celular_Vendedor + "\n" + DatosUsuario.email_Vendedor);
 
         }catch (Exception e){
             Log.d(TAG,"onPostExecute "+e.getMessage());
         }
 
-        if(RedDisponible.serverAvailable(getActivity(), ConfiguracionEmpresa.IP_Publica,ConfiguracionEmpresa.PuertoImagenes)) {
+        if(redDisponible.serverAvailable(getActivity(), datosConexiones.getIP_Publica(),datosConexiones.getPuertoImagenes())) {
             DetectarVariacionPesoCarpeta();
         }
         CargarImagenesMenuPrincipal();

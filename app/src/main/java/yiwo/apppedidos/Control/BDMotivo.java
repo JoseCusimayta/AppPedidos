@@ -1,4 +1,4 @@
-package yiwo.apppedidos.Data;
+package yiwo.apppedidos.Control;
 
 import android.util.Log;
 
@@ -27,7 +27,7 @@ public class BDMotivo {
             String stsql = "SELECT erp_codmot, erp_nommot FROM erp_motivos_tramite WHERE erp_codemp = ? and erp_codtid = 'PED'  ORDER BY erp_predeterminado DESC, erp_codmot";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Código de la empresa
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Código de la empresa
 
             ResultSet rs = query.executeQuery();
 
@@ -55,7 +55,7 @@ public class BDMotivo {
             String stsql = "select erp_nummot from erp_motivos_tramite_detalle where erp_codemp= ?  and erp_sermot= ? and erp_codmot=? ";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Código de la empresa
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Código de la empresa
             query.setString(2, CodigosGenerales.Year); //Año del correlativo
             query.setString(3, CodMotivo); //Codigo del motivo
 
@@ -77,7 +77,7 @@ public class BDMotivo {
         try {
             String stsql = "update erp_motivos_tramite_detalle set erp_nummot=erp_nummot+1 where erp_codemp=? and erp_codmot=? and erp_sermot=?";
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa);
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa);
             query.setString(2, ConfiguracionEmpresa.Codigo_Motivo);
             query.setString(3,CodigosGenerales.Year);
             query.execute();
@@ -96,7 +96,7 @@ public class BDMotivo {
 
             String stsql = "select erp_nummot from erp_motivos_tramite_detalle where erp_codemp=? and erp_codmot=? and erp_sermot=? ";
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa);
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa);
             query.setString(2, ConfiguracionEmpresa.Codigo_Motivo);
             query.setString(3, CodigosGenerales.Year);
 
@@ -105,7 +105,7 @@ public class BDMotivo {
             while (rs.next()) {
                 Correlativo= rs.getInt("erp_nummot");
             }
-            Correlativo+=1;
+            Correlativo++;
             NuevoCodigoPedido= CodigosGenerales.Year +"-"+String.format("%0"+getCantidadCeros()+"d", Correlativo);
         } catch (Exception e) {
             NuevoCodigoPedido= CodigosGenerales.Year +"-"+String.format("%0"+getCantidadCeros()+"d", 0);
@@ -122,7 +122,7 @@ public class BDMotivo {
 
             String stsql = "select cantidad_caracteres from Htipdoc where ccod_empresa =? and ctip_doc ='PED' ";
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa);
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa);
 
             ResultSet rs = query.executeQuery();
 

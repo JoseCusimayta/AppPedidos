@@ -1,4 +1,4 @@
-package yiwo.apppedidos.Data;
+package yiwo.apppedidos.Control;
 
 import android.util.Log;
 
@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.AspectosGenerales.DatosCliente;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
 public class BDFormaPago {
@@ -27,8 +29,8 @@ public class BDFormaPago {
             String stsql = "Select * from dbo.udf_list_hformapg(?,?) where Nombre like ? or codigo like ? ";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Código de la empresa
-            query.setString(2, CodigosGenerales.Codigo_Cliente);   //Código del Cliente
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Código de la empresa
+            query.setString(2, DatosCliente.Codigo_Cliente);   //Código del Cliente
             query.setString(3, Nombre + "%"); //Código de la Forma de Pago
             query.setString(4, Nombre + "%"); //Nombre de la Forma de Pago
 
@@ -60,8 +62,8 @@ public class BDFormaPago {
             String stsql = "Select * from dbo.udf_list_hformapg(?,?) where sel =? ";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); // Código de la empresa
-            query.setString(2, CodigosGenerales.Codigo_Cliente);   //Código del Cliente
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Código de la empresa
+            query.setString(2, DatosCliente.Codigo_Cliente);   //Código del Cliente
             query.setString(3, "S"); //Predeterminado
 
             ResultSet rs = query.executeQuery();

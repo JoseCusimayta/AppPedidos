@@ -3,31 +3,29 @@ package yiwo.apppedidos.AspectosGenerales;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import yiwo.apppedidos.Data.BDArticulos;
-import yiwo.apppedidos.Data.BDCentroCostos;
-import yiwo.apppedidos.Data.BDClientes;
-import yiwo.apppedidos.Data.BDConceptos;
-import yiwo.apppedidos.Data.BDEmpresa;
-import yiwo.apppedidos.Data.BDFamilia;
-import yiwo.apppedidos.Data.BDFiltros;
-import yiwo.apppedidos.Data.BDFormaPago;
-import yiwo.apppedidos.Data.BDMotivo;
-import yiwo.apppedidos.Data.BDPuntoVenta;
-import yiwo.apppedidos.Data.BDSubfamilia;
-import yiwo.apppedidos.Data.BDUnidNegocios;
+import yiwo.apppedidos.Control.BDArticulos;
+import yiwo.apppedidos.Control.BDCentroCostos;
+import yiwo.apppedidos.Control.BDClientes;
+import yiwo.apppedidos.Control.BDConceptos;
+import yiwo.apppedidos.Control.BDEmpresa;
+import yiwo.apppedidos.Control.BDFamilia;
+import yiwo.apppedidos.Control.BDFiltros;
+import yiwo.apppedidos.Control.BDFormaPago;
+import yiwo.apppedidos.Control.BDPuntoVenta;
+import yiwo.apppedidos.Control.BDSubfamilia;
+import yiwo.apppedidos.Control.BDUnidNegocios;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
 import yiwo.apppedidos.R;
 
@@ -37,29 +35,16 @@ public class CodigosGenerales {
     public static boolean isInicio = false;
 
     public static Integer ID_Concepto;
-    public static String Codigo_Empresa;
-    public static String Codigo_Usuario;
-    public static String Nombre_Usuario;
-    public static String Codigo_Cliente;
-    public static String Codigo_PuntoVenta;
-    public static String Codigo_CentroCostos;
-    public static String Codigo_UnidadNegocio;
-    public static String Codigo_Almacen;
     public static String Codigo_Articulo;
     public static String Nombre_Categoria;
     public static String Codigo_Categoria;
     public static String Codigo_Pedido;
-    public static String Codigo_ListaPrecios;
-    public static String Direccion_Cliente;
     public static String FechaActual = FormatoFechas.format(new Date());
-    public static String Nombre_Cliente;
 
     public static int CantidadDatosDialog;
     public static String Year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
 
     public static String TipoArray = "";
-    public static ArrayList<List<String>> arrayListEmpresas = new ArrayList<>();
-    public static ArrayList<CustomDataModel> dataModels;
 
     private static BDEmpresa bdEmpresa = new BDEmpresa();
     private static BDPuntoVenta bdPuntoVenta = new BDPuntoVenta();
@@ -72,7 +57,6 @@ public class CodigosGenerales {
     private static BDConceptos bdConceptos = new BDConceptos();
 
     private static BDClientes bdClientes = new BDClientes();
-    private static BDMotivo bdMotivo = new BDMotivo();
     private static BDFormaPago bdFormaPago = new BDFormaPago();
     private static BDFiltros bdFiltros = new BDFiltros();
 
@@ -87,28 +71,9 @@ public class CodigosGenerales {
     public static List<String> list_concepto6 = new ArrayList<>();
     public static List<String> list_concepto7 = new ArrayList<>();
 
-    //public static String DOWNLOAD_URL = "http://192.168.1.111:8080/192.168.1.111/Imagenes/";//IP LAN ERP SOLUTIONS
-    //public static String DOWNLOAD_URL_ERP = "http://192.168.1.111:8080/192.168.1.111/";//IP LAN ERP SOLUTIONS
-    public static String DOWNLOAD_URL = "http://148.102.21.175:8080/192.168.1.111/Imagenes/";//IP Publica ERP SOLUTIONS
-//    public static String DOWNLOAD_URL = "http://190.187.39.250:8080/192.168.0.5/Imagenes/";//IP Publica Gumisa
-    //public static String DOWNLOAD_URL = "http://192.168.0.5:8080/192.168.0.5/Imagenes/";//IP Lan Gumisa para Pruebas
-//    public static String DOWNLOAD_URL_Lan = "http://192.168.0.5:8080/192.168.0.5/Imagenes/";//IP LAN Gumisa
 
-    //    public static String DOWNLOAD_URL = "http://148.102.21.175:8080/192.168.1.111/Imagenes/";//IP Publica ERP SOLUTIONS
-    public static String DOWNLOAD_URL_Lan = "http://192.168.1.111:8080/192.168.1.111/Imagenes/";//IP LAN ERP SOLUTIONS
-    public static boolean ImagenesMenuCargadas = false;
-    //192.168.0.5\Imagenes
-    static String root = Environment.getExternalStorageDirectory().toString(); //Obetner el directorio padre
-    public static File myDirectorio = new File(root + "/pedidos"); // Crear una carpeta para guardar las imagenes
-    //public static File myDirectorio_ERP = new File(root + "/pedidos2"); // Crear una carpeta para guardar las imagenes
-    public static String Moneda_Empresa;
     public static double Precio_TotalPedido;
     public static ArrayList<List<String>> Codigos_Pedido = new ArrayList<>();
-    public static double Precio_SubTotalPedido;
-    public static double Precio_DescuentoPedido;
-    public static double Precio_IGVCalcPedido;
-    public static double Precio_ImporteTotalPedido;
-    public static String Direccion_Almacen;
     public static ArrayList<CustomDataModel> DataModelsList;
     public static Bitmap ImagenGaleria1;
     public static Bitmap ImagenGaleria2;
@@ -116,17 +81,8 @@ public class CodigosGenerales {
     public static Bitmap ImagenGaleria4;
     public static boolean CancelarTask;
 
-    public static ArrayList<List<String>> listCliente = new ArrayList<>();
     public static ArrayList<List<String>> listEmpresas = new ArrayList<>();
     public static ArrayList<List<String>> listArticulos = new ArrayList<>();
-    public static String Nombre_Vendedor;
-    public static String Celular_Vendedor;
-    public static String email_Vendedor;
-    public static String Lista_Precio = "01";
-    public static String RUC_Cliente;
-    public static String DNI_Cliente;
-    public static String Codigo_FormaPago;
-    public static int Dias_FormaPago;
 
     public static ArrayList<List<String>> getArrayList(String Nombre) {
         switch (TipoArray) {
@@ -189,24 +145,21 @@ public class CodigosGenerales {
         return String.format("%." + Decimales + "f", Monto);
     }
 
-    public static Double tryParseDouble(String value) {
-        try {
-            return Double.parseDouble(value);
-        } catch (NumberFormatException nfe) {
-            // Log exception.
-            return 0.00;
-        }
-    }
-
 
     /**
      * Hides the soft keyboard
      */
     public static void hideSoftKeyboard(Activity activity) {
-        if (activity.getCurrentFocus() != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
         }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
+//            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     /**
@@ -218,6 +171,10 @@ public class CodigosGenerales {
         inputMethodManager.showSoftInput(view, 0);
     }
 
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     public static void CambiarFragment(Fragment fragment, FragmentTransaction transaction) {
         if (transaction != null) {
@@ -233,5 +190,38 @@ public class CodigosGenerales {
                 .addToBackStack(null)
                 .replace(R.id.frag_contenedor, fragment)
                 .commit();
+    }
+
+    public static Double tryParseDouble(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException nfe) {
+            // Log exception.
+            return 0.00;
+        }
+    }
+
+    public static Integer tryParseInteger(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException nfe) {
+            // Log exception.
+            return 0;
+        }
+    }
+
+    public static void BloquearMenuLaeral(Activity activity) {
+        if(activity!=null) {
+            DrawerLayout drawer;
+            drawer = activity.findViewById(R.id.drawer_layout);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//Bloquear el menu lateral
+        }
+    }
+    public static void DesBloquearMenuLaeral(Activity activity) {
+        if(activity!=null) {
+            DrawerLayout drawer;
+            drawer = activity.findViewById(R.id.drawer_layout);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//Bloquear el menu lateral
+        }
     }
 }

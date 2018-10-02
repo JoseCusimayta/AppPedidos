@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -35,10 +36,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
-import yiwo.apppedidos.Data.BDArticulos;
-import yiwo.apppedidos.Data.BDConceptos;
-import yiwo.apppedidos.Data.BDFamilia;
-import yiwo.apppedidos.Data.BDSubfamilia;
+import yiwo.apppedidos.Control.BDArticulos;
+import yiwo.apppedidos.Control.BDConceptos;
+import yiwo.apppedidos.Control.BDFamilia;
+import yiwo.apppedidos.Control.BDSubfamilia;
+import yiwo.apppedidos.Data.DataArticulos;
 import yiwo.apppedidos.InterfacesPerzonalidas.Articulos;
 import yiwo.apppedidos.InterfacesPerzonalidas.ArticulosAdapter;
 import yiwo.apppedidos.InterfacesPerzonalidas.ExpListViewAdapterWithCheckbox;
@@ -58,7 +60,7 @@ public class FragArticulosCardView extends Fragment {
     String TAG = "FragArticulosCardView";
     ProgressBar progressBar;
     BackGroundTask task;
-    BDArticulos bdArticulos= new BDArticulos();
+    BDArticulos bdArticulos = new BDArticulos();
 
     //region Elementos para el filtro
     Toolbar toolbar;
@@ -71,11 +73,13 @@ public class FragArticulosCardView extends Fragment {
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
     Button b_borrar, b_listo;
-    BDFamilia bdFamilia = new BDFamilia();
-    BDSubfamilia bdSubFamilia = new BDSubfamilia();
-    BDConceptos bdConcepto = new BDConceptos();
     Button b_filtro;
     TextView tv_origenFiltro;
+    AppBarLayout app_barLayout;
+    DataArticulos dataArticulos = new DataArticulos();
+
+    Boolean isFilter = false;
+    String CriterioFiltro = "";
 
     //endregion
     public FragArticulosCardView() {
@@ -92,6 +96,7 @@ public class FragArticulosCardView extends Fragment {
         et_buscar = view.findViewById(R.id.et_buscar);
         b_filtro = view.findViewById(R.id.b_filtro);
 
+        isFilter = false;
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
 
@@ -105,6 +110,10 @@ public class FragArticulosCardView extends Fragment {
         recyclerView.setAdapter(adapter);
 
         try {
+            app_barLayout = getActivity().findViewById(R.id.app_barLayout);
+            tv_origenFiltro = getActivity().findViewById(R.id.tv_origenFiltro);
+            toolbar = getActivity().findViewById(R.id.toolbar);
+            app_barLayout.setVisibility(View.VISIBLE);
             task = new BackGroundTask();
             task.execute("");
         } catch (Exception e) {
@@ -156,12 +165,25 @@ public class FragArticulosCardView extends Fragment {
         b_filtro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    task.cancel(true);
+                } catch (Exception e) {
+                }
+                isFilter = true;
                 Filtros();
                 b_filtro.setEnabled(false);
+                CodigosGenerales.hideSoftKeyboard(getActivity());
             }
         });
 //        prepareAlbums();
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        task.cancel(true);
+        isFilter = false;
+        super.onPause();
     }
 
     //region Tarea en Segundo Plano con ListView
@@ -175,40 +197,18 @@ public class FragArticulosCardView extends Fragment {
 //            articulosList = new ArrayList<>();
             articulosList.clear();
             adapter.notifyDataSetChanged();
+            Log.d(TAG, "BackGroundTask iniciando");
             super.onPreExecute();
         }
 
         @Override
         protected String doInBackground(String... strings) {
-            try {
-                arrayList = bdArticulos.getList(et_buscar.getText().toString());
-                articulosList.clear();
+            if (isFilter)
+                arrayList = BuscarConFiltros();
+            else
+                arrayList = BuscarSinFiltros();
 
-                Log.d(TAG,"ArticulosCardView "+arrayList.get(0).size());
-//                if(arrayList.get(0).size()>5)
-                for (int i = 0; i < arrayList.size(); i = i + 2) {
-                    if(isCancelled())
-                        break;
-                    Double cantidad_productos = CodigosGenerales.tryParseDouble(arrayList.get(i).get(2));
-                    Double precio_productos = CodigosGenerales.tryParseDouble(arrayList.get(i).get(4));
-                    Double porcentaje_igv = CodigosGenerales.tryParseDouble(arrayList.get(i).get(6));
-//                    Log.d(TAG,"Nombre:"+arrayList.get(i).get(1));
-                    Articulos a = new Articulos(
-                            //region registrar los Datos del producto A
-                            arrayList.get(i).get(0),   // codigo
-                            arrayList.get(i).get(1),   // Nombre
-                            CodigosGenerales.RedondearDecimales(cantidad_productos, 2),   // stock
-                            arrayList.get(i).get(3),   // cunidad
-                            CodigosGenerales.RedondearDecimales(precio_productos, 2),   // precio
-                            arrayList.get(i).get(5),   // moneda
-                            CodigosGenerales.RedondearDecimales(porcentaje_igv, 2)   // nigv
-
-                    );
-                    articulosList.add(a);
-                }
-            } catch (Exception e) {
-                Log.d(TAG, "doInBackground: " + e.getMessage());
-            }
+            Log.d(TAG, "BackGroundTask ejecutando");
             return null;
         }
 
@@ -227,6 +227,7 @@ public class FragArticulosCardView extends Fragment {
                 Log.d(TAG, "onPostExecute: " + e.getMessage());
             }
 
+            Log.d(TAG, "BackGroundTask terminando");
             super.onPostExecute(s);
         }
     }
@@ -286,18 +287,90 @@ public class FragArticulosCardView extends Fragment {
         super.onResume();
     }
 
+    public ArrayList<List<String>> BuscarSinFiltros() {
 
 
+        ArrayList<List<String>> arrayList = new ArrayList<>();
+        try {
+            if (task.isCancelled())
+                return arrayList;
+            arrayList = bdArticulos.getList(et_buscar.getText().toString());
+            articulosList.clear();
+            Log.d(TAG, "ArticulosCardView " + arrayList.get(0).size());
+//                if(arrayList.get(0).size()>5)
+            for (int i = 0; i < arrayList.size(); i++) {
+                if (task.isCancelled())
+                    break;
+                Double cantidad_productos = CodigosGenerales.tryParseDouble(arrayList.get(i).get(2));
+                Double precio_productos = CodigosGenerales.tryParseDouble(arrayList.get(i).get(4));
+                Double porcentaje_igv = CodigosGenerales.tryParseDouble(arrayList.get(i).get(6));
+//                    Log.d(TAG,"Nombre:"+arrayList.get(i).get(1));
+                Articulos a = new Articulos(
+                        //region registrar los Datos del producto A
+                        arrayList.get(i).get(0),   // codigo
+                        arrayList.get(i).get(1),   // Nombre
+                        CodigosGenerales.RedondearDecimales(cantidad_productos, 2),   // stock
+                        arrayList.get(i).get(3),   // cunidad
+                        CodigosGenerales.RedondearDecimales(precio_productos, 2),   // precio
+                        arrayList.get(i).get(5),   // moneda
+                        CodigosGenerales.RedondearDecimales(porcentaje_igv, 2)   // nigv
+
+                );
+                articulosList.add(a);
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "BuscarSinFiltros: " + e.getMessage());
+        }
+        return arrayList;
+    }
 
 
+    public ArrayList<List<String>> BuscarConFiltros() {
+        ArrayList<List<String>> arrayList = new ArrayList<>();
+        try {
+            if (task.isCancelled())
+                return arrayList;
+            arrayList = dataArticulos.getArticulosFiltrados(et_buscar.getText().toString(), CriterioFiltro);
+            articulosList.clear();
+            Log.d(TAG, "ArticulosCardView " + arrayList.get(0).size());
+//                if(arrayList.get(0).size()>5)
+            for (int i = 0; i < arrayList.size(); i++) {
+                if (task.isCancelled())
+                    break;
+                Double cantidad_productos = CodigosGenerales.tryParseDouble(arrayList.get(i).get(2));
+                Double precio_productos = CodigosGenerales.tryParseDouble(arrayList.get(i).get(4));
+                Double porcentaje_igv = CodigosGenerales.tryParseDouble(arrayList.get(i).get(6));
+//                    Log.d(TAG,"Nombre:"+arrayList.get(i).get(1));
+                Articulos a = new Articulos(
+                        //region registrar los Datos del producto A
+                        arrayList.get(i).get(0),   // codigo
+                        arrayList.get(i).get(1),   // Nombre
+                        CodigosGenerales.RedondearDecimales(cantidad_productos, 2),   // stock
+                        arrayList.get(i).get(3),   // cunidad
+                        CodigosGenerales.RedondearDecimales(precio_productos, 2),   // precio
+                        arrayList.get(i).get(5),   // moneda
+                        CodigosGenerales.RedondearDecimales(porcentaje_igv, 2)   // nigv
 
-
+                );
+                articulosList.add(a);
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "doInBackground: " + e.getMessage());
+        }
+        return arrayList;
+    }
 
 
     //region preparar datos para Filtrar
     public void Filtros() {
 
         try {
+
+            listDataHeader = dataArticulos.getTituloCategoria();
+            listDataChild = dataArticulos.getNombresCategorias(listDataHeader);
+            Log.d(TAG, "listDataChild: " + listDataChild.get(listDataHeader.get(0)));
+            Log.d(TAG, "listDataChild: " + listDataChild.get(listDataHeader.get(0)).get(0));
+
             toolbar.setVisibility(View.GONE);
             layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             popupView = layoutInflater.inflate((R.layout.popup_filtros), null);
@@ -306,7 +379,8 @@ public class FragArticulosCardView extends Fragment {
             // popupWindow.setOutsideTouchable(true);
             popupWindow.setFocusable(true);
             expListView = popupView.findViewById(R.id.lvExp);
-            prepareListData();
+
+
             listAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
             listAdapterCheckbox = new ExpListViewAdapterWithCheckbox(getContext(), listDataHeader, listDataChild);
             b_borrar = popupView.findViewById(R.id.b_borrar);
@@ -324,83 +398,88 @@ public class FragArticulosCardView extends Fragment {
             b_listo.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Boolean Filtrar = false;
+
                     ArrayList<List<Integer>> CheckedList = listAdapterCheckbox.getCheckedList();
+                    toolbar.setVisibility(View.VISIBLE);
+                    et_buscar.setText("");
                     try {
-                        ArrayList<List<String>> Familia = bdFamilia.getList("");
-                        ArrayList<List<String>> SubFamilia = bdSubFamilia.getList("");
-                        CodigosGenerales.ID_Concepto = 1;
-                        ArrayList<List<String>> Concepto1 = bdConcepto.getList("");
-                        CodigosGenerales.ID_Concepto = 2;
-                        ArrayList<List<String>> Concepto2 = bdConcepto.getList("");
-                        CodigosGenerales.ID_Concepto = 3;
-                        ArrayList<List<String>> Concepto3 = bdConcepto.getList("");
-                        CodigosGenerales.ID_Concepto = 4;
-                        ArrayList<List<String>> Concepto4 = bdConcepto.getList("");
-                        CodigosGenerales.ID_Concepto = 5;
-                        ArrayList<List<String>> Concepto5 = bdConcepto.getList("");
-                        CodigosGenerales.ID_Concepto = 6;
-                        ArrayList<List<String>> Concepto6 = bdConcepto.getList("");
-                        CodigosGenerales.ID_Concepto = 7;
-                        ArrayList<List<String>> Concepto7 = bdConcepto.getList("");
-                        CodigosGenerales.list_familia.clear();
-                        CodigosGenerales.list_subFamilia.clear();
-                        CodigosGenerales.list_concepto1.clear();
-                        CodigosGenerales.list_concepto2.clear();
-                        CodigosGenerales.list_concepto3.clear();
-                        CodigosGenerales.list_concepto4.clear();
-                        CodigosGenerales.list_concepto5.clear();
-                        CodigosGenerales.list_concepto6.clear();
-                        CodigosGenerales.list_concepto7.clear();
+                        String cfamilia = " cnom_familia in ( ";
+                        String csubfamilia = " cnom_subfamilia in ( ";
+                        String concepto1 = " erp_concepto1.erp_nomcon in ( ";
+                        String concepto2 = " erp_concepto2.erp_nomcon in ( ";
+                        String concepto3 = " erp_concepto3.erp_nomcon in ( ";
+                        String concepto4 = " erp_concepto4.erp_nomcon in ( ";
+                        String concepto5 = " erp_concepto5.erp_nomcon in ( ";
+                        String concepto6 = " erp_concepto6.erp_nomcon in ( ";
+                        String concepto7 = " erp_concepto7.erp_nomcon in ( ";
+                        Log.d(TAG, "CheckedList " + CheckedList);
+                        Log.d(TAG, "CheckedList " + CheckedList.get(0).get(0));
+
+                        Log.d(TAG, "listDataChild: " + listDataChild.get(listDataHeader.get(CheckedList.get(0).get(0))));
+                        Log.d(TAG, "listDataChild: " + listDataChild.get(listDataHeader.get(CheckedList.get(0).get(0))).get(CheckedList.get(0).get(1)));
 
                         for (int i = 0; i < CheckedList.size(); i++) {
-                            Filtrar = true;
                             if (CheckedList.get(i).get(0) == 0) {
-                                CodigosGenerales.list_familia.add(Familia.get(CheckedList.get(i).get(1)).get(0));
+                                cfamilia += "'" + listDataChild.get(listDataHeader.get(CheckedList.get(i).get(0))).get(CheckedList.get(i).get(1)) + "', ";
                             }
                             if (CheckedList.get(i).get(0) == 1) {
-                                CodigosGenerales.list_subFamilia.add(SubFamilia.get(CheckedList.get(i).get(1)).get(0));
-                            }
-                            if (CheckedList.get(i).get(0) == 2) {
-                                CodigosGenerales.list_concepto1.add(Concepto1.get(CheckedList.get(i).get(1)).get(0));
-                            }
-                            if (CheckedList.get(i).get(0) == 3) {
-                                CodigosGenerales.list_concepto2.add(Concepto2.get(CheckedList.get(i).get(1)).get(0));
-                            }
-                            if (CheckedList.get(i).get(0) == 4) {
-                                CodigosGenerales.list_concepto3.add(Concepto3.get(CheckedList.get(i).get(1)).get(0));
-                            }
-                            if (CheckedList.get(i).get(0) == 5) {
-                                CodigosGenerales.list_concepto4.add(Concepto4.get(CheckedList.get(i).get(1)).get(0));
-                            }
-                            if (CheckedList.get(i).get(0) == 6) {
-                                CodigosGenerales.list_concepto5.add(Concepto5.get(CheckedList.get(i).get(1)).get(0));
-                            }
-                            if (CheckedList.get(i).get(0) == 7) {
-                                CodigosGenerales.list_concepto6.add(Concepto6.get(CheckedList.get(i).get(1)).get(0));
-                            }
-                            if (CheckedList.get(i).get(0) == 8) {
-                                CodigosGenerales.list_concepto7.add(Concepto7.get(CheckedList.get(i).get(1)).get(0));
+                                csubfamilia += "'" + listDataChild.get(listDataHeader.get(CheckedList.get(i).get(0))).get(CheckedList.get(i).get(1)) + "', ";
                             }
                         }
-                        if (Filtrar) {
-                            CodigosGenerales.Filtro = true;
-                            toolbar.setVisibility(View.VISIBLE);
-                            et_buscar.setText("");
-                            try {
-                                BackGroundTask task = new BackGroundTask();
-                                task.execute("");
-                            } catch (Exception e) {
-                                Log.d(TAG, "Filtros: " + e.getMessage());
-                            }
-                            popupWindow.dismiss();
-                        } else {
-                            Log.d(TAG, "b_listo " + CheckedList + "");
-                        }
-                    } catch (Exception e) {
-                        Log.d(TAG, "b_listo " + e.getMessage());
-                    }
 
+                        if (cfamilia.equals(" cnom_familia in ( "))
+                            cfamilia = "";
+                        else
+                            cfamilia = getQueryCorregido(cfamilia);
+
+                        if (csubfamilia.equals(" cnom_subfamilia in ( "))
+                            csubfamilia = "";
+                        else
+                            csubfamilia = getQueryCorregido(csubfamilia);
+
+                        if (concepto1.equals(" erp_concepto1.erp_nomcon in ( "))
+                            concepto1 = "";
+                        else
+                            concepto1 = getQueryCorregido(concepto1);
+
+                        if (concepto2.equals(" erp_concepto2.erp_nomcon in ( "))
+                            concepto2 = "";
+                        else
+                            concepto2 = getQueryCorregido(concepto2);
+
+                        if (concepto3.equals(" erp_concepto3.erp_nomcon in ( "))
+                            concepto3 = "";
+                        else
+                            concepto3 = getQueryCorregido(concepto3);
+
+                        if (concepto4.equals(" erp_concepto4.erp_nomcon in ( "))
+                            concepto4 = "";
+                        else
+                            concepto4 = getQueryCorregido(concepto4);
+
+                        if (concepto5.equals(" erp_concepto5.erp_nomcon in ( "))
+                            concepto5 = "";
+                        else
+                            concepto5 = getQueryCorregido(concepto5);
+
+                        if (concepto6.equals(" erp_concepto6.erp_nomcon in ( "))
+                            concepto6 = "";
+                        else
+                            concepto6 = getQueryCorregido(concepto6);
+
+                        if (concepto7.equals(" erp_concepto7.erp_nomcon in ( "))
+                            concepto7 = "";
+                        else
+                            concepto7 = getQueryCorregido(concepto7);
+
+                        CriterioFiltro = cfamilia + csubfamilia + concepto1 + concepto2 + concepto3 + concepto4 + concepto5 + concepto6 + concepto7;
+                        Log.d(TAG, "CriterioFiltro: " + CriterioFiltro);
+                        task = new BackGroundTask();
+                        task.execute("");
+                    } catch (Exception e) {
+                        Log.d(TAG, "Filtros: " + e.getMessage());
+                    }
+                    popupWindow.dismiss();
                 }
             });
             popupWindow.showAsDropDown(tv_origenFiltro, 0, 0);
@@ -417,75 +496,11 @@ public class FragArticulosCardView extends Fragment {
 
     }
 
-    private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
-
-        // Adding Header data
-        listDataHeader.add("Familia");
-        listDataHeader.add("Sub Familia");
-        ArrayList<List<String>> Conceptos = bdConcepto.getNombresConceptos();
-        Integer conceptos = Conceptos.size();
-        for (int i = 0; i < conceptos; i++) {
-            listDataHeader.add(Conceptos.get(i).get(1));
-        }
-        List<String> list_familia = new ArrayList<>();
-        List<String> list_subFamilia = new ArrayList<>();
-        List<String> list_concepto1 = new ArrayList<>();
-        List<String> list_concepto2 = new ArrayList<>();
-        List<String> list_concepto3 = new ArrayList<>();
-        List<String> list_concepto4 = new ArrayList<>();
-        List<String> list_concepto5 = new ArrayList<>();
-        List<String> list_concepto6 = new ArrayList<>();
-        List<String> list_concepto7 = new ArrayList<>();
-        // Adding child data
-        try {
-            list_familia = bdFamilia.getNombres();
-            if (listDataHeader.size() > 0)
-                listDataChild.put(listDataHeader.get(0), list_familia);
-
-            list_subFamilia = bdSubFamilia.getNombres();
-            if (listDataHeader.size() > 1)
-                listDataChild.put(listDataHeader.get(1), list_subFamilia);
-
-            CodigosGenerales.ID_Concepto = 1;
-            list_concepto1 = bdConcepto.getNombres();
-            if (listDataHeader.size() > 2)
-                listDataChild.put(listDataHeader.get(2), list_concepto1);
-
-            CodigosGenerales.ID_Concepto = 2;
-            list_concepto2 = bdConcepto.getNombres();
-            if (listDataHeader.size() > 3)
-                listDataChild.put(listDataHeader.get(3), list_concepto2);
-
-            CodigosGenerales.ID_Concepto = 3;
-            list_concepto3 = bdConcepto.getNombres();
-            if (listDataHeader.size() > 4)
-                listDataChild.put(listDataHeader.get(4), list_concepto3);
-
-            CodigosGenerales.ID_Concepto = 4;
-            list_concepto4 = bdConcepto.getNombres();
-            if (listDataHeader.size() > 5)
-                listDataChild.put(listDataHeader.get(5), list_concepto4);
-
-            CodigosGenerales.ID_Concepto = 5;
-            list_concepto5 = bdConcepto.getNombres();
-            if (listDataHeader.size() > 6)
-                listDataChild.put(listDataHeader.get(6), list_concepto5);
-
-            CodigosGenerales.ID_Concepto = 6;
-            list_concepto6 = bdConcepto.getNombres();
-            if (listDataHeader.size() > 7)
-                listDataChild.put(listDataHeader.get(7), list_concepto6);
-
-            CodigosGenerales.ID_Concepto = 7;
-            list_concepto7 = bdConcepto.getNombres();
-            if (listDataHeader.size() > 8)
-                listDataChild.put(listDataHeader.get(8), list_concepto7);
-
-        } catch (Exception e) {
-            Log.d(TAG, "Concentps " + e.getMessage());
-        }
-    }
     //endregion
+
+    public String getQueryCorregido(String query) {
+        query = query.substring(0, query.length() - 2);
+        query += " )";
+        return query;
+    }
 }

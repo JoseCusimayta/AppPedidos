@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,11 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
-import yiwo.apppedidos.Data.BDClientes;
-import yiwo.apppedidos.Data.BDFormaPago;
-import yiwo.apppedidos.Data.BDPedidos;
-import yiwo.apppedidos.InterfacesPerzonalidas.CustomAdapterCodNom;
-import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
+import yiwo.apppedidos.AspectosGenerales.DatosCliente;
+import yiwo.apppedidos.Control.BDClientes;
+import yiwo.apppedidos.Control.BDFormaPago;
+import yiwo.apppedidos.InterfacesPerzonalidas.Clientes;
+import yiwo.apppedidos.InterfacesPerzonalidas.ClientesAdapter;
 import yiwo.apppedidos.R;
 
 /**
@@ -39,12 +40,12 @@ public class LateralClientes extends Fragment {
     ProgressBar progressBar;
     AppBarLayout app_barLayout;
 
-    ArrayList<CustomDataModel> dataModels;
-    CustomAdapterCodNom adapter;
+    ArrayList<Clientes> dataModels;
+    ClientesAdapter adapter;
     ArrayList<List<String>> arrayList;
     BDClientes bdClientes = new BDClientes();
     String TAG="LateralClientes";
-    BDFormaPago bdFormaPago = new BDFormaPago();
+    View view;
     public LateralClientes() {
         // Required empty public constructor
     }
@@ -54,7 +55,7 @@ public class LateralClientes extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.frag_lateral_clientes, container, false);
+        view = inflater.inflate(R.layout.frag_lateral_clientes, container, false);
         lv_items = view.findViewById(R.id.lv_items);
         et_bucar = view.findViewById(R.id.et_buscar);
         progressBar = view.findViewById(R.id.progressBar);
@@ -109,7 +110,19 @@ public class LateralClientes extends Fragment {
                 dataModels = new ArrayList<>();
                 arrayList = bdClientes.getList(et_bucar.getText().toString());
                 for (int i = 0; i < arrayList.size(); i++) {
-                    dataModels.add(new CustomDataModel(arrayList.get(i).get(0), arrayList.get(i).get(1), null, null, null, null, null));
+                    dataModels.add(
+                            new Clientes(
+                                    arrayList.get(i).get(0),
+                                    arrayList.get(i).get(1),
+                                    arrayList.get(i).get(2),
+                                    arrayList.get(i).get(3),
+                                    arrayList.get(i).get(4),
+                                    arrayList.get(i).get(5),
+                                    arrayList.get(i).get(6),
+                                    arrayList.get(i).get(7),
+                                    arrayList.get(i).get(8),
+                                    arrayList.get(i).get(9)
+                            ));
                 }
             } catch (Exception e) {
                 Log.d("FragList", "BackGroundTask: " + e.getMessage());
@@ -121,44 +134,47 @@ public class LateralClientes extends Fragment {
         protected void onPostExecute(String s) {
             try {
                 progressBar.setVisibility(View.GONE);
-                adapter = new CustomAdapterCodNom(dataModels, getContext());
+                adapter = new ClientesAdapter(dataModels, getContext());
                 lv_items.setAdapter(adapter);
+                final View _view= view;
 
 
                 lv_items.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-                        final String Codigo = dataModels.get(i).getCod();
+                        final String Codigo = dataModels.get(i).getCodigo_Cliente();
                         adb.setTitle("¿Elegir?");
-                        adb.setMessage("¿Está seguro de elegir el cliente " + dataModels.get(i).getName() + "?");
+                        adb.setMessage("¿Está seguro de elegir el cliente " + dataModels.get(i).getNombre_Cliente() + "?");
                         final int positionToRemove = i;
                         adb.setNegativeButton("Cancel", null);
                         adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
-                                CodigosGenerales.Nombre_Cliente = dataModels.get(positionToRemove).getName();
-                                CodigosGenerales.Direccion_Cliente = dataModels.get(positionToRemove).getDireccion();
-                                CodigosGenerales.Codigo_Cliente = dataModels.get(positionToRemove).getCod();
-                                CodigosGenerales.Codigo_ListaPrecios = dataModels.get(positionToRemove).getListaPrecios();
-                                CodigosGenerales.Nombre_Cliente= dataModels.get(positionToRemove).getName();
-                                CodigosGenerales.RUC_Cliente= dataModels.get(positionToRemove).getRuc();
-                                CodigosGenerales.DNI_Cliente= dataModels.get(positionToRemove).getRuc();
+                                DatosCliente.Nombre_Cliente = dataModels.get(positionToRemove).getNombre_Cliente();
+                                DatosCliente.Direccion_Cliente = dataModels.get(positionToRemove).getDireccion_Cliente();
+                                DatosCliente.Codigo_Cliente = dataModels.get(positionToRemove).getCodigo_Cliente();
+                                DatosCliente.Codigo_ListaPrecios = dataModels.get(positionToRemove).getListaPrecios_Cliente();
+                                DatosCliente.RUC_Cliente= dataModels.get(positionToRemove).getRuc_Cliente();
+                                DatosCliente.DNI_Cliente= dataModels.get(positionToRemove).getDNI_Cliente();
+                                DatosCliente.Codigo_FormaPago= dataModels.get(positionToRemove).getCodigo_FormaPago();
+                                DatosCliente.Nombre_FormaPago= dataModels.get(positionToRemove).getNombre_FormaPago();
+                                DatosCliente.Dias_FormaPago= CodigosGenerales.tryParseInteger(dataModels.get(positionToRemove).getDias_FormaPago());
+                                DatosCliente.Codigo_Pais= dataModels.get(positionToRemove).getCodigo_Pais();
 
-                                Log.d(TAG, "Nombre_Cliente " + CodigosGenerales.Nombre_Cliente+" ...");
-                                Log.d(TAG, "Direccion_Cliente " + CodigosGenerales.Direccion_Cliente+" ...");
-                                Log.d(TAG, "Codigo_Cliente " + CodigosGenerales.Codigo_Cliente+" ...");
-                                Log.d(TAG, "Codigo_ListaPrecios " + CodigosGenerales.Codigo_ListaPrecios+" ...");
-                                Log.d(TAG, "Nombre_Cliente " + CodigosGenerales.Nombre_Cliente+" ...");
-                                Log.d(TAG, "RUC_Cliente " + CodigosGenerales.RUC_Cliente+" ...");
+                                Log.d(TAG, "Nombre_Cliente " + DatosCliente.Nombre_Cliente+" ...");
+                                Log.d(TAG, "Direccion_Cliente " + DatosCliente.Direccion_Cliente+" ...");
+                                Log.d(TAG, "Codigo_Cliente " + DatosCliente.Codigo_Cliente+" ...");
+                                Log.d(TAG, "Codigo_ListaPrecios " + DatosCliente.Codigo_ListaPrecios+" ...");
+                                Log.d(TAG, "Nombre_Cliente " + DatosCliente.Nombre_Cliente+" ...");
+                                Log.d(TAG, "RUC_Cliente " + DatosCliente.RUC_Cliente+" ...");
+                                Log.d(TAG, "Codigo_FormaPago " + DatosCliente.Codigo_FormaPago+" ...");
+                                Log.d(TAG, "Nombre_FormaPago " + DatosCliente.Nombre_FormaPago+" ...");
+                                Log.d(TAG, "Dias_FormaPago " + DatosCliente.Dias_FormaPago+" ...");
+                                Log.d(TAG, "Codigo_Pais " + DatosCliente.Codigo_Pais+" ...");
+                                Snackbar.make(_view, DatosCliente.Nombre_Cliente + " ha sido elegido", Snackbar.LENGTH_LONG).setAction("No action", null).show();
 
-                                try {
-                                    List<String> FormPago = bdFormaPago.getPredeterminado();
-                                    CodigosGenerales.Codigo_FormaPago= FormPago.get(0);
-                                    CodigosGenerales.Dias_FormaPago = Integer.parseInt(FormPago.get(2));
-                                } catch (Exception e) {
-                                    CodigosGenerales.Dias_FormaPago = 0;
-                                }
+
                             }
                         });
                         adb.show();

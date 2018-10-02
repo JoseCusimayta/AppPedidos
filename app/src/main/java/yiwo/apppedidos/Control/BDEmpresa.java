@@ -1,4 +1,4 @@
-package yiwo.apppedidos.Data;
+package yiwo.apppedidos.Control;
 
 import android.util.Log;
 
@@ -89,7 +89,7 @@ public class BDEmpresa {
             String stsql = "select * from Htipmon where ccod_empresa = ?";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); //Código de la empresa
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); //Código de la empresa
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
                 arrayList.add(Arrays.asList(
@@ -102,7 +102,7 @@ public class BDEmpresa {
             connection.close();
 
         } catch (Exception e) {
-            Log.d("BDEmpresa", "- getMonedas: "+CodigosGenerales.Codigo_Empresa+" - "+e.getMessage());
+            Log.d("BDEmpresa", "- getMonedas: "+ConfiguracionEmpresa.Codigo_Empresa+" - "+e.getMessage());
         }
         return arrayList;
     }
@@ -114,7 +114,7 @@ public class BDEmpresa {
             String stsql = "select * from Htipmon where ccod_empresa = ?";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); //Código de la empresa
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); //Código de la empresa
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
                 arrayList.add(Arrays.asList(
@@ -126,26 +126,25 @@ public class BDEmpresa {
             }
 
         } catch (Exception e) {
-            Log.d("BDEmpresa", "- getMonedas: "+CodigosGenerales.Codigo_Empresa+" - "+e.getMessage());
+            Log.d("BDEmpresa", "- getMonedas: "+ConfiguracionEmpresa.Codigo_Empresa+" - "+e.getMessage());
         }
         return arrayList;
     }
-
-    public  Boolean isIncluidoIGV(Connection connection){
+    public  String isIncluidoIGV(Connection connection){
         try {
             String stsql = "select mas_igv from  Hconfiguraciones_2 where idempresa = ?";
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); //Código de la empresa
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); //Código de la empresa
             ResultSet rs = query.executeQuery();
             String mas_igv="";
             while (rs.next()) {
                 mas_igv=rs.getString("mas_igv");
             }
-            return mas_igv.equals("S");
+            return mas_igv;
         } catch (Exception e) {
             Log.d("BDEmpresa", "- isIncluidoIGV: "+e.getMessage());
         }
-        return false;
+        return "S";
     }
     public String getMonedaTrabajo(Connection connection){
         String  monedaTrabajo = "S/";
@@ -153,7 +152,7 @@ public class BDEmpresa {
         try {
             String stsql = "select moneda_trabajo from Hconfiguraciones_2 where idempresa = ?";
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); //Código de la empresa
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); //Código de la empresa
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
                 monedaTrabajo= rs.getString("moneda_trabajo"); //Tipo de moneda de la empresa
@@ -167,7 +166,7 @@ public class BDEmpresa {
     ctip	tc
     VTA	3.272
      */
-    public  List<String> getTipoCambio(Connection connection){
+    public  List<String> getDatosTipoCambio(Connection connection){
         //select ntc_venta, ntc_compra,ntc_especial from hcalenda where  CONVERT(date, dfecha) =CONVERT(date, getdate())
         List<String> list=new ArrayList<>();
 
@@ -180,8 +179,8 @@ public class BDEmpresa {
                             "from hcalenda where Convert(varchar, dfecha,111) = convert(varchar,getdate(),111)";
 
             PreparedStatement query = connection.prepareStatement(stsql);
-            query.setString(1, CodigosGenerales.Codigo_Empresa); //Código de la empresa
-            query.setString(2, CodigosGenerales.Codigo_Empresa); //Código de la empresa
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); //Código de la empresa
+            query.setString(2, ConfiguracionEmpresa.Codigo_Empresa); //Código de la empresa
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
                 list.add(rs.getString("Tipo")); //Valor para el tipo de cambio

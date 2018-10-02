@@ -10,9 +10,12 @@ import java.net.Socket;
 import java.net.SocketAddress;
 
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.AspectosGenerales.DatosConexiones;
 
 public class RedDisponible {
 
+    private DatosConexiones datosConexiones= new DatosConexiones();
+    
     public boolean isNetDisponible(Activity activity) {
 
         ConnectivityManager connectivityManager = (ConnectivityManager)
@@ -56,16 +59,16 @@ public class RedDisponible {
         return networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE;
     }
 
-    public static void isLAN(Activity activity) {
-        ConfiguracionEmpresa.isLANAviable = serverAvailable(activity, ConfiguracionEmpresa.IP_LAN, ConfiguracionEmpresa.PuertoSQL);
-        ConfiguracionEmpresa.isPublicaAviable = serverAvailable(activity, ConfiguracionEmpresa.IP_Publica, ConfiguracionEmpresa.PuertoSQL);
+    public void isLAN(Activity activity) {
+        ConfiguracionEmpresa.isLANAviable = serverAvailable(activity, datosConexiones.getIP_LAN(), datosConexiones.getPuertoSQL());
+        ConfiguracionEmpresa.isPublicaAviable = serverAvailable(activity, datosConexiones.getIP_Publica(), datosConexiones.getPuertoSQL());
         if(ConfiguracionEmpresa.isLANAviable)
             ConfiguracionEmpresa.isLAN=true;
         if(ConfiguracionEmpresa.isPublicaAviable)
             ConfiguracionEmpresa.isLAN=false;
     }
 
-    public static boolean serverAvailable(Activity activity, String DATABASE_ADDR, int DATABASE_PORT) {
+    public boolean serverAvailable(Activity activity, String DATABASE_ADDR, int DATABASE_PORT) {
         final int TIMEOUT_MS = 2000; // 2 seconds
         // First check if we have network connectivity
         ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);

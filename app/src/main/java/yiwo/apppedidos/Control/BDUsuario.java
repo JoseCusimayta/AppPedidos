@@ -1,4 +1,4 @@
-package yiwo.apppedidos.Data;
+package yiwo.apppedidos.Control;
 
 import android.util.Log;
 
@@ -9,31 +9,28 @@ import java.util.ArrayList;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.AspectosGenerales.DatosUsuario;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
 public class BDUsuario {
-    private String TAG="BDUsuario";
+    private String TAG = "BDUsuario";
     BDConexionSQL bdata = new BDConexionSQL();
-    private BDEmpresa bdEmpresa= new BDEmpresa();
 
     public Boolean getLogin(String Usuario, String Clave) {
 
         try {
 
-            if(Usuario.equals("erpsys") && Clave.equals("2012")){
+            if (Usuario.equals("erpsys") && Clave.equals("2012")) {
 
-//                CodigosGenerales.Codigo_Empresa = "01";
-                CodigosGenerales.Nombre_Vendedor = "ERP Solutions Perú";
-                CodigosGenerales.Celular_Vendedor = "número_celular";
-                CodigosGenerales.email_Vendedor = "erpsys@gmail.com";
-                CodigosGenerales.Codigo_Usuario = "erpsys";
-                CodigosGenerales.Nombre_Usuario = "erpsys";
+                DatosUsuario.Nombre_Vendedor = "ERP Solutions Perú";
+                DatosUsuario.Celular_Vendedor = "número_celular";
+                DatosUsuario.email_Vendedor = "erpsys@gmail.com";
+                DatosUsuario.Codigo_Usuario = "erpsys";
+                DatosUsuario.Nombre_Usuario = "erpsys";
 
-                Log.d(TAG,"Tipo_CambioEmpresa "+ConfiguracionEmpresa.Tipo_CambioEmpresa);
                 return true;
-            }else {
+            } else {
 
-                ArrayList arrayList = new ArrayList<String>();
                 String ClaveEncriptada = getClaveEncriptada(Clave);
                 Connection connection = bdata.getConnection();
 
@@ -61,41 +58,21 @@ public class BDUsuario {
                                 "and erp_usuario.erp_estado = 'A'";
 
                 PreparedStatement query = connection.prepareStatement(stsql);
-                query.setString(1, CodigosGenerales.Codigo_Empresa);
+                query.setString(1, ConfiguracionEmpresa.Codigo_Empresa);
                 query.setString(2, Usuario);
                 query.setString(3, ClaveEncriptada);
 
                 ResultSet rs = query.executeQuery();
                 while (rs.next()) {
-                    arrayList.add(rs.getString("codigo_empresa"));      //Codigo de Empresa
-                    arrayList.add(rs.getString("ruc"));         //RUC
-                    arrayList.add(rs.getString("razon_social"));    //Razon Social de la empresa
-                    arrayList.add(rs.getString("nombre_vendedor"));    //nombre del vendedor
-                    arrayList.add(rs.getString("celular"));    //celular del vendedor
-                    arrayList.add(rs.getString("email"));    //email del vendedor
-                    arrayList.add(rs.getString("codigo_usuario"));     //Codigo de usuario para ingresar
-                    arrayList.add(rs.getString("nombre_usuario"));     //Nombre del Usuario para mostrar
-                }
-
-                if (arrayList.size() > 0) {
-                    String Codigo_Usuario = arrayList.get(6).toString();
-                    if (Usuario.equals(Codigo_Usuario)) {
-                        CodigosGenerales.Codigo_Empresa = arrayList.get(0).toString();
-                        CodigosGenerales.Nombre_Vendedor = arrayList.get(3).toString();
-                        CodigosGenerales.Celular_Vendedor = arrayList.get(4).toString();
-                        CodigosGenerales.email_Vendedor = arrayList.get(5).toString();
-                        CodigosGenerales.Codigo_Usuario = Codigo_Usuario;
-                        CodigosGenerales.Nombre_Usuario = arrayList.get(7).toString();
-                        Log.d(TAG,"Codigo_Empresa "+CodigosGenerales.Codigo_Empresa);
-                        CodigosGenerales.Moneda_Empresa = bdEmpresa.getMonedaTrabajo(connection);
-                        ConfiguracionEmpresa.isIncluidoIGV = bdEmpresa.isIncluidoIGV(connection); //Obtener el tipo de cambio actual
-                        ConfiguracionEmpresa.Tipo_CambioEmpresa = bdEmpresa.getTipoCambio(connection); //Obtener el tipo de cambio actualL
-                        Log.d(TAG,"Tipo_CambioEmpresa "+ConfiguracionEmpresa.Tipo_CambioEmpresa);
-                        Log.d(TAG, "Datos del vendedor:\n" + arrayList);
-                        return true;
-                    }
+                    DatosUsuario.Nombre_Vendedor = rs.getString("nombre_vendedor");
+                    DatosUsuario.Celular_Vendedor = rs.getString("celular");
+                    DatosUsuario.email_Vendedor = rs.getString("email");
+                    DatosUsuario.Codigo_Usuario = rs.getString("codigo_usuario");
+                    DatosUsuario.Nombre_Usuario = rs.getString("nombre_usuario");
                 }
                 connection.close();
+                if (DatosUsuario.Codigo_Usuario != null)
+                    return true;
             }
         } catch (Exception e) {
             Log.d(TAG, "- getLogin: " + e.getMessage());
@@ -120,5 +97,4 @@ public class BDUsuario {
         }
         return strexpresion;
     }
-
 }
