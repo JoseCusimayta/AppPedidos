@@ -86,4 +86,13 @@ public class DataArticulos {
     public  ArrayList<List<String>>  getArticulosFiltrados(String Nombre, String BusquedaCategoria){
         return bdArticulos.getArticulosFiltrado(Nombre,BusquedaCategoria);
     }
+
+    public ArrayList<List<String>> getList(String Nombre) {
+        return bdArticulos.getList(Nombre);
+    }
+
+    public ArrayList<List<String>> getFichaTecnica(String Codigo_Articulo) {
+        return bdArticulos.getFichaTecnica(Codigo_Articulo);
+
+    }
 }

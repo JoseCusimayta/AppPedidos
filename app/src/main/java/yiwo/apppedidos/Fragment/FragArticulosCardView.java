@@ -60,7 +60,6 @@ public class FragArticulosCardView extends Fragment {
     String TAG = "FragArticulosCardView";
     ProgressBar progressBar;
     BackGroundTask task;
-    BDArticulos bdArticulos = new BDArticulos();
 
     //region Elementos para el filtro
     Toolbar toolbar;
@@ -150,6 +149,8 @@ public class FragArticulosCardView extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
+                    if (task != null)
+                        task.cancel(true);
                     task = new BackGroundTask();
                     task.execute("");
                 } catch (Exception e) {
@@ -165,23 +166,22 @@ public class FragArticulosCardView extends Fragment {
         b_filtro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
+                if (task != null)
                     task.cancel(true);
-                } catch (Exception e) {
-                }
                 isFilter = true;
                 Filtros();
                 b_filtro.setEnabled(false);
                 CodigosGenerales.hideSoftKeyboard(getActivity());
             }
         });
-//        prepareAlbums();
+
         return view;
     }
 
     @Override
     public void onPause() {
-        task.cancel(true);
+        if (task != null)
+            task.cancel(true);
         isFilter = false;
         super.onPause();
     }
@@ -194,7 +194,6 @@ public class FragArticulosCardView extends Fragment {
         @Override
         protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
-//            articulosList = new ArrayList<>();
             articulosList.clear();
             adapter.notifyDataSetChanged();
             Log.d(TAG, "BackGroundTask iniciando");
@@ -216,19 +215,23 @@ public class FragArticulosCardView extends Fragment {
         protected void onPostExecute(String s) {
             try {
                 progressBar.setVisibility(View.GONE);
-
                 adapter.notifyDataSetChanged();
                 if (adapter.getItemCount() < 1) {
                     Snackbar.make(view, "No se encontraron los datos", Snackbar.LENGTH_LONG).setAction("No action", null).show();
-//                    Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
                 }
-//                recyclerView.setAdapter(adapter);
             } catch (Exception e) {
                 Log.d(TAG, "onPostExecute: " + e.getMessage());
             }
 
             Log.d(TAG, "BackGroundTask terminando");
             super.onPostExecute(s);
+        }
+
+        @Override
+        protected void onCancelled() {
+
+            Log.d(TAG, "BackGroundTask Cancelado");
+            super.onCancelled();
         }
     }
 
@@ -294,7 +297,7 @@ public class FragArticulosCardView extends Fragment {
         try {
             if (task.isCancelled())
                 return arrayList;
-            arrayList = bdArticulos.getList(et_buscar.getText().toString());
+            arrayList = dataArticulos.getList(et_buscar.getText().toString());
             articulosList.clear();
             Log.d(TAG, "ArticulosCardView " + arrayList.get(0).size());
 //                if(arrayList.get(0).size()>5)

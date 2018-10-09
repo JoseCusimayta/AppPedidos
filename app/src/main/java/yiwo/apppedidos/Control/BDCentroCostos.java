@@ -16,13 +16,25 @@ import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 public class BDCentroCostos {
 
     BDConexionSQL bdata= new BDConexionSQL();
-
+    String TAG="BDCentroCostos";
     public ArrayList<List<String>> getList(String Nombre){
         ArrayList<List<String>> arrayList = new ArrayList<>();
         try {
             Connection connection = bdata.getConnection();
 
-            String stsql = "select * from dbo.udf_list_hcencos(?) where codigo like ? or nombre like ? order by codigo";
+            String stsql="select \n" +
+                    "ccod_cencos, \n" +
+                    "cnom_cencos \n" +
+                    "from \n" +
+                    "hcencos \n" +
+                    "where \n" +
+                    "ccod_empresa = ? \n" +
+                    "and \n" +
+                    "(\n" +
+                    "ccod_cencos like ? \n" +
+                    "or cnom_cencos like ?\n" +
+                    ") \n" +
+                    "order by ccod_cencos";
 
             PreparedStatement query = connection.prepareStatement(stsql);
             query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Código de la empresa
@@ -33,15 +45,15 @@ public class BDCentroCostos {
 
             while (rs.next()) {
                 arrayList.add(Arrays.asList(
-                        rs.getString("codigo"),
-                        rs.getString("Nombre"),
+                        rs.getString("ccod_cencos"),
+                        rs.getString("cnom_cencos"),
                         null
                 ));
             }
             connection.close();
 
         } catch (Exception e) {
-            Log.d("BDCentroCostos", "- getList: "+e.getMessage());
+            Log.d(TAG, "- getList: "+e.getMessage());
         }
         return arrayList;
     }
@@ -52,21 +64,26 @@ public class BDCentroCostos {
         List<String> list=new ArrayList<>();
 
         try {
-//            Connection connection = bdata.getConnection();
 
-            String stsql = "select TOP(1) * from dbo.udf_list_hcencos(?) order by codigo";
+            String stsql="select TOP(1) \n" +
+                    "ccod_cencos, \n" +
+                    "cnom_cencos \n" +
+                    "from \n" +
+                    "hcencos \n" +
+                    "where \n" +
+                    "ccod_empresa = ? \n" +
+                    "order by ccod_cencos";
 
             PreparedStatement query = connection.prepareStatement(stsql);
             query.setString(1, ConfiguracionEmpresa.Codigo_Empresa);
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
-                list.add(rs.getString("codigo"));
-                list.add(rs.getString("nombre"));
+                list.add(rs.getString("ccod_cencos"));
+                list.add(rs.getString("cnom_cencos"));
             }
-//            connection.close();
 
         } catch (Exception e) {
-            Log.d("BDEmpresa", "- getListaArticulos: "+e.getMessage());
+            Log.d(TAG, "- getPredeterminado: "+e.getMessage());
         }
         return list;
     }

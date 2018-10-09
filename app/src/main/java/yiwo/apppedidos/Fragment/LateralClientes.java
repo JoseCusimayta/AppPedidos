@@ -46,6 +46,8 @@ public class LateralClientes extends Fragment {
     BDClientes bdClientes = new BDClientes();
     String TAG="LateralClientes";
     View view;
+    BackGroundTask task;
+
     public LateralClientes() {
         // Required empty public constructor
     }
@@ -77,7 +79,9 @@ public class LateralClientes extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    BackGroundTask task = new BackGroundTask();
+                    if (task != null)
+                        task.cancel(true);
+                    task = new BackGroundTask();
                     task.execute("");
                 } catch (Exception e) {
                     Log.d("FragList", "et_buscar: " + e.getMessage());
@@ -89,10 +93,18 @@ public class LateralClientes extends Fragment {
             }
         });
 
-
-        BackGroundTask task1 = new BackGroundTask();
-        task1.execute("");
+        if (task != null)
+            task.cancel(true);
+        task = new BackGroundTask();
+        task.execute("");
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        if (task != null)
+            task.cancel(true);
+        super.onPause();
     }
 
     public class BackGroundTask extends AsyncTask<String, String, String> {

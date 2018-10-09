@@ -129,7 +129,6 @@ public class FragMenuPrincipal extends Fragment implements View.OnClickListener 
         switch (view.getId()) {
             case (R.id.iv_articulos):
                 CodigosGenerales.TipoArray = "Articulos";
-//                fragment = new FragArticulos();
                 fragment = new FragArticulosCardView();
                 CambiarFragment(fragment);
                 break;

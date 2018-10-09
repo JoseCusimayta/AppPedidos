@@ -34,7 +34,7 @@ public class BDArticulos {
                 Connection connection = bdata.getConnection();
 
                 String stsql =
-                        "select top(50) \n" +
+                                "select top(50) \n" +
                                 "ccod_articulo, \n" +
                                 "cnom_articulo, \n" +
                                 "cfamilia,\n" +
@@ -56,8 +56,8 @@ public class BDArticulos {
                                 "inner join Hstock\n" +
                                 "on \n" +
                                 "Harticul.ccod_articulo=HSTOCK.ERP_CODART and\n" +
-                                "Harticul.ccod_empresa=HSTOCK.ERP_CODEMP and \n" +
-                                "Harticul.ccod_almacen=HSTOCK.ERP_CODALM\n" +
+                                "Harticul.ccod_empresa=HSTOCK.ERP_CODEMP \n" +
+                                "and Harticul.ccod_almacen=HSTOCK.ERP_CODALM\n" +
                                 "inner join Erp_Lista_Precio_Cliente\n" +
                                 "on\n" +
                                 "Harticul.ccod_articulo=Erp_Lista_Precio_Cliente.ERP_CODART and\n" +
@@ -182,8 +182,8 @@ public class BDArticulos {
                                 "inner join Hstock\n" +
                                 "on \n" +
                                 "Harticul.ccod_articulo=HSTOCK.ERP_CODART and\n" +
-                                "Harticul.ccod_empresa=HSTOCK.ERP_CODEMP and \n" +
-                                "Harticul.ccod_almacen=HSTOCK.ERP_CODALM\n" +
+                                "Harticul.ccod_empresa=HSTOCK.ERP_CODEMP \n" +
+                                "and Harticul.ccod_almacen=HSTOCK.ERP_CODALM\n" +
                                 "inner join Erp_Lista_Precio_Cliente\n" +
                                 "on\n" +
                                 "Harticul.ccod_articulo=Erp_Lista_Precio_Cliente.ERP_CODART and\n" +

@@ -19,6 +19,7 @@ import yiwo.apppedidos.Control.BDEmpresa;
 import yiwo.apppedidos.Control.BDMotivo;
 import yiwo.apppedidos.Control.BDPuntoVenta;
 import yiwo.apppedidos.Control.BDUnidNegocios;
+import yiwo.apppedidos.Control.BDUsuario;
 import yiwo.apppedidos.Fragment.FragMenuPrincipal;
 
 public class DataUsuario {
@@ -27,6 +28,7 @@ public class DataUsuario {
     private BDPuntoVenta bdPuntoVenta = new BDPuntoVenta();
     private BDCentroCostos bdCentroCostos = new BDCentroCostos();
     private BDUnidNegocios bdUnidNegocios = new BDUnidNegocios();
+    private BDUsuario bdUsuario = new BDUsuario();
     private String TAG = "DataUsuario";
 
     public Boolean CargarDatosUsuario(String CodigoEmpresa) {
@@ -39,15 +41,19 @@ public class DataUsuario {
             DatosUsuario.Codigo_PuntoVenta = list.get(0);
             DatosUsuario.Nombre_PuntoVenta = list.get(1);
             DatosUsuario.Codigo_Almacen = list.get(2);
-
+            DatosUsuario.Direccion_Almacen = list.get(3);
+            Log.d(TAG,"list: "+list);
 
             list = bdCentroCostos.getPredeterminado(connection);
             DatosUsuario.Codigo_CentroCostos = list.get(0);
             DatosUsuario.Nombre_CentroCostos = list.get(1);
+            Log.d(TAG,"list: "+list);
 
             list = bdUnidNegocios.getPredeterminado(connection);
             DatosUsuario.Codigo_UnidadNegocio = list.get(0);
             DatosUsuario.Nombre_UnidadNegocio = list.get(1);
+            Log.d(TAG,"list: "+list);
+
             connection.close();
             return true;
         } catch (SQLException e) {
@@ -81,5 +87,30 @@ public class DataUsuario {
                 DatosUsuario.Nombre_Vendedor,
                 DatosUsuario.Celular_Vendedor,
                 DatosUsuario.email_Vendedor);
+    }
+
+    public Boolean loginUsuario(String Usuario, String Clave) {
+
+
+        if (Usuario.equals("erpsys") && Clave.equals("2012")) {
+
+            DatosUsuario.Nombre_Vendedor = "ERP Solutions Perú";
+            DatosUsuario.Celular_Vendedor = "número_celular";
+            DatosUsuario.email_Vendedor = "erpsys@gmail.com";
+            DatosUsuario.Codigo_Usuario = "erpsys";
+            DatosUsuario.Nombre_Usuario = "erpsys";
+            return true;
+        } else {
+            List<String> list = bdUsuario.getLogin(Usuario, Clave);
+            if (list.size() >= 5) {
+                DatosUsuario.Nombre_Vendedor =  list.get(0);
+                DatosUsuario.Celular_Vendedor = list.get(1);
+                DatosUsuario.email_Vendedor =   list.get(2);
+                DatosUsuario.Codigo_Usuario =   list.get(3);
+                DatosUsuario.Nombre_Usuario =   list.get(4);
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -50,32 +50,15 @@ public class MainActivity extends AppCompatActivity
     FrameLayout frameLayout;
     NavigationView navigationView;
     BDConexionSQLite myDb;
-    String TAG="MainActivity";
+    String TAG = "MainActivity";
     //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        CargarVariables();
 
-        //region Declarando variables del activity
-        toolbar = findViewById(R.id.toolbar);
-        app_barLayout = findViewById(R.id.app_barLayout);
-        iv_logo = findViewById(R.id.iv_logo);
-        b_carrito = findViewById(R.id.b_carrito);
-        drawer = findViewById(R.id.drawer_layout);
-        tv_origenFiltro = findViewById(R.id.tv_origenFiltro);
-        frameLayout = findViewById(R.id.frag_contenedor);
-        navigationView = findViewById(R.id.nav_view);
-        //endregion
-        findViewById(R.id.frag_contenedor).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                return false;
-            }
-        });
         //region Cambiar de Toolbar
         setSupportActionBar(toolbar);
         //endregion
@@ -88,30 +71,41 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//Bloquear el menu lateral
         //endregion
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
         //region Ocultar Toolbar para que no aparezca en el Login
         app_barLayout.setVisibility(View.GONE);
         tv_origenFiltro.setVisibility(View.GONE);
         //endregion
 
-        //region GenerarAccion de "Click"
+        //region Acciones
         navigationView.setNavigationItemSelectedListener(this);
         b_carrito.setOnClickListener(this);
         iv_logo.setOnClickListener(this);
         //endregion
 
 
-        myDb = new BDConexionSQLite(this); //Cargar base de datos SQLite
-
         Fragment fragment = new FragSplashScreen();
         CambiarFragment(fragment);
+    }
+
+
+    public void CargarVariables() {
+        //region Declarando variables del activity
+        toolbar = findViewById(R.id.toolbar);
+        app_barLayout = findViewById(R.id.app_barLayout);
+        iv_logo = findViewById(R.id.iv_logo);
+        b_carrito = findViewById(R.id.b_carrito);
+        drawer = findViewById(R.id.drawer_layout);
+        tv_origenFiltro = findViewById(R.id.tv_origenFiltro);
+        frameLayout = findViewById(R.id.frag_contenedor);
+        navigationView = findViewById(R.id.nav_view);
+        myDb = new BDConexionSQLite(this); //Cargar base de datos SQLite
+        //endregion
     }
 
     @Override
     public void onBackPressed() {
         b_carrito.setEnabled(true);
-        if(CodigosGenerales.isInicio){
+        if (CodigosGenerales.isInicio) {
             new AlertDialog.Builder(this)
                     .setTitle("Salir")
                     .setMessage("¿Esstá seguro de salir?")
@@ -124,7 +118,7 @@ public class MainActivity extends AppCompatActivity
                     })
                     .create()
                     .show();
-        }else
+        } else
             super.onBackPressed();
     }
 
@@ -133,8 +127,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-        if (!b_carrito.isEnabled())
-            b_carrito.setEnabled(true);
         Fragment fragment;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -167,10 +159,9 @@ public class MainActivity extends AppCompatActivity
 
 
     public void CambiarFragment(Fragment fragment) {
-
-        CodigosGenerales.isInicio=false;
-
-
+        if (!b_carrito.isEnabled())
+            b_carrito.setEnabled(true);
+        CodigosGenerales.isInicio = false;
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frag_contenedor, fragment)
@@ -184,25 +175,23 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment;
         switch (view.getId()) {
             case (R.id.b_carrito):
+                b_carrito.setEnabled(false);
                 fragment = new FragListDeseo();
                 CambiarFragment(fragment);
                 break;
             case (R.id.iv_logo):
                 iv_logo.setEnabled(false);
-                if (!b_carrito.isEnabled())
-                    b_carrito.setEnabled(true);
                 FragmentManager fm = getSupportFragmentManager();
                 for (int i = 1; i < fm.getBackStackEntryCount(); ++i) {
                     fm.popBackStack();
                 }
                 FragMenuPrincipal frag = new FragMenuPrincipal();
                 CambiarFragment(frag);
-
                 break;
         }
     }
 
-    public void CerrarSesion(){
+    public void CerrarSesion() {
         new AlertDialog.Builder(this)
                 .setTitle("Cerrar sesión")
                 .setMessage("¿Esstá seguro de cerrar sesión?")
@@ -215,13 +204,11 @@ public class MainActivity extends AppCompatActivity
                             myDb.deleteAllDataLogin();   //Borrar toda la información del SQLITE
                             CodigosGenerales.Login = false;//Guardar el estado de Login en falso para que el sistema sepa que nadie ha iniciado sesión
 
-
                             FragmentManager fm = getSupportFragmentManager();
                             for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
                                 fm.popBackStack();
                             }
                             frameLayout.removeAllViews();
-
 
                             FragLogin fragLogin = new FragLogin();
                             CambiarFragment(fragLogin);

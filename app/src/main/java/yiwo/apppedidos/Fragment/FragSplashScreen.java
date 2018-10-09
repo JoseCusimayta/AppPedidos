@@ -67,8 +67,7 @@ public class FragSplashScreen extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-
-            redDisponible.isLAN(getActivity());
+            redDisponible.isLAN();
             ComprobarLogin();
             return null;
         }

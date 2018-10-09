@@ -15,7 +15,7 @@ import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
 public class BDPromociones {
 
-    String TAG = "BDPedidos";
+    String TAG = "BDPromociones";
     BDConexionSQL bdata = new BDConexionSQL();
 
     public List<String> getPromociones(Connection connection, String Codigo_Producto, String Cantidad) {
@@ -27,6 +27,9 @@ public class BDPromociones {
 
     public List<String> getPromocionesCantidadIntermedia(Connection connection, String Codigo_Producto, String Cantidad) {
 
+        Log.d(TAG,"Codigo_Empresa "+ ConfiguracionEmpresa.Codigo_Empresa);
+        Log.d(TAG,"Codigo_Producto "+ Codigo_Producto);
+        Log.d(TAG,"Cantidad "+Cantidad);
         List<String> arrayList = new ArrayList<>();
         try {
             String stsql = " select desc01, desc02,desc03,desc04 " +
@@ -71,14 +74,17 @@ public class BDPromociones {
                 arrayList.add(desc04);  //desc04
             }
 
-            Log.d(TAG, "getPromociones- " + arrayList);
+            Log.d(TAG, "getPromocionesCantidadIntermedia- " + arrayList);
         } catch (Exception e) {
-            Log.d(TAG, "- getPromociones: " + e.getMessage());
+            Log.d(TAG, "- getPromocionesCantidadIntermedia: " + e.getMessage());
         }
         return arrayList;
     }
     public List<String> getPromocionesCantidadSuperada(Connection connection, String Codigo_Producto, String Cantidad) {
 
+        Log.d(TAG,"Codigo_Empresa "+ ConfiguracionEmpresa.Codigo_Empresa);
+        Log.d(TAG,"Codigo_Producto "+ Codigo_Producto);
+        Log.d(TAG,"Cantidad "+Cantidad);
         List<String> arrayList = new ArrayList<>();
 
         arrayList.add("0");  //descuento 1
@@ -87,13 +93,15 @@ public class BDPromociones {
         arrayList.add("0");  //descuento 4
         arrayList.add("0");  //descuento único
         try {
+
+
             String stsql = " \n" +
                     "select TOP(1)  desc01, desc02,desc03,desc04, erp_cant_fin\n" +
                     "from Erp_Promociones \n" +
                     "where \n" +
                     "erp_codemp=?\n" +
                     "and erp_tipo='Item' \n" +
-                    "and erp_codigo=?'\n" +
+                    "and erp_codigo=?\n" +
                     "and erp_motivo='RM' and erp_cant_fin<=?\n" +
                     "and erp_vcto_ini<=GETDATE() and erp_vcto_fin>=GETDATE() order by erp_cant_fin desc";
 
@@ -130,9 +138,9 @@ public class BDPromociones {
                 arrayList.add(desc04);  //desc04
             }
 
-            Log.d(TAG, "getPromociones- " + arrayList);
+            Log.d(TAG, "getPromocionesCantidadSuperada- " + arrayList);
         } catch (Exception e) {
-            Log.d(TAG, "- getPromociones: " + e.getMessage());
+            Log.d(TAG, "- getPromocionesCantidadSuperada: " + e.getMessage());
         }
         return arrayList;
     }

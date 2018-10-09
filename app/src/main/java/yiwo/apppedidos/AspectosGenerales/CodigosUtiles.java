@@ -63,23 +63,18 @@ public class CodigosUtiles {
 
 
 
-
-
-
-
-
 select top(50)
 ccod_articulo,
 cnom_articulo,
-cfamilia,
-ccod_subfamilia,
-erp_concepto1.erp_nomcon as 'codmarca',
-erp_concepto2.erp_nomcon as 'modelo',
-erp_concepto3.erp_nomcon as 'color',
-erp_concepto4.erp_nomcon as 'tratamiento',
-erp_concepto5.erp_nomcon as 'fuelle',
-erp_concepto6.erp_nomcon as 'azas',
-erp_concepto7.erp_nomcon as 'solapa',
+cnom_familia,
+cnom_subfamilia,
+codmarca,
+modelo,
+color,
+tratamiento,
+fuelle,
+azas,
+solapa,
 cmoneda_precio,
 erp_monto,
 cunidad,
@@ -97,71 +92,31 @@ on
 Harticul.ccod_articulo=Erp_Lista_Precio_Cliente.ERP_CODART and
 Harticul.ccod_empresa=Erp_Lista_Precio_Cliente.ERP_CODEMP and
 Harticul.cunidad=Erp_Lista_Precio_Cliente.erp_unidad
-inner join Hfam_art
-on
-Hfam_art.ccod_empresa=Harticul.ccod_empresa and
-Hfam_art.cfamilia=Harticul.cfamilia
-inner join Hsubfamilia_art
-on
-Hsubfamilia_art.ccod_empresa=Harticul.ccod_empresa and
-Hsubfamilia_art.ccod_subfamilia=Harticul.ccod_subfamilia
-inner join erp_concepto1
-on
-erp_concepto1.erp_codemp=Harticul.ccod_empresa and
-erp_concepto1.erp_codcon=Harticul.codmarca
-inner join erp_concepto2
-on
-erp_concepto2.erp_codemp=Harticul.ccod_empresa and
-erp_concepto2.erp_codcon=Harticul.modelo
-inner join erp_concepto3
-on
-erp_concepto3.erp_codemp=Harticul.ccod_empresa and
-erp_concepto3.erp_codcon=Harticul.color
-inner join erp_concepto4
-on
-erp_concepto4.erp_codemp=Harticul.ccod_empresa and
-erp_concepto4.erp_codcon=Harticul.tratamiento
-inner join erp_concepto5
-on
-erp_concepto5.erp_codemp=Harticul.ccod_empresa and
-erp_concepto5.erp_codcon=Harticul.fuelle
-inner join erp_concepto6
-on
-erp_concepto6.erp_codemp=Harticul.ccod_empresa and
-erp_concepto6.erp_codcon=Harticul.azas
-inner join erp_concepto7
-on
-erp_concepto7.erp_codemp=Harticul.ccod_empresa and
-erp_concepto7.erp_codcon=Harticul.solapa
-
 where
-Harticul.ccod_empresa = ?
+ccod_empresa = ?
 and ERP_CODPTV = ?
 and ERP_CODALM = ?
-and erp_tipo = ?
+and erp_tipo = '12 '
 and erp_codigo_concepto = ?
 and (
 (ccod_articulo like ? or cnom_articulo like ? )
- Busqueda_categoria +
-)
 group by
 ccod_articulo,
 cnom_articulo,
-cnom_familia,
-cnom_subfamilia,
-erp_concepto1.erp_nomcon,
-erp_concepto2.erp_nomcon,
-erp_concepto3.erp_nomcon,
-erp_concepto4.erp_nomcon,
-erp_concepto5.erp_nomcon,
-erp_concepto6.erp_nomcon,
-erp_concepto7.erp_nomcon,
+cfamilia,
+ccod_subfamilia,
+codmarca,
+modelo,
+color,
+tratamiento,
+fuelle,
+azas,
+solapa,
 cmoneda_precio,
 erp_monto,
 cunidad,
 ccod_almacen,
 nigv
-
 
 
 

@@ -21,14 +21,15 @@ public class BDConexionSQL {
 
         Connection connection = null;
 
-        String ip;
+        String ip=ConfiguracionEmpresa.IP;
 
-        if (ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isLANAviable)
-            ip = datosConexiones.getIP_LAN();
-        else if (!ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isPublicaAviable)
-            ip = datosConexiones.getIP_Publica();
-        else
-            return null;
+//
+//        if (ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isLANAviable)
+//            ip = datosConexiones.getIP_LAN();
+//        else if (!ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isPublicaAviable)
+//            ip = datosConexiones.getIP_Publica();
+//        else
+//            return null;
 
         ip = ip + "/" + datosConexiones.getServerSQL();
         String TAG = "BConexionSQL";

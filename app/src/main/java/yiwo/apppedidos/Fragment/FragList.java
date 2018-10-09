@@ -43,7 +43,7 @@ public class FragList extends Fragment {
     ArrayList<CustomDataModel> dataModels;
     CustomAdapterCodNom adapter;
     ArrayList<List<String>> arrayList;
-
+    BackGroundTask task;
 
     public FragList() {
         // Required empty public constructor
@@ -69,7 +69,9 @@ public class FragList extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    BackGroundTask task = new BackGroundTask();
+                    if(task!=null)
+                        task.cancel(true);
+                    task = new BackGroundTask();
                     task.execute("");
                 } catch (Exception e) {
                     Log.d(TAG, "et_buscar: " + e.getMessage());
@@ -85,13 +87,13 @@ public class FragList extends Fragment {
             lv_items.setAdapter(null);
             app_barLayout = getActivity().findViewById(R.id.app_barLayout);
             app_barLayout.setVisibility(View.VISIBLE);
-            BackGroundTask task1 = new BackGroundTask();
-            task1.execute("");
+            if(task!=null)
+                task.cancel(true);
+            task = new BackGroundTask();
+            task.execute("");
         } catch (Exception e) {
             Log.d(TAG, "onCreateView: " + e.getMessage());
         }
-
-
         return view;
     }
 
@@ -111,9 +113,15 @@ public class FragList extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
+                if(task.isCancelled())
+                   return  null;
                 dataModels = new ArrayList<>();
                 arrayList = CodigosGenerales.getArrayList(et_bucar.getText().toString());
+                if(task.isCancelled())
+                    return  null;
                 for (int i = 0; i < arrayList.size(); i++) {
+                    if(task.isCancelled())
+                        break;
                     dataModels.add(new CustomDataModel(arrayList.get(i).get(0), arrayList.get(i).get(1), null, null, null, null, null));
                 }
                 CodigosGenerales.DataModelsList = dataModels;
@@ -177,5 +185,12 @@ public class FragList extends Fragment {
         transaction.replace(R.id.frag_contenedor, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public void onPause() {
+        if (task != null)
+            task.cancel(true);
+        super.onPause();
     }
 }

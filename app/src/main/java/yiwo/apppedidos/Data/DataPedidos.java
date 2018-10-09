@@ -1,6 +1,8 @@
 package yiwo.apppedidos.Data;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.DatosCliente;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
@@ -20,9 +22,10 @@ public class DataPedidos {
         try {
             Connection connection = bdata.getConnection();
             String CodPedido = bdMotivo.getNuevoCodigoPedido(connection);
-            if (DatosCliente.Codigo_Cliente.isEmpty() || CodPedido.isEmpty()){
+            if (DatosCliente.Codigo_Cliente.isEmpty() || CodPedido.isEmpty()) {
                 connection.close();
-                return false;}
+                return false;
+            }
             if (bdPedidos.GuardarPedido(connection, CodPedido, Importe, Descuento, Subtotal, IGV, Percepcion, Fecha_Entrega, Comentario)
                     && bdMotivo.ActualizarCorrelativo(connection)
                     && bdPedidos.LlenarDetalle(connection, CodPedido)) {
@@ -36,5 +39,13 @@ public class DataPedidos {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public ArrayList<List<String>> getDetalle(String Cod_Pedido, String Cod_Motivo) {
+        return bdPedidos.getDetalle(Cod_Pedido, Cod_Motivo);
+    }
+
+    public ArrayList<List<String>> getList(String Nombre) {
+        return bdPedidos.getList(Nombre);
     }
 }

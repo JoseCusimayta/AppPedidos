@@ -17,6 +17,8 @@ public class ConfiguracionEmpresa {
     public static String CodigoTipoCambio;
     public static String ifIGV;
 
+    public static String IP;
+
     public static Double ValorTipoCambio;
 
     public static ArrayList<List<String>> Tipo_Monedas;

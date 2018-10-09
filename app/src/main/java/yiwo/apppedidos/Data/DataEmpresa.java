@@ -40,15 +40,17 @@ public class DataEmpresa {
     }
 
     public ArrayList<List<String>> getList(String nombre){
+        ArrayList<List<String>> list= new ArrayList<>();
         try {
             if(CodigosPreGuardados.listEmpresas.size()>0 && nombre.equals("")){
-                return CodigosPreGuardados.listEmpresas;
+                list= CodigosPreGuardados.listEmpresas;
             }
             Connection connection = bdata.getConnection();
-            return bdEmpresa.getList(connection,nombre);
+            list= bdEmpresa.getList(connection,nombre);
+            connection.close();
         } catch (Exception e) {
             Log.d(TAG, "CargarDatosEmpresa " + e.getMessage());
         }
-        return null;
+        return list;
     }
 }

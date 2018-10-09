@@ -354,72 +354,7 @@ public class FragArticulos extends Fragment {
     private void prepareListData() {
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
-//
-//        // Adding Header data
-//        listDataHeader.add("Familia");
-//        listDataHeader.add("Sub Familia");
-//        ArrayList<List<String>> Conceptos = bdConcepto.getNombresConceptos();
-//        Integer conceptos = Conceptos.size();
-//        for (int i = 0; i < conceptos; i++) {
-//            listDataHeader.add(Conceptos.get(i).get(1));
-//        }
-//        List<String> list_familia = new ArrayList<>();
-//        List<String> list_subFamilia = new ArrayList<>();
-//        List<String> list_concepto1 = new ArrayList<>();
-//        List<String> list_concepto2 = new ArrayList<>();
-//        List<String> list_concepto3 = new ArrayList<>();
-//        List<String> list_concepto4 = new ArrayList<>();
-//        List<String> list_concepto5 = new ArrayList<>();
-//        List<String> list_concepto6 = new ArrayList<>();
-//        List<String> list_concepto7 = new ArrayList<>();
-//        // Adding child data
-//        try {
-//            list_familia = bdFamilia.getNombres(c);
-//            if (listDataHeader.size() > 0)
-//                listDataChild.put(listDataHeader.get(0), list_familia);
-//
-//            list_subFamilia = bdSubFamilia.getNombres();
-//            if (listDataHeader.size() > 1)
-//                listDataChild.put(listDataHeader.get(1), list_subFamilia);
-//
-//            CodigosGenerales.ID_Concepto = 1;
-//            list_concepto1 = bdConcepto.getNombres();
-//            if (listDataHeader.size() > 2)
-//                listDataChild.put(listDataHeader.get(2), list_concepto1);
-//
-//            CodigosGenerales.ID_Concepto = 2;
-//            list_concepto2 = bdConcepto.getNombres();
-//            if (listDataHeader.size() > 3)
-//                listDataChild.put(listDataHeader.get(3), list_concepto2);
-//
-//            CodigosGenerales.ID_Concepto = 3;
-//            list_concepto3 = bdConcepto.getNombres();
-//            if (listDataHeader.size() > 4)
-//                listDataChild.put(listDataHeader.get(4), list_concepto3);
-//
-//            CodigosGenerales.ID_Concepto = 4;
-//            list_concepto4 = bdConcepto.getNombres();
-//            if (listDataHeader.size() > 5)
-//                listDataChild.put(listDataHeader.get(5), list_concepto4);
-//
-//            CodigosGenerales.ID_Concepto = 5;
-//            list_concepto5 = bdConcepto.getNombres();
-//            if (listDataHeader.size() > 6)
-//                listDataChild.put(listDataHeader.get(6), list_concepto5);
-//
-//            CodigosGenerales.ID_Concepto = 6;
-//            list_concepto6 = bdConcepto.getNombres();
-//            if (listDataHeader.size() > 7)
-//                listDataChild.put(listDataHeader.get(7), list_concepto6);
-//
-//            CodigosGenerales.ID_Concepto = 7;
-//            list_concepto7 = bdConcepto.getNombres();
-//            if (listDataHeader.size() > 8)
-//                listDataChild.put(listDataHeader.get(8), list_concepto7);
-//
-//        } catch (Exception e) {
-//            Log.d(TAG, "Concentps " + e.getMessage());
-//        }
+
     }
     //endregion
 

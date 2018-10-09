@@ -34,15 +34,11 @@ import yiwo.apppedidos.R;
  * A simple {@link Fragment} subclass.
  */
 public class LateralActualizar extends Fragment {
-    BDArticulos bdArticulos = new BDArticulos();
     Button b_actualizar, b_cancelar;
     ProgressBar pb_loading;
-    ArrayList<List<String>> articulos;
-    Integer sizeList = 0, progress = 0, descargados = 0;
     TextView tv_mensaje;
     String TAG = "LateralActualizar";
     BackGroundTask task;
-    Boolean Online = true, descarga_exitosa = false;
     Integer articulos_descargados=0, articulos_no_descargados=0, articulos_totales=0;
 
     private DatosConexiones datosConexiones= new DatosConexiones();
@@ -96,6 +92,12 @@ public class LateralActualizar extends Fragment {
         return view;
     }
 
+    @Override
+    public void onPause() {
+        if (task != null)
+            task.cancel(true);
+        super.onPause();
+    }
 
     public class BackGroundTask extends AsyncTask<String, String, String> {
         int level = 0;

@@ -30,8 +30,58 @@ public class BDPedidos {
         try {
 
             Connection connection = bdata.getConnection();
-            String stsql = "SELECT * FROM udf_list_hpedidoc(?,?,?,?,?,?)";
-
+            String stsql="Select \n" +
+                    " Hpedidoc.ccod_empresa  Codigo_Empresa, \n" +
+                    " Hpedidoc.idmotivo_venta  Codigo_Motivo, \n" +
+                    " erp_motivos_tramite.erp_nommot  Nombre_Motivo, \n" +
+                    " Hpedidoc.cnum_doc  Codigo_Pedido,  \n" +
+                    " Hpedidoc.ccod_cliente  Codigo_Cliente, \n" +
+                    " Hpedidoc.cnom_cliente  Nombre_Cliente, \n" +
+                    " Hpedidoc.cnum_ruc_cliente  RUC_Cliente,\n" +
+                    " Hpedidoc.ccod_forpago  Codigo_FormaPago, \n" +
+                    " Hfor_pag.cnom_forpago  Nombre_FormaPago,\n" +
+                    " Hpedidoc.erp_Dimporte  Importe, \n" +
+                    " Hpedidoc.erp_Digv  IGV, \n" +
+                    " Hpedidoc.erp_Dtotal  Total, \n" +
+                    " Hpedidoc.dfecha_doc Fecha_Emision, \n" +
+                    " Hpedidoc.aprobado Estado, \n" +
+                    " Hpedidoc.observacion Observacion, \n" +
+                    " Hpedidoc.Usuario Usuario_Vendedor, \n" +
+                    " Hpedidoc.Pc_Fecha Fecha_Registro  \n" +
+                    " from \n" +
+                    " Hpedidoc \n" +
+                    " Inner Join erp_motivos_tramite On \n" +
+                    " Hpedidoc.ccod_empresa = erp_motivos_tramite.erp_codemp \n" +
+                    " and Hpedidoc.idmotivo_venta = erp_motivos_tramite.erp_codmot  \n" +
+                    " Inner Join Hfor_pag On \n" +
+                    " Hpedidoc.ccod_empresa = Hfor_pag.ccod_empresa \n" +
+                    " and Hpedidoc.idmotivo_venta = Hfor_pag.ccod_forpago \n" +
+                    " where \n" +
+                    " erp_motivos_tramite.erp_codtid = 'PED' \n" +
+                    " and comentario7 = 'Celular' \n" +
+                    " and  Hpedidoc.ccod_empresa =? \n" +
+                    " and Hpedidoc.idmotivo_venta ='07' \n" +
+                    " and Usuario =?\n" +
+                    " and  \n" +
+                    " (\n" +
+                    " erp_nommot like ? \n" +
+                    " or idmotivo_venta like ?\n" +
+                    " or cnum_doc like ?\n" +
+                    " or ccod_cliente like ?\n" +
+                    " or cnom_cliente like ?\n" +
+                    " or cnum_ruc_cliente like ?\n" +
+                    " or Hpedidoc.ccod_forpago like ?\n" +
+                    " or cnom_forpago like ?\n" +
+                    " or aprobado like ?\n" +
+                    " or observacion like ?\n" +
+                    " or\n" +
+                    " (\n" +
+                    " DATEPART(yy, dfecha_doc) = ? \n" +
+                    " and DATEPART(mm, dfecha_doc) = ? \n" +
+                    " AND DATEPART(dd, dfecha_doc) = ?\n" +
+                    " )\n" +
+                    " )  \n" +
+                    " Order by Hpedidoc.Pc_Fecha desc\n";
 
             String year = "0", mes = "0", dia = "0";
             try {
@@ -54,10 +104,18 @@ public class BDPedidos {
             PreparedStatement query = connection.prepareStatement(stsql);
             query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // vi_codigo_empresa
             query.setString(2, DatosUsuario.Codigo_Usuario); // vi_codigo_usuario
-            query.setString(3, Nombre + "%"); // vi_criterio_busqueda
-            query.setString(4, year); // vi_criterio_busqueda_year
-            query.setString(5, mes); // vi_criterio_busqueda_month
-            query.setString(6, dia); // vi_criterio_busqueda_day
+            query.setString(3, Nombre + "%"); // criterio de busqueda
+            query.setString(4, Nombre + "%"); // criterio de busqueda
+            query.setString(5, Nombre + "%"); // criterio de busqueda
+            query.setString(6, Nombre + "%"); // criterio de busqueda
+            query.setString(7, Nombre + "%"); // criterio de busqueda
+            query.setString(8, Nombre + "%"); // criterio de busqueda
+            query.setString(9, Nombre + "%"); // criterio de busqueda
+            query.setString(10,Nombre + "%"); // criterio de busqueda
+            query.setString(11, year); // año
+            query.setString(12, mes); // nes
+            query.setString(13, dia); // dia
+
 
 
             ResultSet rs = query.executeQuery();

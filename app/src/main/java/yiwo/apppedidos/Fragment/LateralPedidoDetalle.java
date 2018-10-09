@@ -19,6 +19,7 @@ import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.Control.BDEmpresa;
 import yiwo.apppedidos.Control.BDPedidos;
+import yiwo.apppedidos.Data.DataPedidos;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomAdapterListaDeseos;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModelListaDeseos;
 import yiwo.apppedidos.R;
@@ -29,7 +30,7 @@ import yiwo.apppedidos.R;
 public class LateralPedidoDetalle extends Fragment {
 
 
-    BDPedidos bdPedidos = new BDPedidos();
+    DataPedidos dataPedidos = new DataPedidos();
     ListView lv_items;
     ProgressBar progressBar;
 
@@ -38,7 +39,7 @@ public class LateralPedidoDetalle extends Fragment {
     ArrayList<CustomDataModelListaDeseos> dataModels_listaDeseos;
     CustomAdapterListaDeseos adapter_listaDeseos;
     String TAG="";
-    BDEmpresa bdEmpresa = new BDEmpresa();
+    BackGroundTask task;
     public LateralPedidoDetalle() {
         // Required empty public constructor
     }
@@ -55,7 +56,9 @@ public class LateralPedidoDetalle extends Fragment {
         try {
             app_barLayout = getActivity().findViewById(R.id.app_barLayout);
             app_barLayout.setVisibility(View.VISIBLE);
-            BackGroundTask task= new BackGroundTask();
+            if (task != null)
+                task.cancel(true);
+            task= new BackGroundTask();
             task.execute("");
             if (app_barLayout.getVisibility() == View.GONE)
                 app_barLayout.setVisibility(View.VISIBLE);
@@ -65,6 +68,11 @@ public class LateralPedidoDetalle extends Fragment {
         return view;
     }
 
+    @Override
+    public void onPause() {
+        task.cancel(true);
+        super.onPause();
+    }
 
     public class BackGroundTask extends AsyncTask<String, String, String> {
 
@@ -73,14 +81,13 @@ public class LateralPedidoDetalle extends Fragment {
             progressBar.setVisibility(View.VISIBLE);
             dataModels_listaDeseos = new ArrayList<>();
             lv_items.setAdapter(null);
-
             super.onPreExecute();
         }
 
         @Override
         protected String doInBackground(String... strings) {
             try {
-                ArrayList<List<String>> listaDeseos = bdPedidos.getDetalle(CodigosGenerales.Codigo_Pedido,ConfiguracionEmpresa.Codigo_Motivo);
+                ArrayList<List<String>> listaDeseos = dataPedidos.getDetalle(CodigosGenerales.Codigo_Pedido,ConfiguracionEmpresa.Codigo_Motivo);
 
                 for (int i = 0; i < listaDeseos.size(); i++) {
 
@@ -98,7 +105,6 @@ public class LateralPedidoDetalle extends Fragment {
                     //String LP = listaDeseos.get(i).get(11);
                     Double BaseCalculada, BaseImponible, Descuento_Unico, MontoIGV, ImporteTotal, MontoADescontar;
 
-
                     Descuento_Unico = CodigosGenerales.getDescuenetoUnico(descuento_1, descuento_2, descuento_3, descuento_4);
                     BaseImponible = precio_unitario * ncantidad;
 
@@ -111,26 +117,6 @@ public class LateralPedidoDetalle extends Fragment {
                     }
                     MontoIGV = BaseCalculada * IGV_Articulo / 100;
                     ImporteTotal = BaseCalculada + MontoIGV;
-
-                    //endregion
-
-//                    Log.d(TAG,"nitem "+nitem);
-//                    Log.d(TAG,"ccod_articulo "+ ccod_articulo);
-//                    Log.d(TAG,"nom_articulo "+ nom_articulo);
-//                    Log.d(TAG,"cunida "+ cunidad);
-//                    Log.d(TAG,"ncantidad "+ ncantidad);
-//                    Log.d(TAG,"precio_unitario "+ precio_unitario);
-//                    Log.d(TAG,"IGV_Articulo "+ IGV_Articulo);
-//                    Log.d(TAG,"descuento_1 "+ descuento_1);
-//                    Log.d(TAG,"descuento_2 "+ descuento_2);
-//                    Log.d(TAG,"descuento_3 "+ descuento_3);
-//                    Log.d(TAG,"descuento_4 "+ descuento_4);
-//                    Log.d(TAG,"BaseCalculada "+ BaseCalculada);
-//                    Log.d(TAG,"BaseImponible "+ BaseImponible);
-//                    Log.d(TAG,"Descuento_Unico "+ Descuento_Unico);
-//                    Log.d(TAG,"MontoIGV "+ MontoIGV);
-//                    Log.d(TAG,"ImporteTotal "+ ImporteTotal);
-//                    Log.d(TAG,"CodigosGenerales.Moneda_Empresa "+ CodigosGenerales.Moneda_Empresa);
 
                     dataModels_listaDeseos.add(
                             new CustomDataModelListaDeseos(
@@ -155,23 +141,6 @@ public class LateralPedidoDetalle extends Fragment {
                 Log.d(TAG, "doInBackground " + e.getMessage());
             }
             return null;
-
-//
-//
-//            dataModels = new ArrayList<>();
-//            arrayList = bdPedidos.getDetalle(CodigosGenerales.Codigo_Pedido,CodigosGenerales.Codigo_Motivo);
-//            for (int i = 0; i < arrayList.size(); i++) {
-//                dataModels.add(new CustomDataModel(
-//                        String.valueOf(i + 1),
-//                        "logo",
-//                        arrayList.get(i).get(2),
-//                        CodigosGenerales.Moneda_Empresa+" "+arrayList.get(i).get(5)+"\n" + arrayList.get(i).get(4) + " " + arrayList.get(i).get(3),
-//                        null,
-//                        arrayList.get(i).get(1),
-//                        ""
-//                ));
-//            }
-//            return null;
         }
 
         @Override
@@ -185,16 +154,6 @@ public class LateralPedidoDetalle extends Fragment {
                 Log.d(TAG, "BackGroundTask" + e.getMessage());
             }
             super.onPostExecute(s);
-//
-//            progressBar.setVisibility(View.GONE);
-//
-//            try {
-//                adapter = new CustomAdapterNumerado(dataModels, getContext());
-//                lv_items.setAdapter(adapter);
-//            } catch (Exception e) {
-//                Log.d("FragListDeseo", "BackGroundTask" + e.getMessage());
-//            }
-//            super.onPostExecute(s);
         }
     }
 }

@@ -129,16 +129,22 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
             //endregion
 
             //region Ejecutar Tarea en Segundo Plano para cargar el ListView
-            BackGroundTask task1 = new BackGroundTask();
-            task1.execute("");
+            BackGroundTask task = new BackGroundTask();
+            task.execute("");
             //endregion
 
             if(DatosCliente.Codigo_Cliente!=null){
                 et_cod_cliente.setText(DatosCliente.Codigo_Cliente);
                 et_Nombre.setText(DatosCliente.Nombre_Cliente);
+            }else{
+
+                et_cod_cliente.setText("");
+                et_Nombre.setText("");
             }
             if(DatosCliente.Codigo_FormaPago!=null){
-                et_formaPago.setText(DatosCliente.Codigo_FormaPago);
+                et_formaPago.setText(DatosCliente.Nombre_FormaPago);
+            }else{
+                et_formaPago.setText("");
             }
         } catch (Exception e) {
             Log.d("FragListDeseo", "onCreateView: " + e.getMessage());
@@ -307,16 +313,26 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
 
     @Override
     public void ResultadoCuadroDialogPedido(String Codigo, String Nombre) {
-        String FechaPago = CodigosGenerales.FormatoFechas.format(CodigosGenerales.sumarRestarDiasFecha(new Date(),  DatosCliente.Dias_FormaPago));
-        Log.d(TAG, "ResultadoCuadroDialogPedido ValorCambio: "+ ConfiguracionEmpresa.ValorTipoCambio);
-        Log.d(TAG,"ResultadoCuadroDialogPedido Monto_Importe_Pedido"+Monto_Importe_Pedido);
+        String FechaPago = CodigosGenerales.FormatoFechas.format(CodigosGenerales.sumarRestarDiasFecha(new Date(), DatosCliente.Dias_FormaPago));
+        Log.d(TAG, "ResultadoCuadroDialogPedido ValorCambio: " + ConfiguracionEmpresa.ValorTipoCambio);
+        Log.d(TAG, "ResultadoCuadroDialogPedido Monto_Importe_Pedido" + Monto_Importe_Pedido);
         if (dataPedidos.EnviarPedido(
-                String.valueOf(Monto_Importe_Pedido),String.valueOf(Monto_Descontado_Pedido),String.valueOf(Monto_SubTotal_Pedido),
-                String.valueOf(Monto_IGV_Pedido),"0.00",FechaPago,et_comentario.getText().toString())) {
+                String.valueOf(Monto_Importe_Pedido), String.valueOf(Monto_Descontado_Pedido), String.valueOf(Monto_SubTotal_Pedido),
+                String.valueOf(Monto_IGV_Pedido), "0.00", FechaPago, et_comentario.getText().toString())) {
             Toast.makeText(getContext(), "Se ha enviado el pedido", Toast.LENGTH_SHORT).show();
             lv_items.setAdapter(null);
             if (!b_carrito.isEnabled())
                 b_carrito.setEnabled(true);
+            DatosCliente.Codigo_Cliente = null;
+            DatosCliente.DNI_Cliente = null;
+            DatosCliente.Nombre_Cliente = null;
+            DatosCliente.Direccion_Cliente = null;
+            DatosCliente.Codigo_ListaPrecios = "01";
+            DatosCliente.RUC_Cliente = null;
+            DatosCliente.Codigo_FormaPago = null;
+            DatosCliente.Nombre_FormaPago = null;
+            DatosCliente.Dias_FormaPago =0;
+            DatosCliente.Codigo_Pais = null;
             FragmentManager fm = getActivity().getSupportFragmentManager();
             for (int i = 1; i < fm.getBackStackEntryCount(); ++i) {
                 fm.popBackStack();
@@ -357,6 +373,7 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
         DatosCliente.Codigo_Pais= Codigo_Pais;
         et_cod_cliente.setText(DatosCliente.Codigo_Cliente);
         et_Nombre.setText(DatosCliente.Nombre_Cliente);
+        et_formaPago.setText(Nombre_FormaPago);
     }
 
     public class BackGroundTask extends AsyncTask<String, String, String> {

@@ -26,7 +26,19 @@ public class BDFormaPago {
 
             Connection connection = bdata.getConnection();
 
-            String stsql = "Select * from dbo.udf_list_hformapg(?,?) where Nombre like ? or codigo like ? ";
+            String stsql="Select \n" +
+                    "hforpag_provee.ccod_forpago as Codigo, \n" +
+                    "Hfor_pag.cnom_forpago as Nombre, \n" +
+                    "Hfor_pag.nro_dias as ndias,  \n" +
+                    "hforpag_provee.selec  \n" +
+                    "From hforpag_provee Inner Join Hfor_pag On    \n" +
+                    "hforpag_provee.ccod_empresa = Hfor_pag.ccod_empresa And    \n" +
+                    "hforpag_provee.ccod_forpago = Hfor_pag.ccod_forpago     \n" +
+                    "Where \n" +
+                    "hforpag_provee.ccod_empresa = ?\n" +
+                    "And hforpag_provee.tipo = '12' \n" +
+                    "And hforpag_provee.ccod_proveedor = ?" +
+                    "And (Hfor_pag.cnom_forpago like ? or hforpag_provee.ccod_forpago like ?)";
 
             PreparedStatement query = connection.prepareStatement(stsql);
             query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Código de la empresa
@@ -59,12 +71,24 @@ public class BDFormaPago {
 
             Connection connection = bdata.getConnection();
 
-            String stsql = "Select * from dbo.udf_list_hformapg(?,?) where sel =? ";
+            String stsql="Select \n" +
+                    "hforpag_provee.ccod_forpago as Codigo, \n" +
+                    "Hfor_pag.cnom_forpago as Nombre, \n" +
+                    "Hfor_pag.nro_dias as ndias,  \n" +
+                    "hforpag_provee.selec  \n" +
+                    "From hforpag_provee Inner Join Hfor_pag On    \n" +
+                    "hforpag_provee.ccod_empresa = Hfor_pag.ccod_empresa And    \n" +
+                    "hforpag_provee.ccod_forpago = Hfor_pag.ccod_forpago     \n" +
+                    "Where \n" +
+                    "hforpag_provee.selec ='S' and hforpag_provee.ccod_empresa = ?\n" +
+                    "And hforpag_provee.tipo = '12' \n" +
+                    "And hforpag_provee.ccod_proveedor = ?" +
+                    "And (Hfor_pag.cnom_forpago like ? or hforpag_provee.ccod_forpago like ?)";
+
 
             PreparedStatement query = connection.prepareStatement(stsql);
             query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Código de la empresa
             query.setString(2, DatosCliente.Codigo_Cliente);   //Código del Cliente
-            query.setString(3, "S"); //Predeterminado
 
             ResultSet rs = query.executeQuery();
 

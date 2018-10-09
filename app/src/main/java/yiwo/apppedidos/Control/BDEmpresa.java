@@ -16,7 +16,7 @@ import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 public class BDEmpresa {
 
     BDConexionSQL bdata= new BDConexionSQL();
-
+    String TAG="BDEmpresa";
     public ArrayList<List<String>> getList(Connection connection, String nombre) {
 
         ArrayList<List<String>> arrayList = new ArrayList<>();
@@ -42,7 +42,7 @@ public class BDEmpresa {
                     CodigosGenerales.listEmpresas=arrayList;
             }
         } catch (Exception e) {
-            Log.d("BDEmpresa", "- getList: "+e.getMessage());
+            Log.d(TAG, "- getList: "+e.getMessage());
         }
         return arrayList;
     }
@@ -74,7 +74,7 @@ public class BDEmpresa {
                 connection.close();
             }
         } catch (Exception e) {
-            Log.d("BDEmpresa", "- getList: "+e.getMessage());
+            Log.d(TAG, "- getList: "+e.getMessage());
         }
         return arrayList;
     }
@@ -102,7 +102,7 @@ public class BDEmpresa {
             connection.close();
 
         } catch (Exception e) {
-            Log.d("BDEmpresa", "- getMonedas: "+ConfiguracionEmpresa.Codigo_Empresa+" - "+e.getMessage());
+            Log.d(TAG, "- getMonedas: "+ConfiguracionEmpresa.Codigo_Empresa+" - "+e.getMessage());
         }
         return arrayList;
     }
@@ -126,7 +126,7 @@ public class BDEmpresa {
             }
 
         } catch (Exception e) {
-            Log.d("BDEmpresa", "- getMonedas: "+ConfiguracionEmpresa.Codigo_Empresa+" - "+e.getMessage());
+            Log.d(TAG, "- getMonedas: "+ConfiguracionEmpresa.Codigo_Empresa+" - "+e.getMessage());
         }
         return arrayList;
     }
@@ -142,7 +142,7 @@ public class BDEmpresa {
             }
             return mas_igv;
         } catch (Exception e) {
-            Log.d("BDEmpresa", "- isIncluidoIGV: "+e.getMessage());
+            Log.d(TAG, "- isIncluidoIGV: "+e.getMessage());
         }
         return "S";
     }
@@ -158,7 +158,7 @@ public class BDEmpresa {
                 monedaTrabajo= rs.getString("moneda_trabajo"); //Tipo de moneda de la empresa
             }
         } catch (Exception e) {
-            Log.d("BDEmpresa", "- getMonedaTrabajo: "+e.getMessage());
+            Log.d(TAG, "- getMonedaTrabajo: "+e.getMessage());
         }
         return monedaTrabajo;
     }
@@ -188,7 +188,7 @@ public class BDEmpresa {
             }
 
         } catch (Exception e) {
-            Log.d("BDEmpresa", "- getTipoCambio: "+e.getMessage());
+            Log.d(TAG, "- getTipoCambio: "+e.getMessage());
         }
         return list;
     }

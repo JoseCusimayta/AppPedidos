@@ -34,6 +34,8 @@ import yiwo.apppedidos.AspectosGenerales.DatosCliente;
 import yiwo.apppedidos.ConexionBD.BDDescargarImagenes;
 import yiwo.apppedidos.Control.BDArticulos;
 import yiwo.apppedidos.Control.BDListDeseo;
+import yiwo.apppedidos.Data.DataArticulos;
+import yiwo.apppedidos.Data.DataListaDeseo;
 import yiwo.apppedidos.InterfacesPerzonalidas.frag_dialog_galeria;
 import yiwo.apppedidos.R;
 
@@ -64,13 +66,13 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
     AppBarLayout app_barLayout;
     FrameLayout id_lyContent;
     Double Precio_Articulo, Stock, PorcentajeIGV;
-    BDArticulos bdArticulos = new BDArticulos();
-    BDListDeseo bdListDeseo = new BDListDeseo();
 
     ArrayList<List<String>> FichaTecnica = null;
 
     BDDescargarImagenes bdDescargarImagenes = new BDDescargarImagenes();
     Boolean isGalleryReady=false;
+    DataArticulos dataArticulos= new DataArticulos();
+    DataListaDeseo dataListaDeseo= new DataListaDeseo();
     //endregion
 
     public FragDescripcion() {
@@ -100,16 +102,16 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
 
 
         try {
-            informacion = bdArticulos.getList(CodigosGenerales.Codigo_Articulo).get(0);
+            informacion = dataArticulos.getList(CodigosGenerales.Codigo_Articulo).get(0);
             Codigo_Articulo = informacion.get(0);
             Nombre_Articulo = informacion.get(1);
             Stock = Double.parseDouble(informacion.get(2));
             Unidad_Articulo = informacion.get(3);
             Precio_Articulo = CodigosGenerales.tryParseDouble(informacion.get(4));
             PorcentajeIGV= CodigosGenerales.tryParseDouble(informacion.get(7));
-            tv_cantidad.setText(Stock + " " + Unidad_Articulo);
-            tv_precio.setText(ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimales(Precio_Articulo, 2));
-            et_nombre.setText(CodigosGenerales.Nombre_Categoria + Nombre_Articulo);
+            tv_cantidad.setText(Stock + " " + Unidad_Articulo.replace(",","."));
+            tv_precio.setText(ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimales(Precio_Articulo, 2).replace(",","."));
+            et_nombre.setText(Nombre_Articulo);
 
             app_barLayout = getActivity().findViewById(R.id.app_barLayout);
             app_barLayout.setVisibility(View.VISIBLE);
@@ -180,7 +182,7 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
         TextView tv_nombre = popupView.findViewById(R.id.tv_nombre);
         TextView tv_detalle = popupView.findViewById(R.id.tv_detalle);
         if (FichaTecnica == null) {
-            FichaTecnica = bdArticulos.getFichaTecnica(Codigo_Articulo);
+            FichaTecnica = dataArticulos.getFichaTecnica(Codigo_Articulo);
             //tv_nombre.setText("Ficha Técnica");
 
 
@@ -243,7 +245,7 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
     private void AgregarProductosListaDeseo(Double Cantidad) {
         if (Cantidad > 0) {
             if (Cantidad <= Stock) {
-                if (bdListDeseo.GuardarListaDeseo(Codigo_Articulo, Nombre_Articulo, Cantidad.toString(), Unidad_Articulo, Precio_Articulo.toString(), DatosCliente.Codigo_ListaPrecios,PorcentajeIGV.toString())) {
+                if (dataListaDeseo.GuardarListaDeseo(Codigo_Articulo, Nombre_Articulo, Cantidad.toString(), Unidad_Articulo, Precio_Articulo.toString(), DatosCliente.Codigo_ListaPrecios,PorcentajeIGV.toString())) {
                     Toast.makeText(getActivity(), "Se ha(n) agregado " + Cantidad + " elemento(s)", Toast.LENGTH_SHORT).show();
                     et_cantidad.setText("");
                 } else
@@ -254,4 +256,5 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
         }
         CodigosGenerales.hideSoftKeyboard(getActivity());
     }
+
 }

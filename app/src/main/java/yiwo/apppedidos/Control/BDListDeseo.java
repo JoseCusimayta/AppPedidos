@@ -75,6 +75,39 @@ public class BDListDeseo {
         return arrayArticulos;
     }
 
+    public Boolean isExists(Connection connection,String CodigoArticulo, String Unidad) {
+        try {
+            List<Integer> list = new ArrayList<>();
+            String sql =
+                    "Select Count(*) from " + Tabla +
+                            " where " +
+                            " ccod_empresa = ?" +
+                            " and erp_coduser = ?" +
+                            " and ccod_ptovta = ?" +
+                            " and ccod_almacen = ? " +
+                            " and ccod_articulo = ?" +
+                            " and cunidad = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, ConfiguracionEmpresa.Codigo_Empresa);
+            preparedStatement.setString(2, DatosUsuario.Codigo_Usuario);
+            preparedStatement.setString(3, DatosUsuario.Codigo_PuntoVenta);
+            preparedStatement.setString(4, DatosUsuario.Codigo_Almacen);
+            preparedStatement.setString(5, CodigoArticulo);
+            preparedStatement.setString(6, Unidad);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                list.add(rs.getInt(1));
+            }
+            Log.d(TAG,"lista "+list);
+            if(list.get(0)>0)
+                return true;
+        } catch (Exception e) {
+            Log.d(TAG, "- GuardarListaDeseo: " + e.getMessage());
+        }
+        return false;
+    }
     public boolean GuardarListaDeseo(String CodigoArticulo, String NombreArticulo, String Cantidad, String Unidad, String PrecioUnitario, String ListaPrecios, String PorcentajeIGV) {
         try {
             Connection connection = bdata.getConnection();
@@ -212,7 +245,7 @@ public class BDListDeseo {
         return false;
     }
 
-    private Boolean InsertarNuevoArticulo(Connection connection, String CodigoArticulo, String NombreArticulo, String Cantidad, String Unidad, String PrecioUnitario, String ListaPrecios, String PorcentajeIGV) {
+    public Boolean InsertarNuevoArticulo(Connection connection, String CodigoArticulo, String NombreArticulo, String Cantidad, String Unidad, String PrecioUnitario, String ListaPrecios, String PorcentajeIGV) {
         try {
             //Connection connection = bdata.getConnection();
             List<String> promociones = bdPromociones.getPromociones(connection, CodigoArticulo, Cantidad);
@@ -255,12 +288,12 @@ public class BDListDeseo {
             connection.close();
             return true;
         } catch (Exception e) {
-            Log.d("BDListDeseo", "- InsertarNuevoArticulo: " + e.getMessage());
+            Log.d(TAG, "- InsertarNuevoArticulo: " + e.getMessage());
             return false;
         }
     }
 
-    private Boolean UpdateArticulo(Connection connection, String CodigoArticulo, String Cantidad, String Unidad) {
+    public Boolean UpdateArticulo(Connection connection, String CodigoArticulo, String Cantidad, String Unidad) {
         try {
             //Connection connection = bdata.getConnection();
             Double NuevaCantidad = getCantidad(connection, CodigoArticulo) + Double.parseDouble(Cantidad);
@@ -291,7 +324,7 @@ public class BDListDeseo {
             connection.close();
             return true;
         } catch (Exception e) {
-            Log.d("BDListDeseo", "- UpdateArticulo: " + e.getMessage());
+            Log.d(TAG, "- UpdateArticulo: " + e.getMessage());
             return false;
         }
     }
@@ -315,7 +348,7 @@ public class BDListDeseo {
                 NroItem=1;
             connection.close();
         } catch (Exception e) {
-            Log.d("BDListDeseo", "- getNumeroItem: " + e.getMessage());
+            Log.d(TAG, "- getNumeroItem: " + e.getMessage());
         }
         Log.d(TAG, "NroItem: " + NroItem);
         return NroItem.toString();
@@ -339,7 +372,7 @@ public class BDListDeseo {
             }
             //connection.close();
         } catch (Exception e) {
-            Log.d("BDListDeseo", "- getCantidad: " + e.getMessage());
+            Log.d(TAG, "- getCantidad: " + e.getMessage());
         }
         Log.d(TAG, "Cantidad: " + Cantidad);
         return Cantidad;
@@ -368,7 +401,7 @@ public class BDListDeseo {
             connection.close();
 
         } catch (Exception e) {
-            Log.d("BDListDeseo", "- getPrecio: " + e.getMessage());
+            Log.d(TAG, "- getPrecio: " + e.getMessage());
         }
         Log.d(TAG, "getPrecio: " + Precio);
         return Precio;

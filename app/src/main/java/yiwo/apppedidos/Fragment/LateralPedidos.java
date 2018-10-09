@@ -25,6 +25,7 @@ import java.util.List;
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.Control.BDPedidos;
+import yiwo.apppedidos.Data.DataPedidos;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomAdapterNumerado;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
 import yiwo.apppedidos.R;
@@ -36,7 +37,7 @@ public class LateralPedidos extends Fragment {
 
     ArrayList<List<String>> ListPedidos = new ArrayList<>();
     Activity activity;
-    BDPedidos bdPedidos = new BDPedidos();
+    DataPedidos dataPedidos = new DataPedidos();
 
     Button b_carrito;
     EditText et_bucar;
@@ -47,7 +48,7 @@ public class LateralPedidos extends Fragment {
     ProgressBar progressBar;
     AppBarLayout app_barLayout;
 
-
+    BackGroundTask task;
     public LateralPedidos() {
         // Required empty public constructor
     }
@@ -75,7 +76,9 @@ public class LateralPedidos extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    BackGroundTask task = new BackGroundTask();
+                    if (task != null)
+                        task.cancel(true);
+                    task = new BackGroundTask();
                     task.execute("");
                 } catch (Exception e) {
                     Log.d("FragList", "et_buscar: " + e.getMessage());
@@ -87,14 +90,12 @@ public class LateralPedidos extends Fragment {
             }
         });
 
-        if (!b_carrito.isEnabled())
-            b_carrito.setEnabled(true);
-
         try {
             if (app_barLayout.getVisibility() == View.GONE)
                 app_barLayout.setVisibility(View.VISIBLE);
-
-            BackGroundTask task = new BackGroundTask();
+            if (task != null)
+                task.cancel(true);
+            task = new BackGroundTask();
             task.execute("");
         } catch (Exception e) {
             Log.d("AsyncTaskPedidos", e.getMessage());
@@ -111,6 +112,11 @@ public class LateralPedidos extends Fragment {
     }
 
 
+    @Override
+    public void onPause() {
+        task.cancel(true);
+        super.onPause();
+    }
     public class BackGroundTask extends AsyncTask<String, String, String> {
         String Mensaje;
 
@@ -123,10 +129,16 @@ public class LateralPedidos extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
+                if(task.isCancelled())
+                    return null;
                 dataModels = new ArrayList<>();
-                ListPedidos = bdPedidos.getList(et_bucar.getText().toString());
+                ListPedidos = dataPedidos.getList(et_bucar.getText().toString());
+                if(task.isCancelled())
+                    return null;
                 dataModels = new ArrayList<>();
                 for (int i = 0; i < ListPedidos.size(); i++) {
+                    if(task.isCancelled())
+                        break;
                     dataModels.add(new CustomDataModel(
                             String.valueOf(i + 1),
                             null,

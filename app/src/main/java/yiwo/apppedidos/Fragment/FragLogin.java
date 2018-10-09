@@ -176,8 +176,7 @@ public class FragLogin extends Fragment implements View.OnClickListener, Empresa
         @Override
         protected String doInBackground(String... strings) {
             try {
-                if (data.getLogin(et_usuario.getText().toString(), et_clave.getText().toString())) {
-
+                if(dataUsuario.loginUsuario(et_usuario.getText().toString(), et_clave.getText().toString())){
                     dataEmpresa.CargarDatosEmpresa();
                     exito = true;
                 } else
