@@ -314,7 +314,7 @@ public class FragArticulosCardView extends Fragment {
                         arrayList.get(i).get(1),   // Nombre
                         CodigosGenerales.RedondearDecimales(cantidad_productos, 2),   // stock
                         arrayList.get(i).get(3),   // cunidad
-                        CodigosGenerales.RedondearDecimales(precio_productos, 2),   // precio
+                        CodigosGenerales.RedondearDecimales(precio_productos, 2).replace(",","."),   // precio
                         arrayList.get(i).get(5),   // moneda
                         CodigosGenerales.RedondearDecimales(porcentaje_igv, 2)   // nigv
 

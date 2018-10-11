@@ -112,9 +112,11 @@ public class BDPedidos {
             query.setString(8, Nombre + "%"); // criterio de busqueda
             query.setString(9, Nombre + "%"); // criterio de busqueda
             query.setString(10,Nombre + "%"); // criterio de busqueda
-            query.setString(11, year); // año
-            query.setString(12, mes); // nes
-            query.setString(13, dia); // dia
+            query.setString(11, Nombre + "%"); // criterio de busqueda
+            query.setString(12,Nombre + "%"); // criterio de busqueda
+            query.setString(13, year); // año
+            query.setString(14, mes); // nes
+            query.setString(15, dia); // dia
 
 
 

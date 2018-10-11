@@ -127,8 +127,7 @@ public class FragSplashScreen extends Fragment {
 
             fragment = new FragMenuPrincipal();
         } else {
-            CodigosGenerales.TipoArray = "Empresa";
-            CodigosGenerales.getArrayList("");
+            dataEmpresa.getList("");
         }
         datos_login.close();        //Cerrar el cursor para liberar el sqlite
     }

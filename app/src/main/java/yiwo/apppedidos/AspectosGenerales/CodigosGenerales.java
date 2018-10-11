@@ -26,6 +26,7 @@ import yiwo.apppedidos.Control.BDFormaPago;
 import yiwo.apppedidos.Control.BDPuntoVenta;
 import yiwo.apppedidos.Control.BDSubfamilia;
 import yiwo.apppedidos.Control.BDUnidNegocios;
+import yiwo.apppedidos.InterfacesPerzonalidas.CodNom;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
 import yiwo.apppedidos.R;
 
@@ -74,7 +75,7 @@ public class CodigosGenerales {
 
     public static double Precio_TotalPedido;
     public static ArrayList<List<String>> Codigos_Pedido = new ArrayList<>();
-    public static ArrayList<CustomDataModel> DataModelsList;
+    public static ArrayList<CodNom> DataModelsList;
     public static Bitmap ImagenGaleria1;
     public static Bitmap ImagenGaleria2;
     public static Bitmap ImagenGaleria3;

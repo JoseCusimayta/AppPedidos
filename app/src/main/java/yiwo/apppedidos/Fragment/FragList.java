@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.InterfacesPerzonalidas.CodNom;
+import yiwo.apppedidos.InterfacesPerzonalidas.CodNomAdapter;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomAdapterCodNom;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModel;
 import yiwo.apppedidos.R;
@@ -40,8 +42,8 @@ public class FragList extends Fragment {
     ProgressBar progressBar;
     AppBarLayout app_barLayout;
 
-    ArrayList<CustomDataModel> dataModels;
-    CustomAdapterCodNom adapter;
+    ArrayList<CodNom> dataModels;
+    CodNomAdapter adapter;
     ArrayList<List<String>> arrayList;
     BackGroundTask task;
 
@@ -122,7 +124,7 @@ public class FragList extends Fragment {
                 for (int i = 0; i < arrayList.size(); i++) {
                     if(task.isCancelled())
                         break;
-                    dataModels.add(new CustomDataModel(arrayList.get(i).get(0), arrayList.get(i).get(1), null, null, null, null, null));
+                    dataModels.add(new CodNom(arrayList.get(i).get(0), arrayList.get(i).get(1)));
                 }
                 CodigosGenerales.DataModelsList = dataModels;
             } catch (Exception e) {
@@ -137,7 +139,7 @@ public class FragList extends Fragment {
                 lv_items.setAdapter(null);
                 progressBar.setVisibility(View.GONE);
 
-                adapter = new CustomAdapterCodNom(CodigosGenerales.DataModelsList, getContext());
+                adapter = new CodNomAdapter(CodigosGenerales.DataModelsList, getContext());
                 lv_items.setAdapter(adapter);
 
                 lv_items.setOnItemClickListener(new AdapterView.OnItemClickListener() {

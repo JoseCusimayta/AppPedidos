@@ -106,17 +106,17 @@ public class CustomAdapterListaDeseos extends ArrayAdapter<CustomDataModelListaD
         viewHolder.Codigo_Producto.setText(dataModel.getCodigo_Producto());
         viewHolder.Nombre_Producto.setText(dataModel.getNombre_Producto());
         viewHolder.Tipo_moneda.setText(dataModel.getTipo_moneda());
-        viewHolder.Precio_Unitario.setText(dataModel.getPrecio_Unitario());
+        viewHolder.Precio_Unitario.setText(dataModel.getPrecio_Unitario().replace(",","."));
         viewHolder.Cantidad.setText(dataModel.getCantidad());
         viewHolder.Tipo_Unidad.setText(dataModel.getTipo_Unidad());
-        viewHolder.Descuento_1.setText(dataModel.getDescuento_1());
-        viewHolder.Descuento_2.setText(dataModel.getDescuento_2());
-        viewHolder.Descuento_3.setText(dataModel.getDescuento_3());
-        viewHolder.Descuento_4.setText(dataModel.getDescuento_4());
-        viewHolder.Base_Imponible.setText(dataModel.getBase_Imponible());
-        viewHolder.Base_Calculada.setText(dataModel.getBase_Calculada());
-        viewHolder.IGV.setText(dataModel.getIGV());
-        viewHolder.Importe.setText(dataModel.getImporte());
+        viewHolder.Descuento_1.setText(dataModel.getDescuento_1().replace(",","."));
+        viewHolder.Descuento_2.setText(dataModel.getDescuento_2().replace(",","."));
+        viewHolder.Descuento_3.setText(dataModel.getDescuento_3().replace(",","."));
+        viewHolder.Descuento_4.setText(dataModel.getDescuento_4().replace(",","."));
+        viewHolder.Base_Imponible.setText(dataModel.getBase_Imponible().replace(",","."));
+        viewHolder.Base_Calculada.setText(dataModel.getBase_Calculada().replace(",","."));
+        viewHolder.IGV.setText(dataModel.getIGV().replace(",","."));
+        viewHolder.Importe.setText(dataModel.getImporte().replace(",","."));
 
         // Return the completed view to render on screen
         return convertView;
