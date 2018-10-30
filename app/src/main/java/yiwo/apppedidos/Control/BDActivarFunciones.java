@@ -8,19 +8,22 @@ import java.sql.PreparedStatement;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
 public class BDActivarFunciones {
-    String TAG="BDActivarFunciones";
+    String TAG = "BDActivarFunciones";
     BDConexionSQL bdata = new BDConexionSQL();
-    Boolean Actualizar=false;
-    public void ActualizarFunciones(){
-        if(Actualizar) {
-            ActualizarFuncion_udf_list_harticul();
-            ActualizarFuncion_udf_list_hpedidoc();
-            ActualizarFuncion_sv_list_user_login();
+    Boolean Actualizar = false;
+
+    public void ActualizarFunciones() {
+        if (Actualizar) {
+//            ActualizarFuncion_udf_list_harticul();
+//            ActualizarFuncion_udf_list_hpedidoc();
+//            ActualizarFuncion_sv_list_user_login();
+            drop_Tabla_HlistDeseo2();
+            crear_Tabla_HlistDeseo2();
         }
     }
 
 
-    private void ActualizarFuncion_udf_list_harticul(){
+    private void ActualizarFuncion_udf_list_harticul() {
         try {
             Connection connection = bdata.getConnection();
 
@@ -92,7 +95,8 @@ public class BDActivarFunciones {
             Log.d(TAG, "- ActualizarFuncion_udf_list_harticul: " + e.getMessage());
         }
     }
-    private void ActualizarFuncion_udf_list_hpedidoc(){
+
+    private void ActualizarFuncion_udf_list_hpedidoc() {
         try {
             Connection connection = bdata.getConnection();
 
@@ -190,7 +194,8 @@ public class BDActivarFunciones {
             Log.d(TAG, "- ActualizarFuncion_udf_list_harticul: " + e.getMessage());
         }
     }
-    private void ActualizarFuncion_sv_list_user_login(){
+
+    private void ActualizarFuncion_sv_list_user_login() {
         try {
             Connection connection = bdata.getConnection();
 
@@ -212,6 +217,59 @@ public class BDActivarFunciones {
                     "Inner Join Hvended On  \n" +
                     "erp_usuario.erp_codemp = Hvended.ccod_empresa   \n" +
                     "and erp_usuario.erp_coduser = Hvended.ccod_vendedor ";
+
+            PreparedStatement query = connection.prepareStatement(stsql);
+
+            query.execute();
+
+            connection.close();
+
+            Log.d(TAG, "- udf_list_harticul actualizada");
+        } catch (Exception e) {
+            Log.d(TAG, "- ActualizarFuncion_udf_list_harticul: " + e.getMessage());
+        }
+    }
+
+    private void crear_Tabla_HlistDeseo2() {
+        try {
+            Connection connection = bdata.getConnection();
+
+            String stsql = "CREATE TABLE HListDeseo2(\n" +
+                    "ccod_empresa varchar(5) ,\n" +
+                    "erp_coduser varchar(20) ,\n" +
+                    "ccod_ptovta varchar(5) ,\n" +
+                    "ccod_almacen varchar(5) ,\n" +
+                    "nitem int ,\n" +
+                    "ccod_articulo varchar(35) ,\n" +
+                    "nom_articulo varchar(35) ,\n" +
+                    "cunidad varchar(10) ,\n" +
+                    "ncantidad decimal(18, 2) ,\n" +
+                    "precio_unitario decimal(18, 4) ,\n" +
+                    "IGV decimal(18, 4) ,\n" +
+                    "descuento_1 decimal (18, 2) ,\n" +
+                    "descuento_2 decimal (18, 2) ,\n" +
+                    "descuento_3 decimal (18, 2) ,\n" +
+                    "descuento_4 decimal (18, 2) ,\n" +
+                    "Lp varchar (5) )";
+
+            PreparedStatement query = connection.prepareStatement(stsql);
+
+            query.execute();
+
+            connection.close();
+
+            Log.d(TAG, "- udf_list_harticul actualizada");
+        } catch (Exception e) {
+            Log.d(TAG, "- ActualizarFuncion_udf_list_harticul: " + e.getMessage());
+        }
+    }
+
+
+    private void drop_Tabla_HlistDeseo2() {
+        try {
+            Connection connection = bdata.getConnection();
+
+            String stsql = "drop TABLE HListDeseo2";
 
             PreparedStatement query = connection.prepareStatement(stsql);
 

@@ -39,9 +39,9 @@ public class LateralActualizar extends Fragment {
     TextView tv_mensaje;
     String TAG = "LateralActualizar";
     BackGroundTask task;
-    Integer articulos_descargados=0, articulos_no_descargados=0, articulos_totales=0;
+    Integer articulos_descargados = 0, articulos_no_descargados = 0, articulos_totales = 0;
 
-    private DatosConexiones datosConexiones= new DatosConexiones();
+    private DatosConexiones datosConexiones = new DatosConexiones();
 
     public LateralActualizar() {
         // Required empty public constructor
@@ -62,11 +62,16 @@ public class LateralActualizar extends Fragment {
             @Override
             public void onClick(View view) {
                 try {
-                    if(CodigosUtiles.isExternalStorageWritable()) {
+                    if (CodigosUtiles.isExternalStorageWritable()) {
                         CodigosUtiles.crearCarpetaAlmInterno();
+//                        try {
+//                            CodigosUtiles.crearDirectorioPrivado(getContext(), "pedidos");
+//                        } catch (Exception ex) {
+//                            Log.d(TAG, ex.getMessage());
+//                        }
                         task = new BackGroundTask();
                         task.execute("");
-                    }else{
+                    } else {
                         Toast.makeText(getActivity(), "No se puede crear la carpeta en la memoria externa", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
@@ -105,6 +110,7 @@ public class LateralActualizar extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            Log.d(TAG,"Comenzando task");
             pb_loading.setVisibility(View.VISIBLE);
 
             CodigosGenerales.CancelarTask = false;
@@ -119,10 +125,11 @@ public class LateralActualizar extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            if (isCancelled())
-                return null;
-            else
-            {
+            if (isCancelled()){
+                Log.d(TAG,"Cancelando task");
+                return null;}
+            else {
+                Log.d(TAG,"progress task");
                 exito = GuardarMenu();
             }
             return null;
@@ -131,17 +138,19 @@ public class LateralActualizar extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             if (exito) {
-                if(articulos_descargados==articulos_totales){
+                Log.d(TAG,"Finalizando con exito task");
+                if (articulos_descargados == articulos_totales) {
 
                     Toast.makeText(getContext(), "Actualización finalizada ", Toast.LENGTH_SHORT).show();
-                    tv_mensaje.setText("La actualización se ha llevado a cabo con éxito \n Imagenes descargadas: "+articulos_descargados);
+                    tv_mensaje.setText("La actualización se ha llevado a cabo con éxito \n Imagenes descargadas: " + articulos_descargados);
                     pb_loading.setProgress(100);
-                }else {
+                } else {
                     Toast.makeText(getContext(), "Actualización finalizada ", Toast.LENGTH_SHORT).show();
                     tv_mensaje.setText("La actualización se ha llevado a cabo con algunos problemas....\n Se han podido descargar " + articulos_descargados + " imagenes.");
                     pb_loading.setProgress(100);
                 }
             } else {
+                Log.d(TAG,"Finalizando task");
                 Toast.makeText(getContext(), "Actualización fallida", Toast.LENGTH_SHORT).show();
                 tv_mensaje.setText("Hubo un problema en la actualización.");
                 pb_loading.setProgress(0);
@@ -155,15 +164,17 @@ public class LateralActualizar extends Fragment {
 
     public Boolean GuardarMenu() {
 
-        String ip;
+//        String ip;
 
-        if (ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isLANAviable)
-            ip = datosConexiones.getIP_LAN();
-        else if (!ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isPublicaAviable)
-            ip = datosConexiones.getIP_Publica();
-        else
-            return false;
+//        if (ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isLANAviable)
+//            ip = datosConexiones.getIP_LAN();
+//        else if (!ConfiguracionEmpresa.isLAN && ConfiguracionEmpresa.isPublicaAviable)
+//            ip = datosConexiones.getIP_Publica();
+//        else
+//            return false;
 
+        String ip=ConfiguracionEmpresa.IP;
+        Log.d(TAG,"ip task: "+ip);
 
         String DOWNLOAD_URL
                 = "http://" + ip + ":" + datosConexiones.getPuertoImagenes() + "/" +
@@ -347,6 +358,6 @@ public class LateralActualizar extends Fragment {
             articulos_no_descargados++;
             Log.d(TAG, "GuardarArticulos -" + e.getMessage());
         }
-return false;
+        return false;
     }
 }

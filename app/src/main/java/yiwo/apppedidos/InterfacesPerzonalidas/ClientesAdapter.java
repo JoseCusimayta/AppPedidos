@@ -34,12 +34,12 @@ public class ClientesAdapter extends ArrayAdapter<Clientes> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Clientes dataModel = getItem(position);
-        CustomAdapterCodNom.ViewHolder viewHolder;
+        ClientesAdapter.ViewHolder viewHolder;
 
         final View result;
 
         if (convertView == null) {
-            viewHolder = new CustomAdapterCodNom.ViewHolder();
+            viewHolder = new ClientesAdapter.ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.custom_row_item, parent, false);
             viewHolder.tv_code = convertView.findViewById(R.id.cod);
@@ -47,7 +47,7 @@ public class ClientesAdapter extends ArrayAdapter<Clientes> {
             result=convertView;
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (CustomAdapterCodNom.ViewHolder) convertView.getTag();
+            viewHolder = (ClientesAdapter.ViewHolder) convertView.getTag();
             result=convertView;
         }
 

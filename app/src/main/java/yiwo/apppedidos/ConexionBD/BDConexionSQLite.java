@@ -10,7 +10,7 @@ public class BDConexionSQLite extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Pedidosdb";
 
     public BDConexionSQLite(Context context) {
-        super(context, DATABASE_NAME, null, 8);
+        super(context, DATABASE_NAME, null, 1);
     }
 
 

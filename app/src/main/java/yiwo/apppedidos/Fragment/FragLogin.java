@@ -69,8 +69,8 @@ public class FragLogin extends Fragment implements View.OnClickListener, Empresa
         ly_login_datos = view.findViewById(R.id.ly_login_datos);
         b_ingresar.setOnClickListener(this);
 
-        et_usuario.setText(datosConexiones.getUsuarioAPP());
-        et_clave.setText(datosConexiones.getClaveAPP());
+        //et_usuario.setText(datosConexiones.getUsuarioAPP());
+       // et_clave.setText(datosConexiones.getClaveAPP());
 
         et_rucEmp.setOnClickListener(this);
         et_punto_venta.setOnClickListener(this);

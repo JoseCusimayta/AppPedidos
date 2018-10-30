@@ -160,6 +160,9 @@ nigv
     }
 
     public static File crearDirectorioPrivado(Context context, String nombreDirectorio) {
+
+        //String root = Environment.getExternalStorageDirectory().toString(); //Obetner el directorio padre
+        //File myDirectorio = new File(root + "/pedidos"); // Crear una carpeta para guardar las imagenes
         //Crear directorio privado en la carpeta Pictures.
         File directorio =new File(
                 context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
@@ -172,6 +175,7 @@ nigv
     }
 
     public static File crearCarpetaAlmInterno(){
+
         File directorio = DatosConexiones.myDirectorio;
 
         if(!directorio.mkdirs()){

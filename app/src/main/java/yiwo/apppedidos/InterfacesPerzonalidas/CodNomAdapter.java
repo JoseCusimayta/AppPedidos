@@ -34,12 +34,12 @@ public class CodNomAdapter extends ArrayAdapter<CodNom> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         CodNom dataModel = getItem(position);
-        CustomAdapterCodNom.ViewHolder viewHolder;
+        CodNomAdapter.ViewHolder viewHolder;
 
         final View result;
 
         if (convertView == null) {
-            viewHolder = new CustomAdapterCodNom.ViewHolder();
+            viewHolder = new CodNomAdapter.ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.custom_row_item, parent, false);
             viewHolder.tv_code = convertView.findViewById(R.id.cod);
@@ -47,7 +47,7 @@ public class CodNomAdapter extends ArrayAdapter<CodNom> {
             result=convertView;
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (CustomAdapterCodNom.ViewHolder) convertView.getTag();
+            viewHolder = (CodNomAdapter.ViewHolder) convertView.getTag();
             result=convertView;
         }
 
