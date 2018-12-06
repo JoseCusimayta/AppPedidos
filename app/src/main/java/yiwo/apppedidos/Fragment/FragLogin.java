@@ -2,6 +2,7 @@ package yiwo.apppedidos.Fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,9 +20,14 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.AspectosGenerales.DatosConexiones;
 import yiwo.apppedidos.AspectosGenerales.DatosUsuario;
+import yiwo.apppedidos.ConexionBD.BDConexionSQLite;
 import yiwo.apppedidos.Control.BDUsuario;
 import yiwo.apppedidos.Data.DataEmpresa;
 import yiwo.apppedidos.Data.DataUsuario;
@@ -44,6 +50,7 @@ public class FragLogin extends Fragment implements View.OnClickListener, Empresa
     DataUsuario dataUsuario = new DataUsuario();
     View view;
     String TipoArray;
+    BDConexionSQLite myDb;
 
     public FragLogin() {
         // Required empty public constructor
@@ -58,6 +65,7 @@ public class FragLogin extends Fragment implements View.OnClickListener, Empresa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_login, container, false);
+        myDb = new BDConexionSQLite(getContext());
         b_ingresar = view.findViewById(R.id.b_ingresar);
         et_rucEmp = view.findViewById(R.id.et_rucEmp);
         et_usuario = view.findViewById(R.id.et_usuario);
@@ -77,9 +85,34 @@ public class FragLogin extends Fragment implements View.OnClickListener, Empresa
         et_centro_costo.setOnClickListener(this);
         et_unidad_negocio.setOnClickListener(this);
 
-        dataUsuario.BorrarDatosUsuario(getContext());
+        //dataUsuario.BorrarDatosUsuario(getContext());
         CodigosGenerales.BloquearMenuLaeral(getActivity());
+        CargarDatosLogin();
         return view;
+    }
+
+    private void CargarDatosLogin() {
+
+        Cursor datos = myDb.getDataEmpresa();
+        if ( datos.getCount()!=0 ) {
+            while (datos.moveToNext()) {
+                ConfiguracionEmpresa.Codigo_Empresa=datos.getString(0);
+                ConfiguracionEmpresa.RUC_Empresa=datos.getString(1);
+                DatosUsuario.Codigo_PuntoVenta=datos.getString(2);
+                DatosUsuario.Nombre_PuntoVenta=datos.getString(3);
+                DatosUsuario.Codigo_CentroCostos=datos.getString(4);
+                DatosUsuario.Nombre_CentroCostos=datos.getString(5);
+                DatosUsuario.Codigo_UnidadNegocio=datos.getString(6);
+                DatosUsuario.Nombre_UnidadNegocio=datos.getString(7);
+                DatosUsuario.Codigo_Almacen=datos.getString(8);
+                DatosUsuario.Direccion_Almacen=datos.getString(9);
+            }
+            et_rucEmp.setText(ConfiguracionEmpresa.RUC_Empresa);
+            et_punto_venta.setText(DatosUsuario.Codigo_PuntoVenta+"-"+DatosUsuario.Nombre_PuntoVenta);
+            et_centro_costo.setText(DatosUsuario.Codigo_CentroCostos+"-"+DatosUsuario.Nombre_CentroCostos);
+            et_unidad_negocio.setText(DatosUsuario.Codigo_UnidadNegocio+"-"+DatosUsuario.Nombre_UnidadNegocio);
+        }
+
     }
 
     @Override
@@ -122,7 +155,7 @@ public class FragLogin extends Fragment implements View.OnClickListener, Empresa
 
     @Override
     public void ResultadoEmpresaDialog(String cod, String name, String ruc) {
-        if (dataUsuario.CargarDatosUsuario(cod)) {
+        if (dataUsuario.CargarDatosUsuario(cod,ruc)) {
             et_punto_venta.setText(DatosUsuario.Codigo_PuntoVenta + "-" + DatosUsuario.Nombre_PuntoVenta);
             et_centro_costo.setText(DatosUsuario.Codigo_CentroCostos + "-" + DatosUsuario.Nombre_CentroCostos);
             et_unidad_negocio.setText(DatosUsuario.Codigo_UnidadNegocio + "-" + DatosUsuario.Nombre_UnidadNegocio);
@@ -200,7 +233,6 @@ public class FragLogin extends Fragment implements View.OnClickListener, Empresa
                 b_ingresar.setEnabled(true);
 
                 CodigosGenerales.DesBloquearMenuLaeral(getActivity());
-
 
                 boolean isInserted =dataUsuario.InsertarDatosUsuario(getContext());
 

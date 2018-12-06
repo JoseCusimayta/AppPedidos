@@ -14,17 +14,18 @@ public class BDConexionSQLite extends SQLiteOpenHelper {
     }
 
 
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(BDSQLiteTablaLogin.Create);
         db.execSQL(BDSQLiteTablaConfiguracion.Create);
+        db.execSQL(BDSQLiteTablaInicio.Create);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(BDSQLiteTablaLogin.Drop);
         db.execSQL(BDSQLiteTablaConfiguracion.Drop);
+        db.execSQL(BDSQLiteTablaInicio.Drop);
         onCreate(db);
     }
 
@@ -38,8 +39,12 @@ public class BDConexionSQLite extends SQLiteOpenHelper {
                                  String Direccion_Almacen,
                                  String Nombre_Vendedor,
                                  String Celular_Vendedor,
-                                 String email_Vendedor) {
-
+                                 String email_Vendedor,
+                                 String RUC_Empresa,
+                                 String Nombre_PuntoVenta,
+                                 String Nombre_CentroCostos,
+                                 String Nombre_UnidadNegocio) {
+        BDSQLiteTablaInicio.deleteAllData(this);
         return BDSQLiteTablaLogin.insert(
                 Codigo_Empresa,
                 Codigo_PuntoVenta,
@@ -52,15 +57,37 @@ public class BDConexionSQLite extends SQLiteOpenHelper {
                 Nombre_Vendedor,
                 Celular_Vendedor,
                 email_Vendedor,
-                this);
+                RUC_Empresa,
+                this)
+                &&
+                BDSQLiteTablaInicio.insert(
+                        Codigo_Empresa,
+                        RUC_Empresa,
+                        Codigo_PuntoVenta,
+                        Nombre_PuntoVenta,
+                        Codigo_CentroCostos,
+                        Nombre_CentroCostos,
+                        Codigo_UnidadNegocio,
+                        Nombre_UnidadNegocio,
+                        Codigo_Almacen,
+                        Direccion_Almacen,
+                        this);
     }
 
-    public Cursor getDataLogin(){
+    public Cursor getDataLogin() {
         return BDSQLiteTablaLogin.getAllData(this);
     }
 
-    public void deleteAllDataLogin(){
+    public Cursor getDataEmpresa() {
+        return BDSQLiteTablaInicio.getAllData(this);
+    }
+
+    public void deleteAllDataLogin() {
         BDSQLiteTablaLogin.deleteAllData(this);
+    }
+
+    public void deleteAllDataEmpresa() {
+        BDSQLiteTablaInicio.deleteAllData(this);
     }
 
     public boolean insertarConfiguracion(String RUC_Emprsa,
@@ -76,7 +103,7 @@ public class BDConexionSQLite extends SQLiteOpenHelper {
                 this);
     }
 
-    public Cursor getDataConfiguracion(){
+    public Cursor getDataConfiguracion() {
         return BDSQLiteTablaConfiguracion.getAllData(this);
     }
 

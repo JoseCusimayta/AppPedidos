@@ -28,9 +28,8 @@ public class BDPedidos {
         ArrayList<List<String>> arrayList = new ArrayList<>();
 
         try {
-
             Connection connection = bdata.getConnection();
-            String stsql="Select \n" +
+            String stsql = "Select \n" +
                     " Hpedidoc.ccod_empresa  Codigo_Empresa, \n" +
                     " Hpedidoc.idmotivo_venta  Codigo_Motivo, \n" +
                     " erp_motivos_tramite.erp_nommot  Nombre_Motivo, \n" +
@@ -47,7 +46,8 @@ public class BDPedidos {
                     " Hpedidoc.aprobado Estado, \n" +
                     " Hpedidoc.observacion Observacion, \n" +
                     " Hpedidoc.Usuario Usuario_Vendedor, \n" +
-                    " Hpedidoc.Pc_Fecha Fecha_Registro  \n" +
+                    " Hpedidoc.Pc_Fecha Fecha_Registro,\n" +
+                    " Hpedidoc.cmoneda \n" +
                     " from \n" +
                     " Hpedidoc \n" +
                     " Inner Join erp_motivos_tramite On \n" +
@@ -111,13 +111,12 @@ public class BDPedidos {
             query.setString(7, Nombre + "%"); // criterio de busqueda
             query.setString(8, Nombre + "%"); // criterio de busqueda
             query.setString(9, Nombre + "%"); // criterio de busqueda
-            query.setString(10,Nombre + "%"); // criterio de busqueda
+            query.setString(10, Nombre + "%"); // criterio de busqueda
             query.setString(11, Nombre + "%"); // criterio de busqueda
-            query.setString(12,Nombre + "%"); // criterio de busqueda
+            query.setString(12, Nombre + "%"); // criterio de busqueda
             query.setString(13, year); // año
             query.setString(14, mes); // nes
             query.setString(15, dia); // dia
-
 
 
             ResultSet rs = query.executeQuery();
@@ -139,7 +138,8 @@ public class BDPedidos {
                         rs.getString("Estado"),       //Estado
                         rs.getString("Observacion"),   //Observacion
                         rs.getString("Usuario_Vendedor"),   //Usuario_Vendedor
-                        CodigosGenerales.FormatoFechas.format(rs.getDate("Fecha_Registro"))                              //Fecha_Registro
+                        CodigosGenerales.FormatoFechas.format(rs.getDate("Fecha_Registro")),                              //Fecha_Registro
+                        rs.getString("cmoneda")   //Usuario_Vendedor
                 ));
             }
 
@@ -215,9 +215,10 @@ public class BDPedidos {
 
 
     public Boolean EnviarPedidos(Connection connection,
-            String Importe,
-                                 String Descuento, String Subtotal,  String IGV,
-                                 String Percepcion,  String Fecha_Entrega, String Comentario ) {
+                                 String Importe,
+                                 String Descuento, String Subtotal, String IGV,
+                                 String Percepcion, String Fecha_Entrega, String Comentario,
+                                 Double TipCambio) {
         try {
 
             String CodPedido = bdMotivo.getNuevoCodigoPedido(connection);
@@ -228,7 +229,7 @@ public class BDPedidos {
                             Importe, Descuento, Subtotal, IGV,
                             Percepcion, Fecha_Entrega, Comentario)
                             && bdMotivo.ActualizarCorrelativo(connection)
-                            && LlenarDetalle(connection, CodPedido)
+                            && LlenarDetalle(connection, CodPedido, TipCambio)
                     ) {
                 return true;
             } else {
@@ -283,8 +284,8 @@ public class BDPedidos {
     )
      */
     public Boolean GuardarPedido(Connection connection, String CodPedido,
-                                  String Importe, String Descuento,  String Subtotal, String IGV,
-                                  String Percepcion, String Fecha_Entrega, String Comentario) {
+                                 String Importe, String Descuento, String Subtotal, String IGV,
+                                 String Percepcion, String Fecha_Entrega, String Comentario) {
         try {
             Log.d(TAG, "Codigo_Empresa " + ConfiguracionEmpresa.Codigo_Empresa + "");
             Log.d(TAG, "Unidad_Negocio " + DatosUsuario.Codigo_UnidadNegocio + "");
@@ -341,15 +342,12 @@ public class BDPedidos {
     }
 
 
-    public Boolean LlenarDetalle(Connection connection, String Codigo_Pedido) {
+    public Boolean LlenarDetalle(Connection connection, String Codigo_Pedido, Double TipCambio) {
         try {
 
             ArrayList<List<String>> listaDeseos = bdListDeseo.getList();
 
             for (int i = 0; i < listaDeseos.size(); i++) {
-                Log.d(TAG, "asd" + listaDeseos);
-
-
                 String nitem = String.valueOf(i + 1);
                 String ccod_articulo = listaDeseos.get(i).get(1);
                 String nom_articulo = listaDeseos.get(i).get(2);
@@ -363,11 +361,11 @@ public class BDPedidos {
                 Double descuento_4 = Double.parseDouble(listaDeseos.get(i).get(10));
                 //String LP=listaDeseos.get(i).get(11);
                 Double BaseCalculada, BaseImponible, Descuento_Unico, MontoIGV, ImporteTotal, MontoADescontar;
-
+                // precio_unitario=precio_unitario*TipCambio;
                 Descuento_Unico = CodigosGenerales.getDescuenetoUnico(descuento_1, descuento_2, descuento_3, descuento_4);
                 BaseImponible = precio_unitario * ncantidad;
 
-                if (ConfiguracionEmpresa.isIncluidoIGV) {
+                if (!ConfiguracionEmpresa.isIncluidoIGV) {
                     MontoADescontar = (BaseImponible / (1 + (IGV_Articulo / 100))) * (Descuento_Unico) / 100;
                     BaseCalculada = (BaseImponible / (1 + (IGV_Articulo / 100))) * (100 - Descuento_Unico) / 100;
                 } else {
@@ -392,9 +390,9 @@ public class BDPedidos {
                 query.setString(8, cunidad);                        //@cunidad
                 query.setString(9, "1");                    //@factor
                 query.setString(10, ncantidad.toString());                    //@ncantidad
-                query.setString(11, IGV_Articulo.toString());//@nigv
+                query.setString(11, MontoIGV.toString());//@nigv
                 query.setString(12, precio_unitario.toString());//@npreciouni
-                query.setString(13, String.valueOf(precio_unitario * ncantidad));//@nprecio
+                query.setString(13, precio_unitario.toString());//@nprecio
                 query.setString(14, BaseImponible.toString());//@base_imp
                 query.setString(15, BaseCalculada.toString());//@base_calculada
                 query.setString(16, ImporteTotal.toString());//@nimporte
@@ -451,6 +449,4 @@ public class BDPedidos {
         }
         return false;
     }
-
-
 }

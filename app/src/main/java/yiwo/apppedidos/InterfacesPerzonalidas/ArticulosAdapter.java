@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class ArticulosAdapter  extends RecyclerView.Adapter<ArticulosAdapter.MyV
         public TextView unidad_articulo;
         public TextView precio_articulo;
         public TextView moneda_articulo;
+        public RelativeLayout rly_content;
         public ImageView iv_articulos;
 
         public MyViewHolder(View view) {
@@ -48,6 +50,7 @@ public class ArticulosAdapter  extends RecyclerView.Adapter<ArticulosAdapter.MyV
             precio_articulo = view.findViewById(R.id.tv_precio_articulo);
 //            moneda_articulo=view.findViewById(R.id.tv_moneda_articulo);
             iv_articulos = view.findViewById(R.id.iv_articulos);
+            rly_content = view.findViewById(R.id.rly_content);
         }
     }
 
@@ -69,38 +72,55 @@ public class ArticulosAdapter  extends RecyclerView.Adapter<ArticulosAdapter.MyV
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        try{
-        final Articulos Articulos = ArticulosList.get(position);
-        holder.nombre_articulo.setText(Articulos.getNombre_articulo());
-
-        holder.cantidad_articulo.setText(Articulos.getCantidad_articulo() + " " + Articulos.getUnidad_articulo());
-        holder.precio_articulo.setText(Articulos.getMoneda_articulo() + " " + Articulos.getPrecio_articulo());
-
-        Log.d(TAG, "Codigo Producto: " + Articulos.getCodigo_articulo());
         try {
-            Bitmap bitmap = bdDescargarImagenes.getImageFromDirectory(Articulos.getCodigo_articulo() + "_1.jpg");
-            if (bitmap != null)
-                holder.iv_articulos.setImageBitmap(bitmap);
-            else
-                holder.iv_articulos.setImageResource(R.drawable.logo);
+            final Articulos Articulos = ArticulosList.get(position);
+            holder.nombre_articulo.setText(Articulos.getCodigo_articulo().trim() + "\n" + Articulos.getNombre_articulo());
+
+            holder.cantidad_articulo.setText(CodigosGenerales.RedondearDecimalesFormateado(CodigosGenerales.tryParseDouble(Articulos.getCantidad_articulo())) + " " + Articulos.getUnidad_articulo().trim());
+            holder.precio_articulo.setText(Articulos.getMoneda_articulo().trim() + " " + CodigosGenerales.RedondearDecimalesFormateado(CodigosGenerales.tryParseDouble(Articulos.getPrecio_articulo())));
+
+            Log.d(TAG, "Codigo Producto: " + Articulos.getCodigo_articulo());
+            try {
+                Bitmap bitmap = bdDescargarImagenes.getImageFromDirectory(Articulos.getCodigo_articulo() + "_1.jpg");
+                if (bitmap != null) {
+                    holder.iv_articulos.setImageBitmap(bitmap);
+                    holder.iv_articulos.setVisibility(View.VISIBLE);
+                } else
+                    holder.iv_articulos.setVisibility(View.GONE);
+                //  holder.iv_articulos.setImageResource(R.drawable.logo);
+            } catch (Exception e) {
+                Log.d(TAG, "onBindViewHolder " + e.getMessage());
+            }
+            holder.iv_articulos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    CodigosGenerales.hideSoftKeyboard(activity);
+                    CodigosGenerales.Codigo_Articulo = Articulos.getCodigo_articulo();
+
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    Fragment fragment = new FragDescripcion();
+                    transaction.replace(R.id.frag_contenedor, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            });
+            holder.rly_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    CodigosGenerales.hideSoftKeyboard(activity);
+                    CodigosGenerales.Codigo_Articulo = Articulos.getCodigo_articulo();
+
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    Fragment fragment = new FragDescripcion();
+                    transaction.replace(R.id.frag_contenedor, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            });
         } catch (Exception e) {
             Log.d(TAG, "onBindViewHolder " + e.getMessage());
-        }
-        holder.iv_articulos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                CodigosGenerales.hideSoftKeyboard(activity);
-                CodigosGenerales.Codigo_Articulo = Articulos.getCodigo_articulo();
-
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                Fragment fragment = new FragDescripcion();
-                transaction.replace(R.id.frag_contenedor, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });}catch (Exception e){
-            Log.d(TAG,"onBindViewHolder "+e.getMessage());
         }
     }
 

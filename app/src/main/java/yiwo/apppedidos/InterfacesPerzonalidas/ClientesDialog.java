@@ -26,7 +26,7 @@ public class ClientesDialog {
 
     private ArrayList<Clientes> dataModels;
     private ListView listView;
-    private ClientesAdapter adapter;
+    private ClientesSimpleAdapter adapter;
 
     private Activity context;
     private Dialog dialogo;
@@ -129,7 +129,9 @@ public class ClientesDialog {
                         arrayListDialog.get(i).get(6),
                         arrayListDialog.get(i).get(7),
                         arrayListDialog.get(i).get(8),
-                        arrayListDialog.get(i).get(9)
+                        arrayListDialog.get(i).get(9),
+                        arrayListDialog.get(i).get(10),
+                        arrayListDialog.get(i).get(11)
                 ));
             }
             return null;
@@ -141,7 +143,7 @@ public class ClientesDialog {
             if (!isCancelled()) {
                 try {
                     listView.setAdapter(null);
-                    adapter = new ClientesAdapter(dataModels, context);
+                    adapter = new ClientesSimpleAdapter(dataModels, context);
 
                     listView.setAdapter(adapter);
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

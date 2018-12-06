@@ -31,10 +31,11 @@ public class DataUsuario {
     private BDUsuario bdUsuario = new BDUsuario();
     private String TAG = "DataUsuario";
 
-    public Boolean CargarDatosUsuario(String CodigoEmpresa) {
+    public Boolean CargarDatosUsuario(String CodigoEmpresa,String RUC) {
         try {
             Connection connection = bdata.getConnection();
             ConfiguracionEmpresa.Codigo_Empresa = CodigoEmpresa;
+            ConfiguracionEmpresa.RUC_Empresa = RUC;
             List<String> list;
 
             list = bdPuntoVenta.getPredeterminado(connection);
@@ -75,6 +76,7 @@ public class DataUsuario {
 
         BDConexionSQLite myDb;
         myDb = new BDConexionSQLite(context);
+        myDb.deleteAllDataLogin();
         return myDb.insertarLogin(
                 ConfiguracionEmpresa.Codigo_Empresa,
                 DatosUsuario.Codigo_PuntoVenta,
@@ -86,7 +88,11 @@ public class DataUsuario {
                 DatosUsuario.Direccion_Almacen,
                 DatosUsuario.Nombre_Vendedor,
                 DatosUsuario.Celular_Vendedor,
-                DatosUsuario.email_Vendedor);
+                DatosUsuario.email_Vendedor,
+                ConfiguracionEmpresa.RUC_Empresa,
+                DatosUsuario.Nombre_PuntoVenta,
+                DatosUsuario.Nombre_CentroCostos,
+                DatosUsuario.Nombre_UnidadNegocio);
     }
 
     public Boolean loginUsuario(String Usuario, String Clave) {

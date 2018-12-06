@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -61,12 +62,22 @@ public class RedDisponible {
 
     public void isLAN() {
 
-        if(isServerAvailable(datosConexiones.getIP_Publica(), datosConexiones.getPuertoSQL()))
+        if(isServerAvailable(datosConexiones.getIP_Publica(), datosConexiones.getPuertoSQL())){
             ConfiguracionEmpresa.IP=datosConexiones.getIP_Publica();
-        else if(isServerAvailable(datosConexiones.getIP_LAN(), datosConexiones.getPuertoSQL()))
+
+            Log.d("TAG", "Publica: " + datosConexiones.getIP_Publica());
+        }
+        else if(isServerAvailable(datosConexiones.getIP_LAN(), datosConexiones.getPuertoSQL())){
             ConfiguracionEmpresa.IP=datosConexiones.getIP_LAN();
-        else
+
+        Log.d("TAG", "LAN: " + datosConexiones.getIP_LAN());
+    }
+        else{
             ConfiguracionEmpresa.IP=null;
+
+            Log.d("TAG", "Null: " );
+}
+
     }
 
 
@@ -109,6 +120,7 @@ public class RedDisponible {
 
 
     public boolean isServerAvailable(String DATABASE_ADDR, int DATABASE_PORT) {
+        Log.d("isServerAvailable", "IP: " + DATABASE_ADDR+" Puerto: "+DATABASE_PORT);
         final int TIMEOUT_MS = 2000; // 2 seconds
         // First check if we have network connectivity
 

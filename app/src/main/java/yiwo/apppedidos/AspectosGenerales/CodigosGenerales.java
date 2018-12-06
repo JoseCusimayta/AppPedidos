@@ -8,7 +8,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,6 +75,9 @@ public class CodigosGenerales {
     public static List<String> list_concepto6 = new ArrayList<>();
     public static List<String> list_concepto7 = new ArrayList<>();
 
+    public static int CantidadFilas=0;
+    public static double CantidadItems=0.00;
+    public static double ImporteTotal=0.00;
 
     public static double Precio_TotalPedido;
     public static ArrayList<List<String>> Codigos_Pedido = new ArrayList<>();
@@ -141,12 +147,25 @@ public class CodigosGenerales {
     public static Double getDescuenetoUnico(Double descuento_1, Double descuento_2, Double descuento_3, Double descuento_4) {
         return -((((100 - descuento_1) * (100 - descuento_2) * (100 - descuento_3) * (100 - descuento_4)) / 1000000) - 100);
     }
-
+/*
     public static String RedondearDecimales(Double Monto, Integer Decimales) {
         return String.format("%." + Decimales + "f", Monto);
     }
+    */
+public static String RedondearDecimales(Double Monto) {
+    return String.format("%." + ConfiguracionEmpresa.Decimales_Empresa + "f", Monto);
+}
+    public static String RedondearDecimalesFormateado(Double Monto) {
+        NumberFormat nformat = new DecimalFormat("##,###,###.##");
+        return nformat.format(Monto).trim();
+    }
+    public static String RedondearDecimalesFormateado(String Monto) {
+        Double monto= tryParseDouble(Monto);
+        NumberFormat nformat = new DecimalFormat("##,###,###.##");
+        return nformat.format(monto).trim();
+    }
 
-
+//Decimales_Empresa
     /**
      * Hides the soft keyboard
      */
@@ -195,11 +214,13 @@ public class CodigosGenerales {
 
     public static Double tryParseDouble(String value) {
         try {
+            if(value!=null)
             return Double.parseDouble(value);
         } catch (NumberFormatException nfe) {
             // Log exception.
             return 0.00;
         }
+        return 0.00;
     }
 
     public static Integer tryParseInteger(String value) {
@@ -224,5 +245,10 @@ public class CodigosGenerales {
             drawer = activity.findViewById(R.id.drawer_layout);
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//Bloquear el menu lateral
         }
+    }
+    public static void setDatosCabecera(TextView cantidad, TextView importe_total){
+        importe_total.setText("Total: "+  RedondearDecimalesFormateado(ImporteTotal));
+        cantidad.setText("Filas: "+CantidadFilas +" \n Can: "+ RedondearDecimalesFormateado(CantidadItems));
+
     }
 }

@@ -71,10 +71,10 @@ public class FragList extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    if(task!=null)
-                        task.cancel(true);
-                    task = new BackGroundTask();
-                    task.execute("");
+                        if(task!=null)
+                            task.cancel(true);
+                        task = new BackGroundTask();
+                        task.execute("");
                 } catch (Exception e) {
                     Log.d(TAG, "et_buscar: " + e.getMessage());
                 }

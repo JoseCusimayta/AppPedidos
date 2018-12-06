@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
@@ -126,6 +127,7 @@ public class FragMenuPrincipal extends Fragment implements View.OnClickListener 
     public void onClick(View view) {
         Fragment fragment;
         CodigosGenerales.isInicio=false;
+        CodigosGenerales.listArticulos=new ArrayList<>();
         switch (view.getId()) {
             case (R.id.iv_articulos):
                 CodigosGenerales.TipoArray = "Articulos";

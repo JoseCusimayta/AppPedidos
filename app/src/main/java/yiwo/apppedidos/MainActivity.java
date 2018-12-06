@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.Fragment.FragArticulosCardView;
 import yiwo.apppedidos.Fragment.FragList;
 import yiwo.apppedidos.Fragment.FragListDeseo;
 import yiwo.apppedidos.Fragment.FragLogin;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
     BDConexionSQLite myDb;
     String TAG = "MainActivity";
+    String tagFragment = "";
     //endregion
 
     @Override
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity
         frameLayout = findViewById(R.id.frag_contenedor);
         navigationView = findViewById(R.id.nav_view);
         myDb = new BDConexionSQLite(this); //Cargar base de datos SQLite
+
         //endregion
     }
 
@@ -118,6 +121,8 @@ public class MainActivity extends AppCompatActivity
                     })
                     .create()
                     .show();
+        } else if (CodigosGenerales.Login = false) {
+            finish();
         } else
             super.onBackPressed();
     }
@@ -126,28 +131,42 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
         Fragment fragment;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         switch (id) {
             case (R.id.nav_catalogo):
-                CodigosGenerales.TipoArray = "Articulos";
-                fragment = new FragList();
-                CambiarFragment(fragment);
+                //CodigosGenerales.TipoArray = "Articulos";
+                //fragment = new FragList();
+                //CambiarFragment(fragment);
+                if (!tagFragment.equals("nav_catalogo")) {
+                    CodigosGenerales.TipoArray = "Articulos";
+                    tagFragment = "nav_catalogo";
+                    fragment = new FragArticulosCardView();
+                    CambiarFragment(fragment);
+                }
                 break;
             case (R.id.nav_clientes):
-                fragment = new LateralClientes();
-                CambiarFragment(fragment);
+                if (!tagFragment.equals("nav_clientes")) {
+                    tagFragment = "nav_clientes";
+                    fragment = new LateralClientes();
+                    CambiarFragment(fragment);
+                }
+
                 break;
             case (R.id.nav_pedidos):
-                fragment = new LateralPedidos();
-                CambiarFragment(fragment);
+                if (!tagFragment.equals("nav_pedidos")) {
+                    tagFragment = "nav_pedidos";
+                    fragment = new LateralPedidos();
+                    CambiarFragment(fragment);
+                }
                 break;
             case (R.id.nav_actualizar):
-                fragment = new LateralActualizar();
-                CambiarFragment(fragment);
+                if (!tagFragment.equals("nav_actualizar")) {
+                    tagFragment = "nav_actualizar";
+                    fragment = new LateralActualizar();
+                    CambiarFragment(fragment);
+                }
                 break;
             case (R.id.nav_cerrarSesion):
                 CerrarSesion();

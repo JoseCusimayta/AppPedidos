@@ -28,6 +28,7 @@ public class DataEmpresa {
 
             ConfiguracionEmpresa.Tipo_Monedas = bdEmpresa.getMonedas(connection);
             ConfiguracionEmpresa.Moneda_Trabajo = bdEmpresa.getMonedaTrabajo(connection);
+            ConfiguracionEmpresa.Moneda_Empresa=ConfiguracionEmpresa.Moneda_Trabajo;
             List<String> MotivoPredeterminado = bdMotivo.getList(connection).get(0);
             ConfiguracionEmpresa.Codigo_Motivo = MotivoPredeterminado.get(0);
             ConfiguracionEmpresa.Nombre_Motivo = MotivoPredeterminado.get(1);

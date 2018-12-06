@@ -15,6 +15,7 @@
         card_view:cardCornerRadius="@dimen/card_album_radius">
 
         <RelativeLayout
+            android:id="@+id/rly_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -53,7 +54,7 @@
                     android:paddingLeft="@dimen/album_title_padding"
                     android:paddingRight="@dimen/album_title_padding"
                     android:text="Cantidad N producto elegido por el card view"
-                    android:textSize="@dimen/songs_count" />
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/tv_precio_articulo"
@@ -66,7 +67,7 @@
                     android:paddingLeft="@dimen/album_title_padding"
                     android:paddingRight="@dimen/album_title_padding"
                     android:text="Precio en soles de producto elegido por el card view"
-                    android:textSize="@dimen/songs_count" />
+                    android:textSize="10sp" />
             </LinearLayout>
 
 

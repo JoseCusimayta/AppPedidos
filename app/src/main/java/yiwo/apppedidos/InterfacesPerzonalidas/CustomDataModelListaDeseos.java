@@ -16,8 +16,9 @@ public class CustomDataModelListaDeseos {
     String Base_Calculada;
     String IGV;
     String Importe;
+    String MontoDescontado;
 
-    public CustomDataModelListaDeseos(String numero_Orden, String codigo_Producto, String nombre_Producto, String tipo_moneda, String precio_Unitario, String cantidad, String tipo_Unidad, String descuento_1, String descuento_2, String descuento_3, String descuento_4, String base_Imponible, String base_Calculada, String IGV, String importe) {
+    public CustomDataModelListaDeseos(String numero_Orden, String codigo_Producto, String nombre_Producto, String tipo_moneda, String precio_Unitario, String cantidad, String tipo_Unidad, String descuento_1, String descuento_2, String descuento_3, String descuento_4, String base_Imponible, String base_Calculada, String IGV, String importe, String montoDescontado) {
         Numero_Orden = numero_Orden;
         Codigo_Producto = codigo_Producto;
         Nombre_Producto = nombre_Producto;
@@ -33,6 +34,7 @@ public class CustomDataModelListaDeseos {
         Base_Calculada = base_Calculada;
         this.IGV = IGV;
         Importe = importe;
+        MontoDescontado = montoDescontado;
     }
 
     public String getNumero_Orden() {
@@ -93,5 +95,9 @@ public class CustomDataModelListaDeseos {
 
     public String getImporte() {
         return Importe;
+    }
+
+    public String getMontoDescontado() {
+        return MontoDescontado;
     }
 }

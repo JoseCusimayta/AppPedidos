@@ -131,10 +131,12 @@ public class LateralPedidoDetalle extends Fragment {
                                     descuento_2.toString(),
                                     descuento_3.toString(),
                                     descuento_4.toString(),
-                                    CodigosGenerales.RedondearDecimales(BaseImponible,2),
-                                    CodigosGenerales.RedondearDecimales(BaseCalculada,2),
-                                    CodigosGenerales.RedondearDecimales(MontoIGV,2),
-                                    CodigosGenerales.RedondearDecimales(ImporteTotal,2)
+                                    CodigosGenerales.RedondearDecimales(BaseImponible),
+                                    CodigosGenerales.RedondearDecimales(BaseCalculada),
+                                    CodigosGenerales.RedondearDecimales(MontoIGV),
+                                    CodigosGenerales.RedondearDecimales(ImporteTotal),
+                                    CodigosGenerales.RedondearDecimales(MontoADescontar)
+
                             ));
                 }
             } catch (Exception e) {

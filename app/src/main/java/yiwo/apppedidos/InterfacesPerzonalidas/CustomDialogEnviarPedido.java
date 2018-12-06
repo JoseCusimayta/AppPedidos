@@ -72,10 +72,10 @@ public class CustomDialogEnviarPedido {
         //tv_cliente.setText("Cliente: "+CodigosGenerales.Codigo_Cliente+" - "+CodigosGenerales.Nombre_Cliente);
 
         tv_cliente.setText("Cliente: " + DatosCliente.Nombre_Cliente);
-        tv_subtotal.setText("SubTotal: " + ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimales(Monto_SubTotal_Pedido,2).replace(",","."));
-        tv_descuento.setText("Descuento:  "+ ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimales(Monto_Descontado_Pedido,2).replace(",","."));
-        tv_igv.setText("IGV:  "+ ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimales(Monto_IGV_Pedido,2).replace(",","."));
-        tv_importe.setText("Importe:  "+ ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimales(Monto_Importe_Pedido,2).replace(",","."));
+        tv_subtotal.setText("SubTotal: " + ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimalesFormateado(Monto_SubTotal_Pedido));
+        tv_descuento.setText("Descuento:  "+ ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimalesFormateado(Monto_Descontado_Pedido));
+        tv_igv.setText("IGV:  "+ ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimalesFormateado(Monto_IGV_Pedido));
+        tv_importe.setText("Importe:  "+ ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimalesFormateado(Monto_Importe_Pedido));
 
         tv_cliente.setText(DatosCliente.Nombre_Cliente);
 

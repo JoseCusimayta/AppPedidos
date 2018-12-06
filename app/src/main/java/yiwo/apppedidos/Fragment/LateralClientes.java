@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -25,7 +26,6 @@ import java.util.List;
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.DatosCliente;
 import yiwo.apppedidos.Control.BDClientes;
-import yiwo.apppedidos.Control.BDFormaPago;
 import yiwo.apppedidos.InterfacesPerzonalidas.Clientes;
 import yiwo.apppedidos.InterfacesPerzonalidas.ClientesAdapter;
 import yiwo.apppedidos.R;
@@ -133,7 +133,9 @@ public class LateralClientes extends Fragment {
                                     arrayList.get(i).get(6),
                                     arrayList.get(i).get(7),
                                     arrayList.get(i).get(8),
-                                    arrayList.get(i).get(9)
+                                    arrayList.get(i).get(9),
+                                    arrayList.get(i).get(10),
+                                    arrayList.get(i).get(11)
                             ));
                 }
             } catch (Exception e) {
@@ -150,10 +152,11 @@ public class LateralClientes extends Fragment {
                 lv_items.setAdapter(adapter);
                 final View _view= view;
 
+                lv_items.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
-                lv_items.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
                         final String Codigo = dataModels.get(i).getCodigo_Cliente();
                         adb.setTitle("¿Elegir?");
@@ -173,7 +176,7 @@ public class LateralClientes extends Fragment {
                                 DatosCliente.Nombre_FormaPago= dataModels.get(positionToRemove).getNombre_FormaPago();
                                 DatosCliente.Dias_FormaPago= CodigosGenerales.tryParseInteger(dataModels.get(positionToRemove).getDias_FormaPago());
                                 DatosCliente.Codigo_Pais= dataModels.get(positionToRemove).getCodigo_Pais();
-
+/*
                                 Log.d(TAG, "Nombre_Cliente " + DatosCliente.Nombre_Cliente+" ...");
                                 Log.d(TAG, "Direccion_Cliente " + DatosCliente.Direccion_Cliente+" ...");
                                 Log.d(TAG, "Codigo_Cliente " + DatosCliente.Codigo_Cliente+" ...");
@@ -183,13 +186,24 @@ public class LateralClientes extends Fragment {
                                 Log.d(TAG, "Codigo_FormaPago " + DatosCliente.Codigo_FormaPago+" ...");
                                 Log.d(TAG, "Nombre_FormaPago " + DatosCliente.Nombre_FormaPago+" ...");
                                 Log.d(TAG, "Dias_FormaPago " + DatosCliente.Dias_FormaPago+" ...");
-                                Log.d(TAG, "Codigo_Pais " + DatosCliente.Codigo_Pais+" ...");
+                                Log.d(TAG, "Codigo_Pais " + DatosCliente.Codigo_Pais+" ...");*/
                                 Snackbar.make(_view, DatosCliente.Nombre_Cliente + " ha sido elegido", Snackbar.LENGTH_LONG).setAction("No action", null).show();
-
+                                FragmentManager fm = getActivity().getSupportFragmentManager();
+                                for (int i = 1; i < fm.getBackStackEntryCount(); ++i) {
+                                    fm.popBackStack();
+                                }
+                                FragMenuPrincipal frag = new FragMenuPrincipal();
+                                CambiarFragment(frag);
 
                             }
                         });
                         adb.show();
+                        return false;
+                    }
+                });
+                lv_items.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     }
                 });
 
@@ -198,5 +212,16 @@ public class LateralClientes extends Fragment {
             }
             super.onPostExecute(s);
         }
+    }
+
+    public void CambiarFragment(Fragment fragment) {
+        CodigosGenerales.isInicio=false;
+
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frag_contenedor, fragment)
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .addToBackStack(null)
+                .commit();
     }
 }

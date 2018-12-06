@@ -114,7 +114,8 @@ public class CustomAdapterListaDeseos extends ArrayAdapter<CustomDataModelListaD
         viewHolder.Descuento_3.setText(dataModel.getDescuento_3().replace(",","."));
         viewHolder.Descuento_4.setText(dataModel.getDescuento_4().replace(",","."));
         viewHolder.Base_Imponible.setText(dataModel.getBase_Imponible().replace(",","."));
-        viewHolder.Base_Calculada.setText(dataModel.getBase_Calculada().replace(",","."));
+        //viewHolder.Base_Calculada.setText(CodigosGenerales.RedondearDecimalesFormateado(dataModel.getBase_Calculada()));
+        viewHolder.Base_Calculada.setText(dataModel.getBase_Calculada());
         viewHolder.IGV.setText(dataModel.getIGV().replace(",","."));
         viewHolder.Importe.setText(dataModel.getImporte().replace(",","."));
 

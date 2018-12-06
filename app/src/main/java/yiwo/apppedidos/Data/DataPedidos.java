@@ -18,7 +18,8 @@ public class DataPedidos {
 
     public Boolean EnviarPedido(String Importe,
                                 String Descuento, String Subtotal, String IGV,
-                                String Percepcion, String Fecha_Entrega, String Comentario) {
+                                String Percepcion, String Fecha_Entrega, String Comentario,
+                                Double TipCambio) {
         try {
             Connection connection = bdata.getConnection();
             String CodPedido = bdMotivo.getNuevoCodigoPedido(connection);
@@ -28,7 +29,7 @@ public class DataPedidos {
             }
             if (bdPedidos.GuardarPedido(connection, CodPedido, Importe, Descuento, Subtotal, IGV, Percepcion, Fecha_Entrega, Comentario)
                     && bdMotivo.ActualizarCorrelativo(connection)
-                    && bdPedidos.LlenarDetalle(connection, CodPedido)) {
+                    && bdPedidos.LlenarDetalle(connection, CodPedido,TipCambio)) {
                 bdListDeseo.LimpiarListaDeseo(connection);
                 connection.close();
                 return true;

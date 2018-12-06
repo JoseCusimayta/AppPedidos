@@ -73,6 +73,7 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
     Boolean isGalleryReady=false;
     DataArticulos dataArticulos= new DataArticulos();
     DataListaDeseo dataListaDeseo= new DataListaDeseo();
+    TextView tv_cabecera_total, tv_cabecera_cantidad;
     //endregion
 
     public FragDescripcion() {
@@ -108,10 +109,14 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
             Stock = Double.parseDouble(informacion.get(2));
             Unidad_Articulo = informacion.get(3);
             Precio_Articulo = CodigosGenerales.tryParseDouble(informacion.get(4));
+            Log.d(TAG,"Precio: "+Precio_Articulo);
             PorcentajeIGV= CodigosGenerales.tryParseDouble(informacion.get(7));
-            tv_cantidad.setText(Stock + " " + Unidad_Articulo.replace(",","."));
-            tv_precio.setText(ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimales(Precio_Articulo, 2).replace(",","."));
+            tv_cantidad.setText( CodigosGenerales.RedondearDecimalesFormateado(Stock )+ " " +Unidad_Articulo);
+            tv_precio.setText(ConfiguracionEmpresa.Moneda_Trabajo + " " + CodigosGenerales.RedondearDecimalesFormateado( Precio_Articulo));
             et_nombre.setText(Nombre_Articulo);
+
+            tv_cabecera_total = getActivity().findViewById(R.id.tv_total);
+            tv_cabecera_cantidad = getActivity().findViewById(R.id.tv_cantidad);
 
             app_barLayout = getActivity().findViewById(R.id.app_barLayout);
             app_barLayout.setVisibility(View.VISIBLE);
@@ -156,7 +161,6 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
                 if (Cantidad == 0)
                     Cantidad = 1.0;
                 AgregarProductosListaDeseo(Cantidad);
-
                 break;
             case (R.id.ib_fichatecnica):
                 ShowFichaTecnica();
@@ -184,7 +188,6 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
         if (FichaTecnica == null) {
             FichaTecnica = dataArticulos.getFichaTecnica(Codigo_Articulo);
             //tv_nombre.setText("Ficha Técnica");
-
 
             if (FichaTecnica != null) {
                 String Detalle = "";
@@ -245,8 +248,14 @@ public class FragDescripcion extends Fragment implements View.OnClickListener,  
     private void AgregarProductosListaDeseo(Double Cantidad) {
         if (Cantidad > 0) {
             if (Cantidad <= Stock) {
+
+                Log.d(TAG,"Precio: "+Precio_Articulo);
                 if (dataListaDeseo.GuardarListaDeseo(Codigo_Articulo, Nombre_Articulo, Cantidad.toString(), Unidad_Articulo, Precio_Articulo.toString(), DatosCliente.Codigo_ListaPrecios,PorcentajeIGV.toString())) {
                     Toast.makeText(getActivity(), "Se ha(n) agregado " + Cantidad + " elemento(s)", Toast.LENGTH_SHORT).show();
+                    CodigosGenerales.ImporteTotal+=Precio_Articulo;
+                    CodigosGenerales.CantidadItems+=Cantidad;
+
+                    dataListaDeseo.setResumen(tv_cabecera_cantidad,tv_cabecera_total);
                     et_cantidad.setText("");
                 } else
                     Toast.makeText(getActivity(), "No se ha podido realizar la operación", Toast.LENGTH_SHORT).show();

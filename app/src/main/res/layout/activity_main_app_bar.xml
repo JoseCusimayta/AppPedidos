@@ -40,13 +40,23 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="left|center_vertical"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/iv_logo"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         app:srcCompat="@drawable/icono" />
+
+                    <TextView
+                        android:id="@+id/tv_cantidad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:textAlignment="viewEnd"
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -55,14 +65,24 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="right|center"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:paddingRight="10dp">
+
+                    <TextView
+                        android:id="@+id/tv_total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:textSize="12sp" />
 
                     <Button
                         android:id="@+id/b_carrito"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:background="@drawable/carrito_compras" />
+
                 </LinearLayout>
             </LinearLayout>
 

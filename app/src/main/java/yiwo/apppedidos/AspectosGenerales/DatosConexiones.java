@@ -22,14 +22,13 @@ public class DatosConexiones {
     public static File myDirectorio = new File(root + "/pedidos"); // Crear una carpeta para guardar las imagenes
 
 
-    //Configuración ERP
-//    private String IP_LAN = "190.40.111.57";
-//    private String IP_Publica = "190.40.111.57";
+//    Configuración ERP
+//    private String IP_LAN = "192.168.1.111";
+//    private String IP_Publica = "148.102.21.175";
 //    private String BD_Empresa = "Bd_Consultoria_2015";
 //    private String ServerSQL = "SQLSERVER2008R2";
 
     //Configuración Gumisa
-
     private static String IP_LAN="192.168.0.5";
     private static String IP_Publica="190.187.39.250";
     private static String BD_Empresa="BD_Gumisa_2018_08_23";

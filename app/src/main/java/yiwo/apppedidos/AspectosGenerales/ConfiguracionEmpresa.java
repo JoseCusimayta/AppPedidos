@@ -11,7 +11,9 @@ public class ConfiguracionEmpresa {
     public static Boolean isIncluidoIGV=false;
 
     public static String Codigo_Empresa;
+    public static String RUC_Empresa;
     public static String Moneda_Trabajo;
+    public static String Moneda_Empresa;
     public static String Codigo_Motivo;
     public static String Nombre_Motivo;
     public static String CodigoTipoCambio;
@@ -22,5 +24,8 @@ public class ConfiguracionEmpresa {
     public static Double ValorTipoCambio;
 
     public static ArrayList<List<String>> Tipo_Monedas;
+
+
+    public static Integer Decimales_Empresa=2;
 
 }

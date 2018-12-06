@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class BDSQLiteTablaLogin {
     public static final String TABLE_NAME = "login";
@@ -19,6 +20,7 @@ public class BDSQLiteTablaLogin {
     public static final String COL_10 = "Nombre_Vendedor";
     public static final String COL_11 = "Celular_Vendedor";
     public static final String COL_12 = "email_Vendedor";
+    public static final String COL_13 = "RUC_Empresa";
 
     public static final String Create="create table " + TABLE_NAME +"" +
             " (" +
@@ -33,7 +35,8 @@ public class BDSQLiteTablaLogin {
             ""+COL_9+" TEXT, " +
             ""+COL_10+" TEXT, " +
             ""+COL_11+" TEXT, " +
-            ""+COL_12+" TEXT" +
+            ""+COL_12+" TEXT, " +
+            ""+COL_13+" TEXT" +
             ")";
     public static final String Drop="DROP TABLE IF EXISTS "+TABLE_NAME;
 
@@ -49,6 +52,7 @@ public class BDSQLiteTablaLogin {
                               String Nombre_Vendedor,
                               String Celular_Vendedor,
                               String email_Vendedor,
+                              String RUC_Empresa,
                               SQLiteOpenHelper sqLiteOpenHelper) {
         SQLiteDatabase db = sqLiteOpenHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -63,6 +67,7 @@ public class BDSQLiteTablaLogin {
         contentValues.put(COL_10,Nombre_Vendedor);
         contentValues.put(COL_11,Celular_Vendedor);
         contentValues.put(COL_12,email_Vendedor);
+        contentValues.put(COL_13,RUC_Empresa);
         long result = db.insert(TABLE_NAME,null ,contentValues);
         return result != -1;
     }
@@ -72,8 +77,6 @@ public class BDSQLiteTablaLogin {
         SQLiteDatabase db = sqLiteOpenHelper.getWritableDatabase();
         return db.rawQuery("select * from "+TABLE_NAME,null);
     }
-
-
     public static boolean update(String id, String CodEmp,SQLiteOpenHelper sqLiteOpenHelper) {
         SQLiteDatabase db = sqLiteOpenHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();

@@ -24,15 +24,74 @@ public class BDArticulos {
             String Nombre,
             String Busqueda_categoria) {
 
-        Log.d(TAG, "getArticulos...");
         ArrayList<List<String>> arrayList = new ArrayList<>();
 
         try {
             if (CodigosGenerales.listArticulos.size() > 0 && Nombre.equals("") && Busqueda_categoria.equals("")) {
+                Log.d(TAG, "regresando lista guardada...");
                 return CodigosGenerales.listArticulos;
             } else {
+                Log.d(TAG, "generando nueva lista...");
                 Connection connection = bdata.getConnection();
+/*
 
+                                select top(50)
+                                ccod_articulo,
+                                cnom_articulo,
+                                cfamilia,
+                                ccod_subfamilia,
+                                codmarca,
+                                modelo,
+                                color,
+                                tratamiento,
+                                fuelle,
+                                azas,
+                                solapa,
+                                cmoneda_precio,
+                                erp_monto,
+                                cunidad,
+                                Isnull(( SUM(ERP_STOART) - SUM(ERP_STOCOM)),0) as stock,
+                                Harticul.ccod_almacen,
+                                nigv
+                                from Harticul
+                                inner join Hstock
+                                on
+                                Harticul.ccod_articulo=HSTOCK.ERP_CODART and
+                                Harticul.ccod_empresa=HSTOCK.ERP_CODEMP
+                                and Harticul.ccod_almacen=HSTOCK.ERP_CODALM
+                                inner join Erp_Lista_Precio_Cliente
+                                on
+                                Harticul.ccod_articulo=Erp_Lista_Precio_Cliente.ERP_CODART and
+                                Harticul.ccod_empresa=Erp_Lista_Precio_Cliente.ERP_CODEMP and
+                                Harticul.cunidad=Erp_Lista_Precio_Cliente.erp_unidad
+                                where
+                                ccod_empresa = ?
+                                and ERP_CODPTV = ?
+                                and ERP_CODALM = ?
+                                and erp_tipo = '12 '
+                                and erp_codigo_concepto = ?
+                                and (
+                                (ccod_articulo like ? or cnom_articulo like ? )
+                                 Busqueda_categoria
+                                 )
+                                group by
+                                ccod_articulo,
+                                cnom_articulo,
+                                cfamilia,
+                                ccod_subfamilia,
+                                codmarca,
+                                modelo,
+                                color,
+                                tratamiento,
+                                fuelle,
+                                azas,
+                                solapa,
+                                cmoneda_precio,
+                                erp_monto,
+                                cunidad,
+                                ccod_almacen,
+                                nigv
+ */
                 String stsql =
                                 "select top(50) \n" +
                                 "ccod_articulo, \n" +
@@ -112,6 +171,19 @@ public class BDArticulos {
                 ResultSet rs = query.executeQuery();
 
                 while (rs.next()) {
+                    Double precio_productos = rs.getDouble("erp_monto");
+                    String moneda=rs.getString("cmoneda_precio");
+                    if(moneda.trim().equals("S/")){
+                        if(!moneda.trim().equals(ConfiguracionEmpresa.Moneda_Empresa)){
+                            precio_productos=precio_productos / ConfiguracionEmpresa.ValorTipoCambio;
+                        }
+                    }else{
+                        if(!moneda.trim().equals(ConfiguracionEmpresa.Moneda_Empresa)){
+                            precio_productos=precio_productos * ConfiguracionEmpresa.ValorTipoCambio;
+                        }
+                    }
+                   // Log.d(TAG,"cnom_articulo: "+rs.getString("cnom_articulo"));
+                   // Log.d(TAG,"stock: "+rs.getString("stock"));
                     arrayList.add(Arrays.asList(
                             rs.getString("ccod_articulo"),
                             rs.getString("cnom_articulo"),
@@ -126,7 +198,7 @@ public class BDArticulos {
 //                           rs.getString("solapa"),
                             rs.getString("stock"),
                             rs.getString("cunidad"),
-                            rs.getString("erp_monto"),
+                            precio_productos.toString(),
                             rs.getString("cmoneda_precio"),
                             rs.getString("ccod_almacen"),
                             rs.getString("nigv")

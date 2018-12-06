@@ -45,9 +45,8 @@ public class FragSplashScreen extends Fragment {
         View view = inflater.inflate(R.layout.frag_splash_screen, container, false);
         tv_link = view.findViewById(R.id.tv_link);
         myDb = new BDConexionSQLite(getContext());
-        fragment = new FragLogin();
         try {
-
+            fragment = new FragLogin();
             BackGroundTask task = new BackGroundTask();
             task.execute("");
 
@@ -68,6 +67,7 @@ public class FragSplashScreen extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             redDisponible.isLAN();
+
             ComprobarLogin();
             return null;
         }
@@ -89,25 +89,25 @@ public class FragSplashScreen extends Fragment {
 
         bdActivarFunciones.ActualizarFunciones();
         Cursor datos_login = myDb.getDataLogin();
-        isLogin = datos_login.getCount() != 0;
         //endregion
 
         //region Verificar si el usuario ha ingresado previamente obteniendo los datos del SQLITE
-        if (isLogin) {
+        if ( datos_login.getCount()!=0 ) {
             //region Configuración para cuando ya se ha iniciado sesión previamente
             List<String> datos_usuario = new ArrayList();
-            while (datos_login.moveToNext()) {
-                datos_usuario.add(datos_login.getString(1));//Obtener el Codigo_Empresa
-                datos_usuario.add(datos_login.getString(2));//Obtener el Codigo_PuntoVenta
-                datos_usuario.add(datos_login.getString(3));//Obtener el Codigo_Almacen
-                datos_usuario.add(datos_login.getString(4));//Obtener el Codigo_Usuario
-                datos_usuario.add(datos_login.getString(5));//Obtener el Codigo_CentroCostos
-                datos_usuario.add(datos_login.getString(6));//Obtener el Codigo_UnidadNegocio
-                datos_usuario.add(datos_login.getString(7));//Obtener el Tipo_Moneda
-                datos_usuario.add(datos_login.getString(8));//Obtener la direccion del almacen
-                datos_usuario.add(datos_login.getString(9));//Obtener el Nombre del Vendedor
-                datos_usuario.add(datos_login.getString(10));//Obtener el Celular del Vendedor
-                datos_usuario.add(datos_login.getString(11));//Obtener el email del Vendedor
+                while (datos_login.moveToNext()) {
+                    datos_usuario.add(datos_login.getString(1));//Obtener el Codigo_Empresa
+                    datos_usuario.add(datos_login.getString(2));//Obtener el Codigo_PuntoVenta
+                    datos_usuario.add(datos_login.getString(3));//Obtener el Codigo_Almacen
+                    datos_usuario.add(datos_login.getString(4));//Obtener el Codigo_Usuario
+                    datos_usuario.add(datos_login.getString(5));//Obtener el Codigo_CentroCostos
+                    datos_usuario.add(datos_login.getString(6));//Obtener el Codigo_UnidadNegocio
+                    datos_usuario.add(datos_login.getString(7));//Obtener el Tipo_Moneda
+                    datos_usuario.add(datos_login.getString(8));//Obtener la direccion del almacen
+                    datos_usuario.add(datos_login.getString(9));//Obtener el Nombre del Vendedor
+                    datos_usuario.add(datos_login.getString(10));//Obtener el Celular del Vendedor
+                    datos_usuario.add(datos_login.getString(11));//Obtener el email del Vendedor
+                    datos_usuario.add(datos_login.getString(12));//Obtener el ruc de la empresa
             }
             ConfiguracionEmpresa.Codigo_Empresa = datos_usuario.get(0);   //Guardar el Codigo_Empresa en CodigosGenerales
             DatosUsuario.Codigo_PuntoVenta = datos_usuario.get(1);   //Guardar el Codigo_PuntoVenta en CodigosGenerales
@@ -120,14 +120,12 @@ public class FragSplashScreen extends Fragment {
             DatosUsuario.Nombre_Vendedor = datos_usuario.get(8);   //Guardar el Nombre del Vendedor
             DatosUsuario.Celular_Vendedor = datos_usuario.get(9);   //Guardar el Celular del Vendedor
             DatosUsuario.email_Vendedor = datos_usuario.get(10);   //Guardar el email del Vendedor
+            ConfiguracionEmpresa.RUC_Empresa = datos_usuario.get(11);   //Obtener el ruc de la empresa
             Log.d(TAG, "Codigo_Empresa " + ConfiguracionEmpresa.Codigo_Empresa);
             dataEmpresa.CargarDatosEmpresa();
             //endregion
             Log.d(TAG, "datos_usuario - " + datos_usuario.get(0));
-
             fragment = new FragMenuPrincipal();
-        } else {
-            dataEmpresa.getList("");
         }
         datos_login.close();        //Cerrar el cursor para liberar el sqlite
     }

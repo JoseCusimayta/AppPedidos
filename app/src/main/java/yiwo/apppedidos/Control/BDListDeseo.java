@@ -425,4 +425,46 @@ public class BDListDeseo {
         }
         return false;
     }
+
+
+
+
+    public List<String> getResumen() {
+
+        Log.d(TAG,"Inicio...");
+        List<String> array = new ArrayList<>();
+
+        try {
+            Connection connection = bdata.getConnection();
+            String stsql;
+            if (!ConfiguracionEmpresa.isIncluidoIGV) {
+                 stsql="select COUNT(*) as lineas, SUM(ncantidad) as  cantidad ,SUM(ncantidad*precio_unitario*(100+((((100 - descuento_1) * (100 - descuento_2) * (100 - descuento_3) * (100 - descuento_4))/1000000) - 100))/100) as total from HListDeseo2 where ccod_empresa = ? and erp_coduser = ? and ccod_ptovta = ? and ccod_almacen = ?";
+            }else {
+                 stsql="select COUNT(*) as lineas, SUM(ncantidad) as  cantidad ,SUM((ncantidad*precio_unitario*(100+((((100 - descuento_1) * (100 - descuento_2) * (100 - descuento_3) * (100 - descuento_4))/1000000) - 100))/100)*(1+IGV/100)) as total from HListDeseo2 where ccod_empresa = ? and erp_coduser = ? and ccod_ptovta = ? and ccod_almacen = ?";
+
+            }
+
+            PreparedStatement query = connection.prepareStatement(stsql);
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
+            query.setString(2, DatosUsuario.Codigo_Usuario); // Codigo del Usuario
+            query.setString(3, DatosUsuario.Codigo_PuntoVenta); //
+            query.setString(4, DatosUsuario.Codigo_Almacen); //
+            Log.d(TAG," .Codigo_Usuario. "+ DatosUsuario.Codigo_Usuario+" .Codigo_PuntoVenta. "+DatosUsuario.Codigo_PuntoVenta+" .Codigo_Almacen. "+DatosUsuario.Codigo_Almacen);
+            ResultSet rs = query.executeQuery();
+            while (rs.next()) {
+                array.add(rs.getString("lineas"));
+                array.add(rs.getString("cantidad"));
+                array.add(rs.getString("total"));
+                Log.d(TAG,"Lineas "+rs.getString("lineas"));
+                Log.d(TAG,"cantidad "+rs.getString("cantidad"));
+                Log.d(TAG,"total "+rs.getString("total"));
+            }
+            connection.close();
+        } catch (Exception e) {
+            Log.d(TAG, "- getList: " + e.getMessage());
+        }
+        Log.d(TAG,"Final...");
+        return array;
+    }
+
 }

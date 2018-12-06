@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.Control.BDArticulos;
 import yiwo.apppedidos.Control.BDConceptos;
 import yiwo.apppedidos.Control.BDFamilia;
@@ -113,6 +114,8 @@ public class FragArticulosCardView extends Fragment {
             tv_origenFiltro = getActivity().findViewById(R.id.tv_origenFiltro);
             toolbar = getActivity().findViewById(R.id.toolbar);
             app_barLayout.setVisibility(View.VISIBLE);
+            if (task != null)
+                task.cancel(true);
             task = new BackGroundTask();
             task.execute("");
         } catch (Exception e) {
@@ -126,13 +129,11 @@ public class FragArticulosCardView extends Fragment {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE) {
-                    try {
-                        task = new BackGroundTask();
-                        task.execute("");
-                    } catch (Exception e) {
+                    if (task != null)
                         task.cancel(true);
-                        Log.d(TAG, "et_buscar: " + e.getMessage());
-                    }
+                    task = new BackGroundTask();
+                    task.execute("");
+
                     InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     assert imm != null;
                     imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
@@ -202,6 +203,7 @@ public class FragArticulosCardView extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
+
             if (isFilter)
                 arrayList = BuscarConFiltros();
             else
@@ -300,26 +302,31 @@ public class FragArticulosCardView extends Fragment {
             arrayList = dataArticulos.getList(et_buscar.getText().toString());
             articulosList.clear();
             Log.d(TAG, "ArticulosCardView " + arrayList.get(0).size());
-//                if(arrayList.get(0).size()>5)
             for (int i = 0; i < arrayList.size(); i++) {
                 if (task.isCancelled())
                     break;
-                Double cantidad_productos = CodigosGenerales.tryParseDouble(arrayList.get(i).get(2));
-                Double precio_productos = CodigosGenerales.tryParseDouble(arrayList.get(i).get(4));
-                Double porcentaje_igv = CodigosGenerales.tryParseDouble(arrayList.get(i).get(6));
-//                    Log.d(TAG,"Nombre:"+arrayList.get(i).get(1));
-                Articulos a = new Articulos(
-                        //region registrar los Datos del producto A
-                        arrayList.get(i).get(0),   // codigo
-                        arrayList.get(i).get(1),   // Nombre
-                        CodigosGenerales.RedondearDecimales(cantidad_productos, 2),   // stock
-                        arrayList.get(i).get(3),   // cunidad
-                        CodigosGenerales.RedondearDecimales(precio_productos, 2).replace(",","."),   // precio
-                        arrayList.get(i).get(5),   // moneda
-                        CodigosGenerales.RedondearDecimales(porcentaje_igv, 2)   // nigv
+                if (arrayList.get(i).size() > 7) {
 
-                );
-                articulosList.add(a);
+                    Double precio_productos = CodigosGenerales.tryParseDouble(arrayList.get(i).get(4));
+                    Double porcentaje_igv = CodigosGenerales.tryParseDouble(arrayList.get(i).get(6));
+                    String moneda = arrayList.get(i).get(5);
+
+                    Log.d(TAG, "Nombre:" + arrayList.get(i).get(1));
+                    Log.d(TAG, "Stock:" + arrayList.get(i).get(2));
+                    Articulos a = new Articulos(
+                            //region registrar los Datos del producto A
+                            arrayList.get(i).get(0),   // codigo
+                            arrayList.get(i).get(1),   // Nombre
+                            arrayList.get(i).get(2),   // stock
+                            arrayList.get(i).get(3),   // cunidad
+                            CodigosGenerales.RedondearDecimalesFormateado(precio_productos),   // precio
+                            ConfiguracionEmpresa.Moneda_Empresa,   // moneda
+                            CodigosGenerales.RedondearDecimales(porcentaje_igv)   // nigv
+
+                    );
+                    articulosList.add(a);
+                }
+
             }
         } catch (Exception e) {
             Log.d(TAG, "BuscarSinFiltros: " + e.getMessage());
@@ -348,11 +355,11 @@ public class FragArticulosCardView extends Fragment {
                         //region registrar los Datos del producto A
                         arrayList.get(i).get(0),   // codigo
                         arrayList.get(i).get(1),   // Nombre
-                        CodigosGenerales.RedondearDecimales(cantidad_productos, 2),   // stock
+                        CodigosGenerales.RedondearDecimales(cantidad_productos),   // stock
                         arrayList.get(i).get(3),   // cunidad
-                        CodigosGenerales.RedondearDecimales(precio_productos, 2),   // precio
+                        CodigosGenerales.RedondearDecimales(precio_productos),   // precio
                         arrayList.get(i).get(5),   // moneda
-                        CodigosGenerales.RedondearDecimales(porcentaje_igv, 2)   // nigv
+                        CodigosGenerales.RedondearDecimales(porcentaje_igv)   // nigv
 
                 );
                 articulosList.add(a);

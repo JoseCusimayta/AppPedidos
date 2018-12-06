@@ -153,8 +153,10 @@ nigv
         File directorio = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), nombreDirectorio);
         //Muestro un mensaje en el logcat si no se creo la carpeta por algun motivo
-        if (!directorio.mkdirs())
-            Log.e(TAG, "Error: No se creo el directorio público");
+        Log.e(TAG, ""+directorio.mkdir());
+        directorio.mkdir();
+      //  if (!directorio.mkdir())
+      //      Log.e(TAG, "Error: No se creo el directorio público");
 
         return directorio;
     }
@@ -177,10 +179,11 @@ nigv
     public static File crearCarpetaAlmInterno(){
 
         File directorio = DatosConexiones.myDirectorio;
-
-        if(!directorio.mkdirs()){
-            Log.e(TAG, "Error: No se creo el directorio privado");
-        }
+        Log.e(TAG, ""+directorio.mkdir());
+       // if(!directorio.mkdirs()){
+       //     Log.e(TAG, "Error: No se creo el directorio privado");
+       // }
+        directorio.mkdir();
         return directorio;
     }
 }

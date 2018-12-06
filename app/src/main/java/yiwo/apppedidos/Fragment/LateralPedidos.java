@@ -147,8 +147,8 @@ public class LateralPedidos extends Fragment {
                                     "Codigo de Motivo:\t" + ListPedidos.get(i).get(1) + "-" + ListPedidos.get(i).get(2) + "\n"+
                                     "Cliente:\t" + ListPedidos.get(i).get(4) + "-" + ListPedidos.get(i).get(5) + "\n"+
                                     "Forma de Pago:\t" + ListPedidos.get(i).get(7) + "-" + ListPedidos.get(i).get(8) + "\n"+
-                                    "Importe Total:\t" + ListPedidos.get(i).get(9) + "\n"+
-                                    "IGV:\t" + ListPedidos.get(i).get(10)  + "\n"+
+                                    "Importe Total:\t" +ListPedidos.get(i).get(17)+" "+ ListPedidos.get(i).get(9) + "\n"+
+                                    "IGV:\t" +ListPedidos.get(i).get(17)+" "+  ListPedidos.get(i).get(10)  + "\n"+
                                     "Neto:\t" + ListPedidos.get(i).get(11)  + "\n"+
                                     "Estado:\t" + ListPedidos.get(i).get(13)  + "\n"+
                                     "Observación:\t" + ListPedidos.get(i).get(14) + "\n",
