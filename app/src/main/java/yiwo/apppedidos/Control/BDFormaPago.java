@@ -104,4 +104,52 @@ public class BDFormaPago {
         }
         return arrayList;
     }
+
+    public ArrayList<List<String>> getSmallList( String Codigo_Cliente) {
+
+        ArrayList<List<String>> arrayList = new ArrayList<>();
+
+        try {
+
+            Connection connection = bdata.getConnection();
+
+            String stsql="" +
+                    "select top(3)\n" +
+                    "Hforpag_provee.ccod_forpago as ccod_forpago,\n" +
+                    "cnom_forpago, \n" +
+                    "nro_dias\n" +
+                    "From Hcliente\n" +
+                    "inner join Hforpag_provee on\n" +
+                    "ccod_proveedor=ccod_cliente and\n" +
+                    "Hforpag_provee.ccod_empresa=Hcliente.ccod_empresa and\n" +
+                    "Hforpag_provee.tipo=Hcliente.cgrupo_cliente\n" +
+                    "inner join Hfor_pag on\n" +
+                    "hforpag_provee.ccod_empresa = Hfor_pag.ccod_empresa And    \n" +
+                    "hforpag_provee.ccod_forpago = Hfor_pag.ccod_forpago \n" +
+                    "where \n" +
+                    "Hcliente.ccod_empresa=?\n" +
+                    "and cgrupo_cliente='12'\n" +
+                    "and ccod_cliente=? \n"+
+                    "and Hforpag_provee.ccod_forpago <> '00'";
+
+            PreparedStatement query = connection.prepareStatement(stsql);
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Código de la empresa
+            query.setString(2, Codigo_Cliente);   //Código del Cliente
+
+            ResultSet rs = query.executeQuery();
+
+            while (rs.next()) {
+                arrayList.add(Arrays.asList(
+                        rs.getString("ccod_forpago"),
+                        rs.getString("cnom_forpago"),
+                        rs.getString("nro_dias")//Cantidad de Dias para sumar
+                ));
+            }
+            connection.close();
+
+        } catch (Exception e) {
+            Log.d("BDFormaPago", "- getSmallList: " + e.getMessage());
+        }
+        return arrayList;
+    }
 }

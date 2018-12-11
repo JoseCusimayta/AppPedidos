@@ -25,6 +25,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.Fragment.FragArticulosCardView;
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         b_carrito.setEnabled(true);
+        tagFragment="";
         if (CodigosGenerales.isInicio) {
             new AlertDialog.Builder(this)
                     .setTitle("Salir")
@@ -140,6 +143,7 @@ public class MainActivity extends AppCompatActivity
                 //fragment = new FragList();
                 //CambiarFragment(fragment);
                 if (!tagFragment.equals("nav_catalogo")) {
+                    CodigosGenerales.listArticulos=new ArrayList<>();
                     CodigosGenerales.TipoArray = "Articulos";
                     tagFragment = "nav_catalogo";
                     fragment = new FragArticulosCardView();
@@ -191,6 +195,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
+        tagFragment="";
         Fragment fragment;
         switch (view.getId()) {
             case (R.id.b_carrito):

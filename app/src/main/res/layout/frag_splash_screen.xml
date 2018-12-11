@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/logo_gumisa_coregido" />
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_logo" />
 
     <TextView
         android:id="@+id/textView9"
@@ -20,7 +20,8 @@
         android:layout_above="@+id/imageView4"
         android:layout_centerHorizontal="true"
         android:text="Desarrollado por:  ERP SOLUTIONS"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+        android:textColor="@color/vpi__background_holo_dark" />
 
     <TextView
         android:id="@+id/tv_link"
@@ -31,7 +32,7 @@
         android:autoLink="web"
         android:text="http://erp-solutionsperu.com/"
         android:textAppearance="@style/TextAppearance.AppCompat.Tooltip"
-        android:textColorLink="@color/White" />
+        android:textColorLink="#e2000000" />
 
     <ImageView
         android:id="@+id/imageView4"

@@ -72,8 +72,8 @@ public class BDArticulos {
                                 and erp_codigo_concepto = ?
                                 and (
                                 (ccod_articulo like ? or cnom_articulo like ? )
-                                 Busqueda_categoria
-                                 )
+                                Busqueda_categoria
+                                )
                                 group by
                                 ccod_articulo,
                                 cnom_articulo,
@@ -93,9 +93,9 @@ public class BDArticulos {
                                 nigv
  */
                 String stsql =
-                                "select top(50) \n" +
-                                "ccod_articulo, \n" +
-                                "cnom_articulo, \n" +
+                                "select top(50)\n" +
+                                "ccod_articulo,\n" +
+                                "cnom_articulo,\n" +
                                 "cfamilia,\n" +
                                 "ccod_subfamilia,\n" +
                                 "codmarca,\n" +
@@ -109,31 +109,31 @@ public class BDArticulos {
                                 "erp_monto,\n" +
                                 "cunidad,\n" +
                                 "Isnull(( SUM(ERP_STOART) - SUM(ERP_STOCOM)),0) as stock,\n" +
-                                "Harticul.ccod_almacen, \n" +
-                                "nigv \n" +
-                                "from Harticul \n" +
+                                "Harticul.ccod_almacen,\n" +
+                                "nigv\n" +
+                                "from Harticul\n" +
                                 "inner join Hstock\n" +
-                                "on \n" +
+                                "on\n" +
                                 "Harticul.ccod_articulo=HSTOCK.ERP_CODART and\n" +
-                                "Harticul.ccod_empresa=HSTOCK.ERP_CODEMP \n" +
+                                "Harticul.ccod_empresa=HSTOCK.ERP_CODEMP\n" +
                                 "and Harticul.ccod_almacen=HSTOCK.ERP_CODALM\n" +
                                 "inner join Erp_Lista_Precio_Cliente\n" +
                                 "on\n" +
                                 "Harticul.ccod_articulo=Erp_Lista_Precio_Cliente.ERP_CODART and\n" +
-                                "Harticul.ccod_empresa=Erp_Lista_Precio_Cliente.ERP_CODEMP and \n" +
+                                "Harticul.ccod_empresa=Erp_Lista_Precio_Cliente.ERP_CODEMP and\n" +
                                 "Harticul.cunidad=Erp_Lista_Precio_Cliente.erp_unidad\n" +
-                                "where \n" +
-                                "ccod_empresa = ? \n" +
-                                "and ERP_CODPTV = ? \n" +
-                                "and ERP_CODALM = ? \n" +
-                                "and erp_tipo = '12 '\n" +
-                                "and erp_codigo_concepto = ? \n" +
+                                "where\n" +
+                                "ccod_empresa = ?\n" +
+                                "and ERP_CODPTV = ?\n" +
+                                "and ERP_CODALM = ?\n" +
+                                "and erp_tipo = '12' \n" +
+                                "and erp_codigo_concepto = ?\n" +
                                 "and (\n" +
-                                "(ccod_articulo like ? or cnom_articulo like ? ) \n"
-                                + Busqueda_categoria +
-                                " )" +
-                                "group by \n" +
-                                "ccod_articulo, \n" +
+                                "(ccod_articulo like ? or cnom_articulo like ? )\n" +
+                                Busqueda_categoria +
+                                ")\n" +
+                                "group by\n" +
+                                "ccod_articulo,\n" +
                                 "cnom_articulo,\n" +
                                 "cfamilia,\n" +
                                 "ccod_subfamilia,\n" +
@@ -144,11 +144,11 @@ public class BDArticulos {
                                 "fuelle,\n" +
                                 "azas,\n" +
                                 "solapa,\n" +
-                                "cmoneda_precio, \n" +
-                                "erp_monto, \n" +
-                                "cunidad, \n" +
-                                "ccod_almacen, \n" +
-                                "nigv";
+                                "cmoneda_precio,\n" +
+                                "erp_monto,\n" +
+                                "cunidad,\n" +
+                                "ccod_almacen,\n" +
+                                "nigv\n" ;
 //                String stsql = "SELECT TOP(100) * FROM dbo.udf_list_harticul (?,?,?,?) where codigo like ? or Nombre like ?  and cfamilia!='656' and cfamilia!='655' and estado='Activo' order by Nombre";
 
                 PreparedStatement query = connection.prepareStatement(stsql);
@@ -528,4 +528,63 @@ public class BDArticulos {
         return null;
     }
 
+    public List<String> getDescuentos(Connection connection, String Codigo_Producto, String Unidad) {
+
+        Log.d(TAG,"Codigo_Empresa "+ ConfiguracionEmpresa.Codigo_Empresa);
+        Log.d(TAG,"Codigo_Producto "+ Codigo_Producto);
+        List<String> arrayList = new ArrayList<>();
+        try {
+            String stsql = " select \n" +
+                    "erp_desc1,\n" +
+                    "erp_desc2,\n" +
+                    "erp_desc3,\n" +
+                    "erp_desc4 \n" +
+                    "from \n" +
+                    "Erp_Lista_Precio_Cliente\n" +
+                    " where \n" +
+                    " erp_codemp = ?\n" +
+                    " and erp_tipo = '12'\n" +
+                    " and erp_unidad = ?\n" +
+                    " and erp_codigo_concepto = ?\n" +
+                    " and erp_codart = ?";
+
+            PreparedStatement query = connection.prepareStatement(stsql);
+            query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de Empresa
+            query.setString(2, Unidad); // Codigo de Producto
+            query.setString(3, DatosCliente.Codigo_ListaPrecios); // Codigo de Producto
+            query.setString(4, Codigo_Producto); // Codigo de Producto
+
+            ResultSet rs = query.executeQuery();
+            while (rs.next()) {
+                String desc01, desc02, desc03, desc04;
+                desc01 = rs.getString("erp_desc1");
+                desc02 = rs.getString("erp_desc2");
+                desc03 = rs.getString("erp_desc3");
+                desc04 = rs.getString("erp_desc4");
+                Log.d("Descuento1", "--- " + desc01);
+                if (desc01 == null || desc01.isEmpty()) {
+                    desc01 = "0";
+                }
+                if (desc02 == null || desc02.isEmpty()) {
+                    desc02 = "0";
+                }
+                if (desc03 == null || desc03.isEmpty()) {
+                    desc03 = "0";
+                }
+                if (desc04 == null || desc04.isEmpty()) {
+                    desc04 = "0";
+                }
+
+                arrayList.add(desc01);  //desc01
+                arrayList.add(desc02);  //desc02
+                arrayList.add(desc03);  //desc03
+                arrayList.add(desc04);  //desc04
+            }
+
+            Log.d(TAG, "getPromocionesCantidadIntermedia- " + arrayList);
+        } catch (Exception e) {
+            Log.d(TAG, "- getPromocionesCantidadIntermedia: " + e.getMessage());
+        }
+        return arrayList;
+    }
 }

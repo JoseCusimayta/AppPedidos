@@ -249,6 +249,22 @@ public class BDListDeseo {
         try {
             //Connection connection = bdata.getConnection();
             List<String> promociones = bdPromociones.getPromociones(connection, CodigoArticulo, Cantidad);
+
+            String desc01, desc02, desc03, desc04;
+            desc01=promociones.get(0);
+            desc02=promociones.get(1);
+            desc03=promociones.get(2);
+            desc04=promociones.get(3);
+            Log.d(TAG,"InsertarNuevoArticulo: promociones "+promociones);
+            if(desc01.equals("0") && desc02.equals("0") && desc03.equals("0") && desc04.equals("0"))
+            {
+                List<String> descuentos = bdArticulos.getDescuentos(connection, CodigoArticulo, Unidad);
+                desc01=descuentos.get(0);
+                desc02=descuentos.get(1);
+                desc03=descuentos.get(2);
+                desc04=descuentos.get(3);
+                Log.d(TAG,"InsertarNuevoArticulo: descuentos "+descuentos);
+            }
             String sql = "insert into " + Tabla + " values (" +
                     "?," +      //Código de Empresa
                     "?," +      //Código de Usuario
@@ -279,10 +295,10 @@ public class BDListDeseo {
             insert.setString(9, Cantidad);//Cantidad de artículos
             insert.setString(10, PrecioUnitario);//Precio del articulo
             insert.setString(11, PorcentajeIGV);//IGV del articulo
-            insert.setString(12, promociones.get(0));//Descuento 1
-            insert.setString(13, promociones.get(1));//Descuento 2
-            insert.setString(14, promociones.get(2));//Descuento 3
-            insert.setString(15, promociones.get(3));//Descuento 4
+            insert.setString(12, desc01);//Descuento 1
+            insert.setString(13, desc02);//Descuento 2
+            insert.setString(14, desc03);//Descuento 3
+            insert.setString(15, desc04);//Descuento 4
             insert.setString(16, ListaPrecios);//Lista de Precios
             insert.execute();
             connection.close();

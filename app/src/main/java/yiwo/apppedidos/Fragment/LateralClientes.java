@@ -135,7 +135,15 @@ public class LateralClientes extends Fragment {
                                     arrayList.get(i).get(8),
                                     arrayList.get(i).get(9),
                                     arrayList.get(i).get(10),
-                                    arrayList.get(i).get(11)
+                                    arrayList.get(i).get(11),
+                                    arrayList.get(i).get(12),
+                                    arrayList.get(i).get(13),
+                                    arrayList.get(i).get(14),
+                                    arrayList.get(i).get(15),
+                                    arrayList.get(i).get(16),
+                                    arrayList.get(i).get(17),
+                                    arrayList.get(i).get(18),
+                                    arrayList.get(i).get(19)
                             ));
                 }
             } catch (Exception e) {

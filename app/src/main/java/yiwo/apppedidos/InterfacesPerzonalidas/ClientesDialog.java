@@ -131,7 +131,15 @@ public class ClientesDialog {
                         arrayListDialog.get(i).get(8),
                         arrayListDialog.get(i).get(9),
                         arrayListDialog.get(i).get(10),
-                        arrayListDialog.get(i).get(11)
+                        arrayListDialog.get(i).get(11),
+                        arrayListDialog.get(i).get(12),
+                        arrayListDialog.get(i).get(13),
+                        arrayListDialog.get(i).get(14),
+                        arrayListDialog.get(i).get(15),
+                        arrayListDialog.get(i).get(16),
+                        arrayListDialog.get(i).get(17),
+                        arrayListDialog.get(i).get(18),
+                        arrayListDialog.get(i).get(19)
                 ));
             }
             return null;

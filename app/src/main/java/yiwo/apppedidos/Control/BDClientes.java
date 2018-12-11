@@ -23,39 +23,54 @@ public class BDClientes {
         try {
             Connection connection = bdata.getConnection();
 /*
+SELECT
+TOP (10)
+Hcliente.ccod_cliente,
+cnom_cliente,
+cdireccion,
+cnum_ruc,
+cnum_dni,
+lista_precios,
+Hforpag_provee.ccod_forpago as ccod_forpago,
+cnom_forpago,
+nro_dias,
+ccod_pais,
+nlinea_credito_mn as linea_disponible,
+nombre_comercial,
+ctelefonos,
+Hpercontactocli.ccod_contacto,
+Hpercontactocli.cnom_contacto,
+Hpercontactocli.telefono,
+ce_mail,
+Hvended.ccod_vendedor,
+Hvended.cnom_vendedor,
+Erp_Observacion01
+From Hcliente
+inner join Hforpag_provee on
+ccod_proveedor=ccod_cliente and
+Hforpag_provee.ccod_empresa=Hcliente.ccod_empresa and
+Hforpag_provee.tipo=Hcliente.cgrupo_cliente
+inner join Hfor_pag on
+hforpag_provee.ccod_empresa = Hfor_pag.ccod_empresa And
+hforpag_provee.ccod_forpago = Hfor_pag.ccod_forpago
+left join Hpercontactocli on
+Hcliente.ccod_empresa = Hpercontactocli.ccod_empresa and
+Hcliente.ccod_cliente =Hpercontactocli.ccod_cliente AND
+Hpercontactocli.Erp_Predeterminado='S'
+inner join Hvended on
+Hcliente.ccod_empresa= Hvended.ccod_empresa and
+Hcliente.ccod_vendedor= Hvended.ccod_vendedor
+Where
+Hcliente.ccod_empresa = ?
+and Hcliente.cgrupo_cliente = '12'
+and (Hcliente.ccod_cliente like ? or cnom_cliente like ? )
+and Hforpag_provee.selec = 'S'
+and estado='Activo'
 
-                    ccod_cliente,
-                    cnom_cliente,
-                    cdireccion,
-                    SELECT
-                    cnum_ruc,
-                    cnum_dni,
-                    lista_precios,
-                    Hforpag_provee.ccod_forpago as ccod_forpago,
-                    cnom_forpago,
-                    nro_dias,
-                    ccod_pais,
-                    nlinea_credito_mn as linea_disponible,
-                    nombre_comercial
-                    From Hcliente
-                    inner join Hforpag_provee on
-                    ccod_proveedor=ccod_cliente and
-                    Hforpag_provee.ccod_empresa=Hcliente.ccod_empresa and
-                    Hforpag_provee.tipo=Hcliente.cgrupo_cliente
-                    inner join Hfor_pag on
-                    hforpag_provee.ccod_empresa = Hfor_pag.ccod_empresa And
-                    hforpag_provee.ccod_forpago = Hfor_pag.ccod_forpago
-                    Where
-                    Hcliente.ccod_empresa = ?
-                    And Hcliente.cgrupo_cliente = '12'
-                    and (ccod_cliente like ? or cnom_cliente like ? )
-                    and selec='S'
-                    and estado='Activo'
-                    and estado='Activo'
  */
-            String stsql = "" +
-                    "SELECT TOP (10) \n" +
-                    "ccod_cliente, \n" +
+            String stsql = "SELECT \n" +
+                    "TOP (10) \n" +
+                    "Hcliente.ccod_cliente, \n" +
                     "cnom_cliente, \n" +
                     "cdireccion, \n" +
                     "cnum_ruc, \n" +
@@ -66,7 +81,15 @@ public class BDClientes {
                     "nro_dias, \n" +
                     "ccod_pais,\n" +
                     "nlinea_credito_mn as linea_disponible,\n" +
-                    "nombre_comercial\n" +
+                    "nombre_comercial,\n" +
+                    "ctelefonos,\n" +
+                    "Hpercontactocli.ccod_contacto,\n" +
+                    "Hpercontactocli.cnom_contacto,\n" +
+                    "Hpercontactocli.telefono,\n" +
+                    "ce_mail,\n" +
+                    "Hvended.ccod_vendedor,\n" +
+                    "Hvended.cnom_vendedor,\n" +
+                    "Erp_Observacion01\n" +
                     "From Hcliente\n" +
                     "inner join Hforpag_provee on\n" +
                     "ccod_proveedor=ccod_cliente and\n" +
@@ -75,13 +98,19 @@ public class BDClientes {
                     "inner join Hfor_pag on\n" +
                     "hforpag_provee.ccod_empresa = Hfor_pag.ccod_empresa And    \n" +
                     "hforpag_provee.ccod_forpago = Hfor_pag.ccod_forpago \n" +
+                    "left join Hpercontactocli on\n" +
+                    "Hcliente.ccod_empresa = Hpercontactocli.ccod_empresa and\n" +
+                    "Hcliente.ccod_cliente =Hpercontactocli.ccod_cliente AND\n" +
+                    "Hpercontactocli.Erp_Predeterminado='S'\n" +
+                    "inner join Hvended on \n" +
+                    "Hcliente.ccod_empresa= Hvended.ccod_empresa and\n" +
+                    "Hcliente.ccod_vendedor= Hvended.ccod_vendedor\n" +
                     "Where\n" +
                     "Hcliente.ccod_empresa = ?\n" +
-                    "And Hcliente.cgrupo_cliente = '12' \n" +
-                    "and (ccod_cliente like ? or cnom_cliente like ? )\n" +
-                    "and selec='S' \n"+
-                    "and estado='Activo' \n"+
-                    "and estado='Activo' ";
+                    "and Hcliente.cgrupo_cliente = '12' \n" +
+                    "and (Hcliente.ccod_cliente like ? or cnom_cliente like ? )\n" +
+                    "and Hforpag_provee.selec = 'S' \n" +
+                    "and estado='Activo'" ;
 
             PreparedStatement query = connection.prepareStatement(stsql);
             query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
@@ -107,7 +136,15 @@ public class BDClientes {
                         rs.getString("nro_dias"),
                         rs.getString("ccod_pais"),
                         rs.getString("linea_disponible"),
-                        rs.getString("nombre_comercial")
+                        rs.getString("nombre_comercial"),
+                        rs.getString("ctelefonos"),
+                        rs.getString("ccod_contacto"),
+                        rs.getString("cnom_contacto"),
+                        rs.getString("telefono"),
+                        rs.getString("ce_mail"),
+                        rs.getString("ccod_vendedor"),
+                        rs.getString("cnom_vendedor"),
+                        rs.getString("Erp_Observacion01")
                 ));
             }
             connection.close();
@@ -116,6 +153,7 @@ public class BDClientes {
         }
         return arrayList;
     }
+
 
     public String getLineaUsada(String codigo) {
         String lineaUsada = null;

@@ -8,10 +8,11 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/icono_gumisa"
+        android:icon="@drawable/ic_icono"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/icono_gumisa"
+        android:roundIcon="@drawable/ic_icono"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"

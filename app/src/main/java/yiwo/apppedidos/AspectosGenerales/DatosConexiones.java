@@ -23,16 +23,16 @@ public class DatosConexiones {
 
 
 //    Configuración ERP
-//    private String IP_LAN = "192.168.1.111";
-//    private String IP_Publica = "148.102.21.175";
-//    private String BD_Empresa = "Bd_Consultoria_2015";
-//    private String ServerSQL = "SQLSERVER2008R2";
+    private String IP_LAN = "192.168.1.111";
+    private String IP_Publica = "148.102.21.175";
+    private String BD_Empresa = "Bd_Consultoria_2015";
+    private String ServerSQL = "SQLSERVER2008R2";
 
     //Configuración Gumisa
-    private static String IP_LAN="192.168.0.5";
-    private static String IP_Publica="190.187.39.250";
-    private static String BD_Empresa="BD_Gumisa_2018_08_23";
-    private static String ServerSQL="SQLSERVER2008R2";
+//    private static String IP_LAN="192.168.0.5";
+//    private static String IP_Publica="190.187.39.250";
+//    private static String BD_Empresa="BD_Gumisa_2018_08_23";
+//    private static String ServerSQL="SQLSERVER2008R2";
 
 /*
 RUC Empresa: 20600124782
