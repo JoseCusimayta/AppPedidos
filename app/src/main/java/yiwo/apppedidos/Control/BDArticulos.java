@@ -167,7 +167,7 @@ public class BDArticulos {
                 query.setString(4, DatosCliente.Codigo_ListaPrecios);//erp_codigo_concepto Lista de precios del cliente
                 query.setString(5, Nombre + "%"); //Codigo del producto
                 query.setString(6, Nombre + "%"); //Nombre del producto
-
+                Log.d(TAG,"Query: "+query.toString());
                 ResultSet rs = query.executeQuery();
 
                 while (rs.next()) {

@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
+import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 import yiwo.apppedidos.Control.BDListDeseo;
 
@@ -37,7 +38,8 @@ public class DataListaDeseo {
     public void setResumen(TextView cantidad, TextView importe_total) {
         List<String> resumen = bdListDeseo.getResumen();
         if (resumen != null) {
-            importe_total.setText("Total: " +  CodigosGenerales.RedondearDecimalesFormateado (resumen.get(2)));
+            Log.d(TAG,"Resumen get 2 "+resumen.get(2));
+            importe_total.setText("Total: " +  CodigosGenerales.RedondearDecimalesFormateado ( CodigosGenerales.tryParseDouble(resumen.get(2))* ConfiguracionEmpresa.TipoCambioDeseos));
             cantidad.setText("Filas: " + resumen.get(0) + " \n Can: " + CodigosGenerales.RedondearDecimalesFormateado (resumen.get(1)));
         }
     }

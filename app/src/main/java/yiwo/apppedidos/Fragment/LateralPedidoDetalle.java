@@ -40,6 +40,7 @@ public class LateralPedidoDetalle extends Fragment {
     CustomAdapterListaDeseos adapter_listaDeseos;
     String TAG="";
     BackGroundTask task;
+
     public LateralPedidoDetalle() {
         // Required empty public constructor
     }
@@ -102,6 +103,11 @@ public class LateralPedidoDetalle extends Fragment {
                     Double descuento_2 = Double.parseDouble(listaDeseos.get(i).get(8));
                     Double descuento_3 = Double.parseDouble(listaDeseos.get(i).get(9));
                     Double descuento_4 = Double.parseDouble(listaDeseos.get(i).get(10));
+
+                    Double base_imp = Double.parseDouble(listaDeseos.get(i).get(11));
+                    Double base_calculada = Double.parseDouble(listaDeseos.get(i).get(12));
+                    Double nimporte = Double.parseDouble(listaDeseos.get(i).get(13));
+
                     //String LP = listaDeseos.get(i).get(11);
                     Double BaseCalculada, BaseImponible, Descuento_Unico, MontoIGV, ImporteTotal, MontoADescontar;
 
@@ -123,7 +129,7 @@ public class LateralPedidoDetalle extends Fragment {
                                     nitem,
                                     ccod_articulo,
                                     nom_articulo,
-                                    ConfiguracionEmpresa.Moneda_Trabajo,
+                                    ConfiguracionEmpresa.Moneda_Pedidos,
                                     precio_unitario.toString(),
                                     ncantidad.toString(),
                                     cunidad,
@@ -131,11 +137,11 @@ public class LateralPedidoDetalle extends Fragment {
                                     descuento_2.toString(),
                                     descuento_3.toString(),
                                     descuento_4.toString(),
-                                    CodigosGenerales.RedondearDecimales(BaseImponible),
-                                    CodigosGenerales.RedondearDecimales(BaseCalculada),
-                                    CodigosGenerales.RedondearDecimales(MontoIGV),
-                                    CodigosGenerales.RedondearDecimales(ImporteTotal),
-                                    CodigosGenerales.RedondearDecimales(MontoADescontar)
+                                    CodigosGenerales.RedondearDecimalesFormateado(base_imp),
+                                    CodigosGenerales.RedondearDecimalesFormateado(base_calculada),
+                                    CodigosGenerales.RedondearDecimalesFormateado(MontoIGV),
+                                    CodigosGenerales.RedondearDecimalesFormateado(nimporte),
+                                    CodigosGenerales.RedondearDecimalesFormateado(MontoADescontar)
 
                             ));
                 }

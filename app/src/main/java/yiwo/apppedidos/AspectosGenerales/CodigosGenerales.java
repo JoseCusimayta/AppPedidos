@@ -156,12 +156,12 @@ public static String RedondearDecimales(Double Monto) {
     return String.format("%." + ConfiguracionEmpresa.Decimales_Empresa + "f", Monto);
 }
     public static String RedondearDecimalesFormateado(Double Monto) {
-        NumberFormat nformat = new DecimalFormat("##,###,###.##");
+        NumberFormat nformat = new DecimalFormat("##,###,###.00");
         return nformat.format(Monto).trim();
     }
     public static String RedondearDecimalesFormateado(String Monto) {
         Double monto= tryParseDouble(Monto);
-        NumberFormat nformat = new DecimalFormat("##,###,###.##");
+        NumberFormat nformat = new DecimalFormat("##,###,###.00");
         return nformat.format(monto).trim();
     }
 

@@ -14,6 +14,7 @@ public class ConfiguracionEmpresa {
     public static String RUC_Empresa;
     public static String Moneda_Trabajo;
     public static String Moneda_Empresa;
+    public static String Moneda_Pedidos;
     public static String Codigo_Motivo;
     public static String Nombre_Motivo;
     public static String CodigoTipoCambio;
@@ -28,4 +29,5 @@ public class ConfiguracionEmpresa {
 
     public static Integer Decimales_Empresa=2;
 
+    public static Double TipoCambioDeseos=1.0;
 }

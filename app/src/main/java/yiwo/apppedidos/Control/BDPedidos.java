@@ -42,7 +42,7 @@ public class BDPedidos {
                     " Hpedidoc.erp_Dimporte  Importe, \n" +
                     " Hpedidoc.erp_Digv  IGV, \n" +
                     " Hpedidoc.erp_Dtotal  Total, \n" +
-                    " Hpedidoc.dfecha_doc Fecha_Emision, \n" +
+                    " Convert(date,Hpedidoc.dfecha_doc) Fecha_Emision, \n" +
                     " Hpedidoc.aprobado Estado, \n" +
                     " Hpedidoc.observacion Observacion, \n" +
                     " Hpedidoc.Usuario Usuario_Vendedor, \n" +
@@ -174,7 +174,10 @@ public class BDPedidos {
                     "desc2, " +
                     "desc3, " +
                     "erp_desc4, " +
-                    "erp_lpn " +
+                    "erp_lpn,\n" +
+                    "base_imp,\n" +
+                    "base_calculada,\n" +
+                    "nimporte \n" +
                     "from Hpedidod where cnum_doc =? and idmotivo_venta =? and ccod_empresa =? and  ccod_almacen =?";
         /*    Log.d("Cod_Pedido", Cod_Pedido);
             Log.d("Cod_Motivo",Cod_Motivo);
@@ -201,7 +204,10 @@ public class BDPedidos {
                         rs.getString("desc2"),
                         rs.getString("desc3"),
                         rs.getString("erp_desc4"),
-                        rs.getString("erp_lpn")
+                        rs.getString("erp_lpn"),
+                        rs.getString("base_imp"),
+                        rs.getString("base_calculada"),
+                        rs.getString("nimporte")
                 ));
 
             }
@@ -352,9 +358,12 @@ public class BDPedidos {
                 String ccod_articulo = listaDeseos.get(i).get(1);
                 String nom_articulo = listaDeseos.get(i).get(2);
                 String cunidad = listaDeseos.get(i).get(3);
+
                 Double ncantidad = Double.parseDouble(listaDeseos.get(i).get(4));
-                Double precio_unitario = Double.parseDouble(listaDeseos.get(i).get(5));
+
+                Double precio_unitario = Double.parseDouble(listaDeseos.get(i).get(5))*TipCambio;
                 Double IGV_Articulo = Double.parseDouble(listaDeseos.get(i).get(6));
+
                 Double descuento_1 = Double.parseDouble(listaDeseos.get(i).get(7));
                 Double descuento_2 = Double.parseDouble(listaDeseos.get(i).get(8));
                 Double descuento_3 = Double.parseDouble(listaDeseos.get(i).get(9));

@@ -25,7 +25,6 @@ public class CustomAdapterListaDeseos extends ArrayAdapter<CustomDataModelListaD
     ArrayList<CustomDataModelListaDeseos> data;
     Context context;
 
-
     // View lookup cache
         private static class ViewHolder {
 
@@ -107,7 +106,8 @@ public class CustomAdapterListaDeseos extends ArrayAdapter<CustomDataModelListaD
         viewHolder.Nombre_Producto.setText(dataModel.getNombre_Producto());
         viewHolder.Tipo_moneda.setText(dataModel.getTipo_moneda());
         viewHolder.Precio_Unitario.setText(dataModel.getPrecio_Unitario().replace(",","."));
-        viewHolder.Cantidad.setText(dataModel.getCantidad());
+        //viewHolder.Precio_Unitario.setText(dataModel.getPrecio_Unitario().replace(",","."));
+        viewHolder.Cantidad.setText(CodigosGenerales.RedondearDecimalesFormateado(dataModel.getCantidad()));
         viewHolder.Tipo_Unidad.setText(dataModel.getTipo_Unidad());
         viewHolder.Descuento_1.setText(dataModel.getDescuento_1().replace(",","."));
         viewHolder.Descuento_2.setText(dataModel.getDescuento_2().replace(",","."));
@@ -115,7 +115,7 @@ public class CustomAdapterListaDeseos extends ArrayAdapter<CustomDataModelListaD
         viewHolder.Descuento_4.setText(dataModel.getDescuento_4().replace(",","."));
         viewHolder.Base_Imponible.setText(dataModel.getBase_Imponible().replace(",","."));
         //viewHolder.Base_Calculada.setText(CodigosGenerales.RedondearDecimalesFormateado(dataModel.getBase_Calculada()));
-        viewHolder.Base_Calculada.setText(dataModel.getBase_Calculada());
+        viewHolder.Base_Calculada.setText(dataModel.getTipo_moneda()+dataModel.getBase_Calculada());
         viewHolder.IGV.setText(dataModel.getIGV().replace(",","."));
         viewHolder.Importe.setText(dataModel.getImporte().replace(",","."));
 

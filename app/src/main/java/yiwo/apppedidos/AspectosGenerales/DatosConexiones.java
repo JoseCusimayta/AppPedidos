@@ -34,6 +34,12 @@ public class DatosConexiones {
 //    private static String BD_Empresa="BD_Gumisa_2018_08_23";
 //    private static String ServerSQL="SQLSERVER2008R2";
 
+    //Configuración Solu Servicios
+//    private static String IP_LAN="192.168.8.108";
+//    private static String IP_Publica="132.184.66.116";
+//    private static String BD_Empresa="Bd_TheSoluservicios";
+//    private static String ServerSQL="sqlserver2008r2";
+
 /*
 RUC Empresa: 20600124782
 TLF Señor Pun: 962341227

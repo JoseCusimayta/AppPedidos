@@ -87,7 +87,29 @@ public class BDUsuario {
         try {
                 String ClaveEncriptada = getClaveEncriptada(Clave);
                 Connection connection = bdata.getConnection();
-
+/*
+Select
+Hempresa.ccod_empresa as codigo_empresa,
+Hempresa.cnum_ruc as ruc,
+Hempresa.crazonsocial as razon_social,
+Hvended.cnom_vendedor as nombre_vendedor,
+Hvended.celular as celular,
+Hvended.email as email,
+erp_usuario.erp_coduser as codigo_usuario,
+erp_usuario.erp_nomuser as nombre_usuario,
+erp_usuario.erp_password as clave,
+erp_usuario.erp_estado as estado
+From Hempresa
+Inner Join erp_usuario On
+Hempresa.ccod_empresa = erp_usuario.erp_codemp
+Inner Join Hvended On
+erp_usuario.erp_codemp = Hvended.ccod_empresa
+and erp_usuario.erp_coduser = Hvended.ccod_vendedor
+and Hempresa.ccod_empresa = ?
+and erp_usuario.erp_coduser = ?
+and erp_usuario.erp_password = ?
+and erp_usuario.erp_estado = 'A'
+ */
                 String stsql =
                         "Select \n" +
                                 "Hempresa.ccod_empresa as codigo_empresa, \n" +

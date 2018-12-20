@@ -72,7 +72,7 @@ public class CustomAdapterNumerado  extends ArrayAdapter<CustomDataModel> {
         // Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
         // result.startAnimation(animation);
         lastPosition = position;
-
+        Log.d("TAG","DatoInvisible"+dataModel.getDato_invisible());
         if(dataModel.getDato_invisible()=="1")
             viewHolder.tv_info2.setVisibility(View.GONE);
         else

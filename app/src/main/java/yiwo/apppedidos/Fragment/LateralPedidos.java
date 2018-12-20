@@ -147,12 +147,12 @@ public class LateralPedidos extends Fragment {
                                     "Codigo de Motivo:\t" + ListPedidos.get(i).get(1) + "-" + ListPedidos.get(i).get(2) + "\n"+
                                     "Cliente:\t" + ListPedidos.get(i).get(4) + "-" + ListPedidos.get(i).get(5) + "\n"+
                                     "Forma de Pago:\t" + ListPedidos.get(i).get(7) + "-" + ListPedidos.get(i).get(8) + "\n"+
-                                    "Importe Total:\t" +ListPedidos.get(i).get(17)+" "+ ListPedidos.get(i).get(9) + "\n"+
-                                    "IGV:\t" +ListPedidos.get(i).get(17)+" "+  ListPedidos.get(i).get(10)  + "\n"+
-                                    "Neto:\t" + ListPedidos.get(i).get(11)  + "\n"+
+                                    "Importe Total:\t" +ListPedidos.get(i).get(17)+" "+ CodigosGenerales.RedondearDecimalesFormateado(ListPedidos.get(i).get(9)) + "\n"+
+                                    "IGV:\t" +ListPedidos.get(i).get(17)+" "+ CodigosGenerales.RedondearDecimalesFormateado( ListPedidos.get(i).get(10))  + "\n"+
+                                    //"Neto:\t" + ListPedidos.get(i).get(17)+" "+CodigosGenerales.RedondearDecimalesFormateado(ListPedidos.get(i).get(11))  + "\n"+
                                     "Estado:\t" + ListPedidos.get(i).get(13)  + "\n"+
                                     "Observación:\t" + ListPedidos.get(i).get(14) + "\n",
-                            "2",
+                            ListPedidos.get(i).get(17),
                             ListPedidos.get(i).get(3),
                             ListPedidos.get(i).get(1),
                             "1"
@@ -182,6 +182,7 @@ public class LateralPedidos extends Fragment {
                         CodigosGenerales.Codigo_Pedido = dataModel.getListaPrecios();
                         ConfiguracionEmpresa.Codigo_Motivo = dataModel.getDni();
 //                    CodigosGenerales.Cod_Articulo = ListPedidos.get(position).get(0);
+                        ConfiguracionEmpresa.Moneda_Pedidos=dataModel.getDireccion();
                         Fragment fragment = new LateralPedidoDetalle();
                         CambiarFragment(fragment);
                         // Toast.makeText(getContext(), "Elemento seleccionado: " + position, Toast.LENGTH_SHORT).show();
