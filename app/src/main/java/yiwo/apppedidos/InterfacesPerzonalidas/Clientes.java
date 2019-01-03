@@ -43,7 +43,10 @@ public class Clientes {
     }
 
     public String getListaPrecios_Cliente() {
-        return ListaPrecios_Cliente;
+        if(ListaPrecios_Cliente==null || ListaPrecios_Cliente.trim().isEmpty())
+            return  "01";
+        else
+            return ListaPrecios_Cliente;
     }
 
     public String getCodigo_FormaPago() {
@@ -75,19 +78,31 @@ public class Clientes {
     }
 
     public String getContacto_codigo() {
+        if (contacto_codigo == null)
+            return "";
+        else
         return contacto_codigo;
     }
 
     public String getContacto_nombre() {
+        if (contacto_nombre == null)
+            return "";
+        else
         return contacto_nombre;
     }
 
     public String getContacto_telefono() {
+        if (contacto_telefono == null)
+            return "";
+        else
         return contacto_telefono;
     }
 
     public String getCliente_correo() {
-        return cliente_correo;
+        if (cliente_correo == null)
+            return "";
+        else
+            return cliente_correo;
     }
 
     public String getVendedor_codigo() {
@@ -124,5 +139,31 @@ public class Clientes {
         this.vendedor_codigo = vendedor_codigo;
         this.vendedor_nombre = vendedor_nombre;
         this.observacion = observacion;
+    }
+
+    @Override
+    public String toString() {
+        return "Clientes{" +
+                "Codigo_Cliente='" + Codigo_Cliente + '\'' +
+                ", Nombre_Cliente='" + Nombre_Cliente + '\'' +
+                ", Direccion_Cliente='" + Direccion_Cliente + '\'' +
+                ", Ruc_Cliente='" + Ruc_Cliente + '\'' +
+                ", DNI_Cliente='" + DNI_Cliente + '\'' +
+                ", ListaPrecios_Cliente='" + ListaPrecios_Cliente + '\'' +
+                ", Codigo_FormaPago='" + Codigo_FormaPago + '\'' +
+                ", Nombre_FormaPago='" + Nombre_FormaPago + '\'' +
+                ", Dias_FormaPago='" + Dias_FormaPago + '\'' +
+                ", Codigo_Pais='" + Codigo_Pais + '\'' +
+                ", linea_disponible='" + linea_disponible + '\'' +
+                ", nombre_comercial='" + nombre_comercial + '\'' +
+                ", cliente_telefonos='" + cliente_telefonos + '\'' +
+                ", contacto_codigo='" + contacto_codigo + '\'' +
+                ", contacto_nombre='" + contacto_nombre + '\'' +
+                ", contacto_telefono='" + contacto_telefono + '\'' +
+                ", cliente_correo='" + cliente_correo + '\'' +
+                ", vendedor_codigo='" + vendedor_codigo + '\'' +
+                ", vendedor_nombre='" + vendedor_nombre + '\'' +
+                ", observacion='" + observacion + '\'' +
+                '}';
     }
 }

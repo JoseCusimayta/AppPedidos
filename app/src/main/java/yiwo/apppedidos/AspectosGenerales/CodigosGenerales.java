@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import yiwo.apppedidos.Control.BDArticulos;
 import yiwo.apppedidos.Control.BDCentroCostos;
@@ -250,5 +252,10 @@ public static String RedondearDecimales(Double Monto) {
         importe_total.setText("Total: "+  RedondearDecimalesFormateado(ImporteTotal));
         cantidad.setText("Filas: "+CantidadFilas +" \n Can: "+ RedondearDecimalesFormateado(CantidadItems));
 
+    }
+
+    public static boolean validarEmail(String email) {
+        Pattern pattern = Patterns.EMAIL_ADDRESS;
+        return pattern.matcher(email).matches();
     }
 }

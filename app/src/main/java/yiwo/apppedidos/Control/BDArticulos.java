@@ -153,21 +153,21 @@ public class BDArticulos {
 
                 PreparedStatement query = connection.prepareStatement(stsql);
 
-                Log.d(TAG, "Codigo_Empresa: " + ConfiguracionEmpresa.Codigo_Empresa);
-                Log.d(TAG, "Codigo_PuntoVenta: " + DatosUsuario.Codigo_PuntoVenta);
-                Log.d(TAG, "Codigo_Almacen: " + DatosUsuario.Codigo_Almacen);
-                Log.d(TAG, "Lista_Precio: " + DatosCliente.Codigo_ListaPrecios);
+               // Log.d(TAG, "Codigo_Empresa: " + ConfiguracionEmpresa.Codigo_Empresa);
+//                Log.d(TAG, "Codigo_PuntoVenta: " + DatosUsuario.Codigo_PuntoVenta);
+//                Log.d(TAG, "Codigo_Almacen: " + DatosUsuario.Codigo_Almacen);
+//                Log.d(TAG, "Lista_Precio: " + DatosCliente.Codigo_ListaPrecios);
                 if(DatosCliente.Codigo_ListaPrecios==null || DatosCliente.Codigo_ListaPrecios.isEmpty()){
                     DatosCliente.Codigo_ListaPrecios="01";
                 }
-                Log.d(TAG, "Nombre: " + Nombre);
+//                Log.d(TAG, "Nombre: " + Nombre);
                 query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
                 query.setString(2, DatosUsuario.Codigo_PuntoVenta);//ERP_CODPTV Punto de Venta
                 query.setString(3, DatosUsuario.Codigo_Almacen);//ERP_CODALM Almacen
                 query.setString(4, DatosCliente.Codigo_ListaPrecios);//erp_codigo_concepto Lista de precios del cliente
                 query.setString(5, Nombre + "%"); //Codigo del producto
                 query.setString(6, Nombre + "%"); //Nombre del producto
-                Log.d(TAG,"Query: "+query.toString());
+//                Log.d(TAG,"Query: "+query.toString());
                 ResultSet rs = query.executeQuery();
 
                 while (rs.next()) {
@@ -383,9 +383,9 @@ public class BDArticulos {
 
     public ArrayList<List<String>> getList(String Nombre) {
         String Codigo = CodigosGenerales.Codigo_Categoria;
-        Log.d(TAG, "TipoArray " + CodigosGenerales.TipoArray);
-        Log.d(TAG, "Codigo_Categoria " + CodigosGenerales.Codigo_Categoria);
-        Log.d(TAG, "Nombre_Categoria " + CodigosGenerales.Nombre_Categoria);
+        //Log.d(TAG, "TipoArray " + CodigosGenerales.TipoArray);
+        //Log.d(TAG, "Codigo_Categoria " + CodigosGenerales.Codigo_Categoria);
+       // Log.d(TAG, "Nombre_Categoria " + CodigosGenerales.Nombre_Categoria);
         if (Codigo != null)
             Codigo = Codigo.replace("'", "''");
         switch (CodigosGenerales.TipoArray) {

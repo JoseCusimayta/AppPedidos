@@ -99,15 +99,16 @@ erp_usuario.erp_coduser as codigo_usuario,
 erp_usuario.erp_nomuser as nombre_usuario,
 erp_usuario.erp_password as clave,
 erp_usuario.erp_estado as estado
+,Hvended.ccod_vendedor as codigo_vendedo
 From Hempresa
 Inner Join erp_usuario On
 Hempresa.ccod_empresa = erp_usuario.erp_codemp
 Inner Join Hvended On
 erp_usuario.erp_codemp = Hvended.ccod_empresa
 and erp_usuario.erp_coduser = Hvended.ccod_vendedor
-and Hempresa.ccod_empresa = ?
-and erp_usuario.erp_coduser = ?
-and erp_usuario.erp_password = ?
+and Hempresa.ccod_empresa =
+and erp_usuario.erp_coduser =
+and erp_usuario.erp_password =
 and erp_usuario.erp_estado = 'A'
  */
                 String stsql =
@@ -122,6 +123,7 @@ and erp_usuario.erp_estado = 'A'
                                 "erp_usuario.erp_nomuser as nombre_usuario, \n" +
                                 "erp_usuario.erp_password as clave, \n" +
                                 "erp_usuario.erp_estado as estado    \n" +
+                                ",Hvended.ccod_vendedor as codigo_vendedor\n"+
                                 "From Hempresa    \n" +
                                 "Inner Join erp_usuario On     \n" +
                                 "Hempresa.ccod_empresa = erp_usuario.erp_codemp     \n" +
@@ -137,7 +139,7 @@ and erp_usuario.erp_estado = 'A'
                 query.setString(1, ConfiguracionEmpresa.Codigo_Empresa);
                 query.setString(2, Usuario);
                 query.setString(3, ClaveEncriptada);
-
+            Log.d("Clave","Enctripdata :"+ClaveEncriptada);
                 ResultSet rs = query.executeQuery();
                 while (rs.next()) {
                     list.add( rs.getString("nombre_vendedor"));
@@ -145,6 +147,7 @@ and erp_usuario.erp_estado = 'A'
                     list.add( rs.getString("email"));
                     list.add( rs.getString("codigo_usuario"));
                     list.add( rs.getString("nombre_usuario"));
+                    list.add( rs.getString("codigo_vendedor"));
                 }
                 connection.close();
 

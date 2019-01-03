@@ -34,13 +34,7 @@ public class CustomDialog2Datos {
 
     private String Nombre;
     public interface FinalizoCuadroDialogo2Datos {
-        void ResultadoCuadroDialogo2Datos(String cod
-                , String name
-                , String ruc
-                , String direccion
-                , String listaPrecios
-                , String dni
-                , String dato_invisible);
+        void ResultadoCuadroDialogo2Datos(String cod, String name, String ruc, String direccion, String listaPrecios, String dni, String dato_invisible);
 
     }
 
@@ -169,7 +163,8 @@ public class CustomDialog2Datos {
                                 dataModel.getDireccion(),
                                 dataModel.getListaPrecios(),
                                 dataModel.getDni(),
-                                dataModel.getDato_invisible());
+                                dataModel.getDato_invisible()
+                                );
                         dialogo.dismiss();
                     }
                 });

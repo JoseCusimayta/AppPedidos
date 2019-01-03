@@ -194,27 +194,28 @@ public class FragArticulosCardView extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            Log.d(TAG, "BackGroundTask iniciando");
             progressBar.setVisibility(View.VISIBLE);
             articulosList.clear();
             adapter.notifyDataSetChanged();
-            Log.d(TAG, "BackGroundTask iniciando");
             super.onPreExecute();
         }
 
         @Override
         protected String doInBackground(String... strings) {
 
+            Log.d(TAG, "BackGroundTask ejecutando");
             if (isFilter)
                 arrayList = BuscarConFiltros();
             else
                 arrayList = BuscarSinFiltros();
 
-            Log.d(TAG, "BackGroundTask ejecutando");
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
+            Log.d(TAG, "BackGroundTask terminando");
             try {
                 progressBar.setVisibility(View.GONE);
                 adapter.notifyDataSetChanged();
@@ -225,7 +226,6 @@ public class FragArticulosCardView extends Fragment {
                 Log.d(TAG, "onPostExecute: " + e.getMessage());
             }
 
-            Log.d(TAG, "BackGroundTask terminando");
             super.onPostExecute(s);
         }
 
@@ -311,8 +311,8 @@ public class FragArticulosCardView extends Fragment {
                     Double porcentaje_igv = CodigosGenerales.tryParseDouble(arrayList.get(i).get(6));
                     String moneda = arrayList.get(i).get(5);
 
-                    Log.d(TAG, "Nombre:" + arrayList.get(i).get(1));
-                    Log.d(TAG, "Stock:" + arrayList.get(i).get(2));
+//                    Log.d(TAG, "Nombre:" + arrayList.get(i).get(1));
+//                    Log.d(TAG, "Stock:" + arrayList.get(i).get(2));
                     Articulos a = new Articulos(
                             //region registrar los Datos del producto A
                             arrayList.get(i).get(0),   // codigo
@@ -342,7 +342,7 @@ public class FragArticulosCardView extends Fragment {
                 return arrayList;
             arrayList = dataArticulos.getArticulosFiltrados(et_buscar.getText().toString(), CriterioFiltro);
             articulosList.clear();
-            Log.d(TAG, "ArticulosCardView " + arrayList.get(0).size());
+          //  Log.d(TAG, "ArticulosCardView " + arrayList.get(0).size());
 //                if(arrayList.get(0).size()>5)
             for (int i = 0; i < arrayList.size(); i++) {
                 if (task.isCancelled())

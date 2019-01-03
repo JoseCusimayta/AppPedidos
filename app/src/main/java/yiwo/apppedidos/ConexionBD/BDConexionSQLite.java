@@ -44,7 +44,8 @@ public class BDConexionSQLite extends SQLiteOpenHelper {
                                  String RUC_Empresa,
                                  String Nombre_PuntoVenta,
                                  String Nombre_CentroCostos,
-                                 String Nombre_UnidadNegocio) {
+                                 String Nombre_UnidadNegocio,
+                                 String Codigo_Vendedor) {
         BDSQLiteTablaInicio.deleteAllData(this);
         return BDSQLiteTablaLogin.insert(
                 Codigo_Empresa,
@@ -59,6 +60,7 @@ public class BDConexionSQLite extends SQLiteOpenHelper {
                 Celular_Vendedor,
                 email_Vendedor,
                 RUC_Empresa,
+                Codigo_Vendedor,
                 this)
                 &&
                 BDSQLiteTablaInicio.insert(

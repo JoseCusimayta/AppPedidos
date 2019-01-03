@@ -17,6 +17,7 @@ public class DatosUsuario {
     public static String Codigo_Almacen;
     public static String Direccion_Almacen;
 
+    public static String Codigo_Vendedor;
     public static String Nombre_Vendedor;
     public static String Celular_Vendedor;
     public static String email_Vendedor;

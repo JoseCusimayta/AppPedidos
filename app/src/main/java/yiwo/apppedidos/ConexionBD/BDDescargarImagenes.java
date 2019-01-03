@@ -296,7 +296,7 @@ public class BDDescargarImagenes {
         try {
             File imgFile;
             Imagen_nombre = ConfiguracionEmpresa.Codigo_Empresa + "_" + Imagen_nombre;
-            Log.d(TAG, "Descargando Imagen: " + Imagen_nombre);
+           // Log.d(TAG, "Descargando Imagen: " + Imagen_nombre);
             imgFile = new File(DatosConexiones.myDirectorio, Imagen_nombre);
             bitmap = BitmapFactory.decodeStream(new FileInputStream(imgFile));
         } catch (FileNotFoundException e) {

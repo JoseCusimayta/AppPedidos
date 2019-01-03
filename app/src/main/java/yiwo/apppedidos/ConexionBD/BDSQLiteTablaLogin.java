@@ -21,6 +21,7 @@ public class BDSQLiteTablaLogin {
     public static final String COL_11 = "Celular_Vendedor";
     public static final String COL_12 = "email_Vendedor";
     public static final String COL_13 = "RUC_Empresa";
+    public static final String COL_14 = "Codigo_vendedor";
 
     public static final String Create="create table " + TABLE_NAME +"" +
             " (" +
@@ -36,7 +37,8 @@ public class BDSQLiteTablaLogin {
             ""+COL_10+" TEXT, " +
             ""+COL_11+" TEXT, " +
             ""+COL_12+" TEXT, " +
-            ""+COL_13+" TEXT" +
+            ""+COL_13+" TEXT, " +
+            ""+COL_14+" TEXT" +
             ")";
     public static final String Drop="DROP TABLE IF EXISTS "+TABLE_NAME;
 
@@ -53,6 +55,7 @@ public class BDSQLiteTablaLogin {
                               String Celular_Vendedor,
                               String email_Vendedor,
                               String RUC_Empresa,
+                              String Codigo_vendedor,
                               SQLiteOpenHelper sqLiteOpenHelper) {
         SQLiteDatabase db = sqLiteOpenHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -68,6 +71,7 @@ public class BDSQLiteTablaLogin {
         contentValues.put(COL_11,Celular_Vendedor);
         contentValues.put(COL_12,email_Vendedor);
         contentValues.put(COL_13,RUC_Empresa);
+        contentValues.put(COL_14,Codigo_vendedor);
         long result = db.insert(TABLE_NAME,null ,contentValues);
         return result != -1;
     }

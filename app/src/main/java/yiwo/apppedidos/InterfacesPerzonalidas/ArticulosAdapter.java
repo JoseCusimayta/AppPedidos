@@ -79,7 +79,7 @@ public class ArticulosAdapter  extends RecyclerView.Adapter<ArticulosAdapter.MyV
             holder.cantidad_articulo.setText(CodigosGenerales.RedondearDecimalesFormateado(CodigosGenerales.tryParseDouble(Articulos.getCantidad_articulo())) + " " + Articulos.getUnidad_articulo().trim());
             holder.precio_articulo.setText(Articulos.getMoneda_articulo().trim() + " " + CodigosGenerales.RedondearDecimalesFormateado(CodigosGenerales.tryParseDouble(Articulos.getPrecio_articulo())));
 
-            Log.d(TAG, "Codigo Producto: " + Articulos.getCodigo_articulo());
+           // Log.d(TAG, "Codigo Producto: " + Articulos.getCodigo_articulo());
             try {
                 Bitmap bitmap = bdDescargarImagenes.getImageFromDirectory(Articulos.getCodigo_articulo() + "_1.jpg");
                 if (bitmap != null) {

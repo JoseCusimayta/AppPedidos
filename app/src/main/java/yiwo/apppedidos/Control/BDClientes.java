@@ -5,12 +5,15 @@ import android.util.Log;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import yiwo.apppedidos.AspectosGenerales.CodigosGenerales;
 import yiwo.apppedidos.AspectosGenerales.ConfiguracionEmpresa;
+import yiwo.apppedidos.AspectosGenerales.DatosCliente;
+import yiwo.apppedidos.AspectosGenerales.DatosUsuario;
 import yiwo.apppedidos.ConexionBD.BDConexionSQL;
 
 public class BDClientes {
@@ -60,12 +63,14 @@ Hpercontactocli.Erp_Predeterminado='S'
 inner join Hvended on
 Hcliente.ccod_empresa= Hvended.ccod_empresa and
 Hcliente.ccod_vendedor= Hvended.ccod_vendedor
+and Hcliente.ccod_vendedor=Hvended.ccod_vendedor
 Where
 Hcliente.ccod_empresa = ?
 and Hcliente.cgrupo_cliente = '12'
 and (Hcliente.ccod_cliente like ? or cnom_cliente like ? )
 and Hforpag_provee.selec = 'S'
 and estado='Activo'
+and Hvended.ccod_vendedor=?
 
  */
             String stsql = "SELECT \n" +
@@ -96,7 +101,7 @@ and estado='Activo'
                     "Hforpag_provee.ccod_empresa=Hcliente.ccod_empresa and\n" +
                     "Hforpag_provee.tipo=Hcliente.cgrupo_cliente\n" +
                     "inner join Hfor_pag on\n" +
-                    "hforpag_provee.ccod_empresa = Hfor_pag.ccod_empresa And    \n" +
+                    "hforpag_provee.ccod_empresa = Hfor_pag.ccod_empresa And\n" +
                     "hforpag_provee.ccod_forpago = Hfor_pag.ccod_forpago \n" +
                     "left join Hpercontactocli on\n" +
                     "Hcliente.ccod_empresa = Hpercontactocli.ccod_empresa and\n" +
@@ -105,23 +110,27 @@ and estado='Activo'
                     "inner join Hvended on \n" +
                     "Hcliente.ccod_empresa= Hvended.ccod_empresa and\n" +
                     "Hcliente.ccod_vendedor= Hvended.ccod_vendedor\n" +
+                    "and Hcliente.ccod_vendedor=Hvended.ccod_vendedor\n" +
                     "Where\n" +
                     "Hcliente.ccod_empresa = ?\n" +
                     "and Hcliente.cgrupo_cliente = '12' \n" +
                     "and (Hcliente.ccod_cliente like ? or cnom_cliente like ? )\n" +
                     "and Hforpag_provee.selec = 'S' \n" +
-                    "and estado='Activo'" ;
+                    "and estado='Activo'\n" +
+                    "and Hvended.ccod_vendedor=?" ;
 
             PreparedStatement query = connection.prepareStatement(stsql);
             query.setString(1, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
             query.setString(2, Nombre + "%"); //Código del Cliente
             query.setString(3, Nombre + "%"); //Código del Cliente
+            query.setString(4, DatosUsuario.Codigo_Vendedor); //Código del Vendedor
 
+            Log.d(TAG,"Codigo_Vendedor: "+DatosUsuario.Codigo_Vendedor);
             ResultSet rs = query.executeQuery();
 
             while (rs.next()) {
                 String listaPrecios=rs.getString("lista_precios");
-                if(listaPrecios.isEmpty() || listaPrecios.trim().equals(""))
+                if(listaPrecios.isEmpty() || listaPrecios==null || listaPrecios.trim().equals(""))
                     listaPrecios="01";
                 Log.d(TAG,"Lista de Precios: "+listaPrecios);
                 arrayList.add(Arrays.asList(
@@ -187,5 +196,41 @@ and estado='Activo'
         }
         Log.d(TAG, "- lineaUsada: " + lineaUsada);
         return lineaUsada;
+    }
+
+    public Boolean actualizarCorreoTelefono(String correo, String telefono) {
+        Boolean resultado=false;
+
+        try {
+            DatosCliente.Cliene_Correo=correo;
+            DatosCliente.Cliente_Telefono=telefono;
+            Connection connection = bdata.getConnection();
+
+            String stsql =
+                    "update hcliente set \n" +
+                            "ctelefonos=?\n" +
+                            ",ce_mail=? \n" +
+                            "where \n" +
+                            "ccod_empresa=? \n" +
+                            "and ccod_cliente=?";
+
+            PreparedStatement query = connection.prepareStatement(stsql);
+            query.setString(1, DatosCliente.Cliente_Telefono); // Codigo de la empresa
+            query.setString(2, DatosCliente.Cliene_Correo); // Codigo de la empresa
+            query.setString(3, ConfiguracionEmpresa.Codigo_Empresa); // Codigo de la empresa
+            query.setString(4, DatosCliente.Codigo_Cliente); // Codigo de la empresa
+            Boolean sdsad= query.execute();
+            Log.d(TAG,"Cliente_Telefono"+DatosCliente.Cliente_Telefono);
+            Log.d(TAG,"Cliene_Correo"+DatosCliente.Cliene_Correo);
+            Log.d(TAG,"Codigo_Empresa"+ConfiguracionEmpresa.Codigo_Empresa);
+            Log.d(TAG,"Codigo_Cliente"+DatosCliente.Codigo_Cliente);
+            Log.d(TAG,"stsql"+stsql);
+
+
+            connection.close();
+        } catch (Exception e) {
+            Log.d(TAG, "- actualizarCorreoTelefono: " + e.getMessage());
+        }
+        return resultado;
     }
 }

@@ -184,6 +184,8 @@ public class LateralClientes extends Fragment {
                                 DatosCliente.Nombre_FormaPago= dataModels.get(positionToRemove).getNombre_FormaPago();
                                 DatosCliente.Dias_FormaPago= CodigosGenerales.tryParseInteger(dataModels.get(positionToRemove).getDias_FormaPago());
                                 DatosCliente.Codigo_Pais= dataModels.get(positionToRemove).getCodigo_Pais();
+                                DatosCliente.Cliene_Correo= dataModels.get(positionToRemove).getCliente_correo();
+                                DatosCliente.Cliente_Telefono= dataModels.get(positionToRemove).getCliente_telefonos();
 /*
                                 Log.d(TAG, "Nombre_Cliente " + DatosCliente.Nombre_Cliente+" ...");
                                 Log.d(TAG, "Direccion_Cliente " + DatosCliente.Direccion_Cliente+" ...");

@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
     BDConexionSQLite myDb;
     String TAG = "MainActivity";
-    String tagFragment = "";
+    Boolean isPedidos=false;
     //endregion
 
     @Override
@@ -109,8 +109,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        if(!isPedidos)
+                LimpiarNavigationView();
         b_carrito.setEnabled(true);
-        tagFragment="";
         if (CodigosGenerales.isInicio) {
             new AlertDialog.Builder(this)
                     .setTitle("Salir")
@@ -126,48 +127,46 @@ public class MainActivity extends AppCompatActivity
                     .show();
         } else if (CodigosGenerales.Login = false) {
             finish();
-        } else
+        } else {
             super.onBackPressed();
+            isPedidos=false;
+        }
     }
 
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
+        isPedidos=false;
         Fragment fragment;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         switch (id) {
             case (R.id.nav_catalogo):
-                //CodigosGenerales.TipoArray = "Articulos";
-                //fragment = new FragList();
-                //CambiarFragment(fragment);
-                if (!tagFragment.equals("nav_catalogo")) {
+
+                if(!item.isChecked()) {
                     CodigosGenerales.listArticulos=new ArrayList<>();
                     CodigosGenerales.TipoArray = "Articulos";
-                    tagFragment = "nav_catalogo";
                     fragment = new FragArticulosCardView();
                     CambiarFragment(fragment);
                 }
                 break;
             case (R.id.nav_clientes):
-                if (!tagFragment.equals("nav_clientes")) {
-                    tagFragment = "nav_clientes";
+                if(!item.isChecked()) {
                     fragment = new LateralClientes();
                     CambiarFragment(fragment);
                 }
-
                 break;
             case (R.id.nav_pedidos):
-                if (!tagFragment.equals("nav_pedidos")) {
-                    tagFragment = "nav_pedidos";
+                if(!item.isChecked()) {
+                    isPedidos=true;
                     fragment = new LateralPedidos();
                     CambiarFragment(fragment);
                 }
                 break;
             case (R.id.nav_actualizar):
-                if (!tagFragment.equals("nav_actualizar")) {
-                    tagFragment = "nav_actualizar";
+                if(!item.isChecked()) {
                     fragment = new LateralActualizar();
                     CambiarFragment(fragment);
                 }
@@ -176,6 +175,7 @@ public class MainActivity extends AppCompatActivity
                 CerrarSesion();
                 break;
         }
+        item.setChecked(true);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -195,15 +195,20 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        tagFragment="";
         Fragment fragment;
+
         switch (view.getId()) {
             case (R.id.b_carrito):
+
+                isPedidos=false;
+                LimpiarNavigationView();
                 b_carrito.setEnabled(false);
                 fragment = new FragListDeseo();
                 CambiarFragment(fragment);
                 break;
             case (R.id.iv_logo):
+                isPedidos=false;
+                LimpiarNavigationView();
                 iv_logo.setEnabled(false);
                 FragmentManager fm = getSupportFragmentManager();
                 for (int i = 1; i < fm.getBackStackEntryCount(); ++i) {
@@ -212,6 +217,13 @@ public class MainActivity extends AppCompatActivity
                 FragMenuPrincipal frag = new FragMenuPrincipal();
                 CambiarFragment(frag);
                 break;
+        }
+    }
+
+    private void LimpiarNavigationView() {
+        int size = navigationView.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            navigationView.getMenu().getItem(i).setChecked(false);
         }
     }
 

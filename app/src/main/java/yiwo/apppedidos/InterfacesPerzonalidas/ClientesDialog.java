@@ -48,8 +48,10 @@ public class ClientesDialog {
                 String Codigo_FormaPago,
                 String Nombre_FormaPago,
                 String Dias_FormaPago,
+                String Correo,
+                String Telefono,
                 String Codigo_Pais
-                );
+        );
 
     }
 
@@ -160,22 +162,24 @@ public class ClientesDialog {
                             CodigosGenerales.hideSoftKeyboard(context);
                             Clientes dataModel = dataModels.get(position);
                             interfaz.ResultadoClientesDialog(
-                                            dataModel.getCodigo_Cliente(),
-                                            dataModel.getNombre_Cliente(),
-                                            dataModel.getDireccion_Cliente(),
-                                            dataModel.getRuc_Cliente(),
-                                            dataModel.getDNI_Cliente(),
-                                            dataModel.getListaPrecios_Cliente(),
-                                            dataModel.getCodigo_FormaPago(),
-                                            dataModel.getNombre_FormaPago(),
-                                            dataModel.getDias_FormaPago(),
-                                            dataModel.getCodigo_Pais()
+                                    dataModel.getCodigo_Cliente(),
+                                    dataModel.getNombre_Cliente(),
+                                    dataModel.getDireccion_Cliente(),
+                                    dataModel.getRuc_Cliente(),
+                                    dataModel.getDNI_Cliente(),
+                                    dataModel.getListaPrecios_Cliente(),
+                                    dataModel.getCodigo_FormaPago(),
+                                    dataModel.getNombre_FormaPago(),
+                                    dataModel.getDias_FormaPago(),
+                                    dataModel.getCliente_correo(),
+                                    dataModel.getCliente_telefonos(),
+                                    dataModel.getCodigo_Pais()
                             );
                             dialogo.dismiss();
                         }
                     });
                 } catch (Exception e) {
-                    Log.d(TAG, "onPostExecute "+e.getMessage());
+                    Log.d(TAG, "onPostExecute " + e.getMessage());
                 }
             }
             super.onPostExecute(s);

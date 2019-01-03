@@ -11,4 +11,6 @@ public class DatosCliente {
     public static String Nombre_FormaPago;
     public static Integer Dias_FormaPago=0;
     public static String Codigo_Pais;
+    public static String Cliene_Correo;
+    public static String Cliente_Telefono;
 }

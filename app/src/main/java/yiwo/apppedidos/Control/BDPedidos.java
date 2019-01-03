@@ -26,10 +26,66 @@ public class BDPedidos {
     public ArrayList<List<String>> getList(String Nombre) {
 
         ArrayList<List<String>> arrayList = new ArrayList<>();
-
+/*
+Select
+ Hpedidoc.ccod_empresa  Codigo_Empresa,
+ Hpedidoc.idmotivo_venta  Codigo_Motivo,
+ erp_motivos_tramite.erp_nommot  Nombre_Motivo,
+ Hpedidoc.cnum_doc  Codigo_Pedido,
+ Hpedidoc.ccod_cliente  Codigo_Cliente,
+ Hpedidoc.cnom_cliente  Nombre_Cliente,
+ Hpedidoc.cnum_ruc_cliente  RUC_Cliente,
+ Hpedidoc.ccod_forpago  Codigo_FormaPago,
+ Hfor_pag.cnom_forpago  Nombre_FormaPago,
+ Hpedidoc.erp_Dimporte  Importe,
+ Hpedidoc.erp_Digv  IGV,
+ Hpedidoc.erp_Dtotal  Total,
+ Convert(date,Hpedidoc.dfecha_doc) Fecha_Emision,
+ Hpedidoc.aprobado Estado,
+ Hpedidoc.observacion_aprobacion ObservacionAprobacion,
+ Hpedidoc.Usuario Usuario_Vendedor,
+ Hpedidoc.Pc_Fecha Fecha_Registro,
+ Hpedidoc.cmoneda,
+ Hpedidoc.observacion as Comentario
+ from
+ Hpedidoc
+ Inner Join erp_motivos_tramite On
+ Hpedidoc.ccod_empresa = erp_motivos_tramite.erp_codemp
+ and Hpedidoc.idmotivo_venta = erp_motivos_tramite.erp_codmot
+ Inner Join Hfor_pag On
+ Hpedidoc.ccod_empresa = Hfor_pag.ccod_empresa
+ and Hpedidoc.idmotivo_venta = Hfor_pag.ccod_forpago
+ where
+ erp_motivos_tramite.erp_codtid = 'PED'
+ and comentario7 = 'Celular'
+ and  Hpedidoc.ccod_empresa =?
+ and Hpedidoc.idmotivo_venta ='07'
+ and Usuario =?
+ and
+ (
+ erp_nommot like ?
+ or idmotivo_venta like ?
+ or cnum_doc like ?
+ or ccod_cliente like ?
+ or cnom_cliente like ?
+ or cnum_ruc_cliente like ?
+ or Hpedidoc.ccod_forpago like ?
+ or cnom_forpago like ?
+ or aprobado like ?
+ or observacion like ?
+ or
+ (
+ DATEPART(yy, dfecha_doc) = ?
+ and DATEPART(mm, dfecha_doc) = ?
+ AND DATEPART(dd, dfecha_doc) = ?
+ )
+ )
+ Order by Hpedidoc.Pc_Fecha desc
+ */
         try {
             Connection connection = bdata.getConnection();
-            String stsql = "Select \n" +
+            String stsql =
+                    "Select \n" +
                     " Hpedidoc.ccod_empresa  Codigo_Empresa, \n" +
                     " Hpedidoc.idmotivo_venta  Codigo_Motivo, \n" +
                     " erp_motivos_tramite.erp_nommot  Nombre_Motivo, \n" +
@@ -44,10 +100,11 @@ public class BDPedidos {
                     " Hpedidoc.erp_Dtotal  Total, \n" +
                     " Convert(date,Hpedidoc.dfecha_doc) Fecha_Emision, \n" +
                     " Hpedidoc.aprobado Estado, \n" +
-                    " Hpedidoc.observacion Observacion, \n" +
+                    " Hpedidoc.observacion_aprobacion ObservacionAprobacion, \n" +
                     " Hpedidoc.Usuario Usuario_Vendedor, \n" +
                     " Hpedidoc.Pc_Fecha Fecha_Registro,\n" +
-                    " Hpedidoc.cmoneda \n" +
+                    " Hpedidoc.cmoneda,\n" +
+                    " Hpedidoc.observacion as Comentario\n" +
                     " from \n" +
                     " Hpedidoc \n" +
                     " Inner Join erp_motivos_tramite On \n" +
@@ -59,7 +116,7 @@ public class BDPedidos {
                     " where \n" +
                     " erp_motivos_tramite.erp_codtid = 'PED' \n" +
                     " and comentario7 = 'Celular' \n" +
-                    " and  Hpedidoc.ccod_empresa =? \n" +
+                    " and  Hpedidoc.ccod_empresa =?\n" +
                     " and Hpedidoc.idmotivo_venta ='07' \n" +
                     " and Usuario =?\n" +
                     " and  \n" +
@@ -80,8 +137,8 @@ public class BDPedidos {
                     " and DATEPART(mm, dfecha_doc) = ? \n" +
                     " AND DATEPART(dd, dfecha_doc) = ?\n" +
                     " )\n" +
-                    " )  \n" +
-                    " Order by Hpedidoc.Pc_Fecha desc\n";
+                    " ) \n" +
+                    " Order by Hpedidoc.Pc_Fecha desc";
 
             String year = "0", mes = "0", dia = "0";
             try {
@@ -122,24 +179,25 @@ public class BDPedidos {
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
                 arrayList.add(Arrays.asList(
-                        rs.getString("Codigo_Empresa"),     //Codigo_Empresa
-                        rs.getString("Codigo_Motivo"),       //Codigo_Motivo
-                        rs.getString("Nombre_Motivo"),   //Nombre_Motivo
-                        rs.getString("Codigo_Pedido"),   //Codigo_Pedido
-                        rs.getString("Codigo_Cliente"),       //Codigo_Cliente
-                        rs.getString("Nombre_Cliente"), //Nombre_Cliente
-                        rs.getString("RUC_Cliente"),     //RUC_Cliente
-                        rs.getString("Codigo_FormaPago"),       //Codigo_FormaPago
-                        rs.getString("Nombre_FormaPago"),   //Nombre_FormaPago
-                        rs.getString("Importe"),   //Importe
-                        rs.getString("IGV"),       //IGV
-                        rs.getString("Total"), //Total
-                        rs.getString("Fecha_Emision"),     //Fecha_Emision
-                        rs.getString("Estado"),       //Estado
-                        rs.getString("Observacion"),   //Observacion
-                        rs.getString("Usuario_Vendedor"),   //Usuario_Vendedor
-                        CodigosGenerales.FormatoFechas.format(rs.getDate("Fecha_Registro")),                              //Fecha_Registro
-                        rs.getString("cmoneda")   //Usuario_Vendedor
+                        rs.getString("Codigo_Empresa"),
+                        rs.getString("Codigo_Motivo"),
+                        rs.getString("Nombre_Motivo"),
+                        rs.getString("Codigo_Pedido"),
+                        rs.getString("Codigo_Cliente"),
+                        rs.getString("Nombre_Cliente"),
+                        rs.getString("RUC_Cliente"),
+                        rs.getString("Codigo_FormaPago"),
+                        rs.getString("Nombre_FormaPago"),
+                        rs.getString("Importe"),
+                        rs.getString("IGV"),
+                        rs.getString("Total"),
+                        rs.getString("Fecha_Emision"),
+                        rs.getString("Estado"),
+                        rs.getString("ObservacionAprobacion"),
+                        rs.getString("Usuario_Vendedor"),
+                        CodigosGenerales.FormatoFechas.format(rs.getDate("Fecha_Registro")),
+                        rs.getString("cmoneda"),
+                        rs.getString("Comentario")
                 ));
             }
 

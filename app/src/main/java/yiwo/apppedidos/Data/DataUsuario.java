@@ -92,7 +92,8 @@ public class DataUsuario {
                 ConfiguracionEmpresa.RUC_Empresa,
                 DatosUsuario.Nombre_PuntoVenta,
                 DatosUsuario.Nombre_CentroCostos,
-                DatosUsuario.Nombre_UnidadNegocio);
+                DatosUsuario.Nombre_UnidadNegocio,
+                DatosUsuario.Codigo_Vendedor);
     }
 
     public Boolean loginUsuario(String Usuario, String Clave) {
@@ -100,6 +101,7 @@ public class DataUsuario {
 
         if (Usuario.equals("erpsys") && Clave.equals("2012")) {
 
+            DatosUsuario.Codigo_Vendedor = "erpsys";
             DatosUsuario.Nombre_Vendedor = "ERP Solutions Perú";
             DatosUsuario.Celular_Vendedor = "número_celular";
             DatosUsuario.email_Vendedor = "erpsys@gmail.com";
@@ -114,6 +116,7 @@ public class DataUsuario {
                 DatosUsuario.email_Vendedor =   list.get(2);
                 DatosUsuario.Codigo_Usuario =   list.get(3);
                 DatosUsuario.Nombre_Usuario =   list.get(4);
+                DatosUsuario.Codigo_Vendedor =   list.get(5);
                 return true;
             }
         }

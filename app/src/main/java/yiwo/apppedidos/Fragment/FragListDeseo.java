@@ -39,6 +39,7 @@ import yiwo.apppedidos.Control.BDMotivo;
 import yiwo.apppedidos.Control.BDPedidos;
 import yiwo.apppedidos.Data.DataListaDeseo;
 import yiwo.apppedidos.Data.DataPedidos;
+import yiwo.apppedidos.InterfacesPerzonalidas.ClienteCorreoTelefonoDialog;
 import yiwo.apppedidos.InterfacesPerzonalidas.ClientesDialog;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomAdapterListaDeseos;
 import yiwo.apppedidos.InterfacesPerzonalidas.CustomDataModelListaDeseos;
@@ -49,7 +50,7 @@ import yiwo.apppedidos.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragListDeseo extends Fragment implements View.OnClickListener, CustomDialog2Datos.FinalizoCuadroDialogo2Datos, CustomDialogEnviarPedido.FinalizoCuadroDialogPedido, ClientesDialog.FinalizarClientesDialog {
+public class FragListDeseo extends Fragment implements View.OnClickListener, CustomDialog2Datos.FinalizoCuadroDialogo2Datos, CustomDialogEnviarPedido.FinalizoCuadroDialogPedido, ClientesDialog.FinalizarClientesDialog, ClienteCorreoTelefonoDialog.FianlizoClienteCorreoTelefonoDialog {
 
     //region Declaración de variables
     View view;
@@ -171,7 +172,7 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
     public void onClick(View view) {
         switch (view.getId()) {
             case (R.id.b_enviar_pedido):
-                if (Validar()) {
+                if (Validar() && ValidarInformacion()) {
                     new CustomDialogEnviarPedido(getContext(), this, Monto_SubTotal_Pedido, Monto_Descontado_Pedido, Monto_IGV_Pedido, Monto_Importe_Pedido); //Mostrar el dialog de Enviar Pedido
                 }
                 break;
@@ -225,6 +226,20 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
         return true;
     }
 
+    private boolean ValidarInformacion(){
+
+        if (DatosCliente.Cliene_Correo == null || DatosCliente.Cliene_Correo.isEmpty() || !CodigosGenerales.validarEmail(DatosCliente.Cliene_Correo )) {
+            Toast.makeText(getActivity(), "Se requiere un correo", Toast.LENGTH_SHORT).show();
+            new ClienteCorreoTelefonoDialog(getActivity(),this);
+            return false;
+        }
+        if (DatosCliente.Cliente_Telefono == null || DatosCliente.Cliente_Telefono.isEmpty()) {
+            Toast.makeText(getActivity(), "Se requiere un teléfono", Toast.LENGTH_SHORT).show();
+            new ClienteCorreoTelefonoDialog(getActivity(),this);
+            return false;
+        }
+        return true;
+    }
     @Override
     public void ResultadoCuadroDialogo2Datos(String cod, String name, String ruc, String direccion, String listaPrecios, String dni, String dato_invisible) {
         switch (Dialog_ID) {
@@ -346,7 +361,8 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
                                         String Direccion_Cliente, String Ruc_Cliente,
                                         String DNI_Cliente, String ListaPrecios_Cliente,
                                         String Codigo_FormaPago, String Nombre_FormaPago,
-                                        String Dias_FormaPago, String Codigo_Pais) {
+                                        String Dias_FormaPago,
+                                        String correo, String telefono,String Codigo_Pais) {
         DatosCliente.Codigo_Cliente = Codigo_Cliente;
         DatosCliente.Nombre_Cliente = Nombre_Cliente;
         DatosCliente.Direccion_Cliente = Direccion_Cliente;
@@ -357,11 +373,18 @@ public class FragListDeseo extends Fragment implements View.OnClickListener, Cus
         DatosCliente.Nombre_FormaPago = Nombre_FormaPago;
         DatosCliente.Dias_FormaPago = CodigosGenerales.tryParseInteger(Dias_FormaPago);
         DatosCliente.Codigo_Pais = Codigo_Pais;
+        DatosCliente.Cliene_Correo = correo;
+        DatosCliente.Cliente_Telefono = telefono;
         et_cod_cliente.setText(DatosCliente.Codigo_Cliente);
         et_Nombre.setText(DatosCliente.Nombre_Cliente);
         et_formaPago.setText(Nombre_FormaPago);
         Log.d(TAG, "Nombre_Cliente: " + Nombre_Cliente);
         Log.d(TAG, "Lista de Precios: " + DatosCliente.Codigo_ListaPrecios);
+    }
+
+    @Override
+    public void ResultadoClienteCorreoTelefonoDialog(Boolean resultado) {
+
     }
 
     public class BackGroundTask extends AsyncTask<String, String, String> {

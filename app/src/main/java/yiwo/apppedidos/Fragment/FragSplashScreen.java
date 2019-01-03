@@ -108,6 +108,7 @@ public class FragSplashScreen extends Fragment {
                     datos_usuario.add(datos_login.getString(10));//Obtener el Celular del Vendedor
                     datos_usuario.add(datos_login.getString(11));//Obtener el email del Vendedor
                     datos_usuario.add(datos_login.getString(12));//Obtener el ruc de la empresa
+                    datos_usuario.add(datos_login.getString(13));//Obtener el ruc de la empresa
             }
             ConfiguracionEmpresa.Codigo_Empresa = datos_usuario.get(0);   //Guardar el Codigo_Empresa en CodigosGenerales
             DatosUsuario.Codigo_PuntoVenta = datos_usuario.get(1);   //Guardar el Codigo_PuntoVenta en CodigosGenerales
@@ -121,6 +122,7 @@ public class FragSplashScreen extends Fragment {
             DatosUsuario.Celular_Vendedor = datos_usuario.get(9);   //Guardar el Celular del Vendedor
             DatosUsuario.email_Vendedor = datos_usuario.get(10);   //Guardar el email del Vendedor
             ConfiguracionEmpresa.RUC_Empresa = datos_usuario.get(11);   //Obtener el ruc de la empresa
+            DatosUsuario.Codigo_Vendedor = datos_usuario.get(12);   //Obtener el ruc de la empresa
             Log.d(TAG, "Codigo_Empresa " + ConfiguracionEmpresa.Codigo_Empresa);
             dataEmpresa.CargarDatosEmpresa();
             //endregion
